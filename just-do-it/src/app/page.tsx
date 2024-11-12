@@ -1,30 +1,66 @@
-'use client'
+import Link from "next/link";
 
-
-export const Home:React.FC= ()=> {
-  return (<div>
-    
-    <div style={{width: '100%', height: '100vh', justifyContent: 'center', alignItems: 'center', display: 'inline-flex', backgroundImage:"url('img_landing.png')", backgroundAttachment: 'fixed', backgroundPosition: '80%', backgroundRepeat: 'no-repeat', backgroundSize: 'contain'}}>
-    <div style={{width: 1440, height: 608.50, position: 'relative'}}>
-        <div style={{width: 1440, height: 608.50, left: 1440, top: 0, position: 'absolute', transform: 'rotate(180deg)', transformOrigin: '0 0', background: 'linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, black 98%), linear-gradient(270deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.95) 100%)', boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)', border: '1px black solid'}}></div>
-        <div style={{width: 735, height: 220, left: 160, top: 161, position: 'absolute'}}>
-            <div style={{width: 137, height: 45, left: 0, top: 175, position: 'absolute', background: '#FAFF00', borderRadius: 20}}></div>
-            <div style={{width: 114, height: 26, left: 11, top: 184, position: 'absolute', color: 'black', fontSize: 20, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word'}}>Inscríbete</div>
-            <div style={{width: 735, height: 143, left: 0, top: 0, position: 'absolute'}}><span style={{color: 'white', fontSize: 64, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word'}}>AGENDA TU SESIÓN </span><span style={{color: '#ECF014', fontSize: 64, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word' }}>GRATUITA</span><span style={{color: 'white', fontSize: 64, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word' }}> HOY</span></div>
-        </div>
-        <div style={{width: 491, height: 24, left: 789, top: 36, position: 'absolute'}}>
-            <div style={{width: 24, height: 24, left: 467, top: 0, position: 'absolute'}}>
-                <div style={{width: 18, height: 18, left: 3, top: 3, position: 'absolute', background: '#ECF014'}}></div>
+export const Home: React.FC = () => {
+  return (
+    <div style={{ backgroundColor: "black" }}>
+      <div
+        className="w-full h-full flex justify-center items-center inline-flex"
+        style={{
+          backgroundImage: "url('img_landing.png')",
+          backgroundSize: "contain",
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="w-[1440px] h-[608.5px] relative">
+          <div className="w-[1440px] h-[608.5px] absolute left-[1440px] top-0 transform rotate-180 origin-top-left bg-[linear-gradient(90deg,_rgba(0,_0,_0,_0)_0%,_black_98%),_linear-gradient(270deg,_rgba(0,_0,_0,_0)_0%,_rgba(0,_0,_0,_0.95)_100%)] shadow-[0_4px_4px_rgba(0,_0,_0,_0.25)] border border-black"></div>
+          <div className="w-[735px] h-[220px] absolute left-[160px] top-[161px]">
+            <div className="w-[137px] h-[45px] absolute left-0 top-[175px] bg-[#FAFF00] rounded-[20px]"></div>
+            <div className="w-[114px] h-[26px] absolute left-[11px] top-[184px] text-black text-[20px] font-normal">
+              Inscríbete
             </div>
-            <div style={{left: 338, top: 4, position: 'absolute', color: 'white', fontSize: 12, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word'}}>CONTÁCTANOS</div>
-            <div style={{left: 253, top: 5, position: 'absolute', color: 'white', fontSize: 12, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word'}}>PLANES</div>
-            <div style={{left: 152, top: 4.12, position: 'absolute', color: 'white', fontSize: 12, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word'}}>SERVICIOS</div>
-            <div style={{left: 75, top: 4, position: 'absolute', color: 'white', fontSize: 12, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word'}}>SEDES</div>
-            <div style={{left: 0, top: 4, position: 'absolute', color: 'white', fontSize: 12, fontFamily: 'MADE Outer Sans', fontWeight: '400', wordWrap: 'break-word'}}>INICIO</div>
+            <div className="w-[735px] h-[143px] absolute left-0 top-0">
+              <span className="text-white text-[64px] font-normal">
+                AGENDA TU SESIÓN{" "}
+              </span>
+              <span className="text-[#ECF014] text-[64px] font-normal">
+                GRATUITA
+              </span>
+              <span className="text-white text-[64px] font-normal"> HOY</span>
+            </div>
+          </div>
+          <Navbar />
         </div>
+      </div>
     </div>
-</div>
-</div>
-  )
-}
-export default Home
+  );
+};
+export default Home;
+
+export const Navbar = () => {
+  return (
+    <nav className="w-[491px] h-[24px] absolute left-[789px] top-[36px]">
+      <div className="w-[24px] h-[24px] absolute left-[467px] top-0">
+        <div
+          className="w-[70px] h-[18px] absolute left-[3px] top-[3px] bg-contain bg-no-repeat bg-cente"
+          style={{ backgroundImage: "url('login-icon.svg')" }}
+        ></div>
+      </div>
+      <div className="absolute left-[338px] top-[4px] text-white text-[12px] font-normal">
+        <Link href={"/contacto"}>CONTÁCTANOS</Link>
+      </div>
+      <div className="absolute left-[253px] top-[5px] text-white text-[12px] font-normal">
+        <Link href={"/planes"}>PLANES</Link>
+      </div>
+      <div className="absolute left-[152px] top-[4.12px] text-white text-[12px] font-normal">
+        <Link href={"/servicios"}>SERVICIOS</Link>
+      </div>
+      <div className="absolute left-[75px] top-[4px] text-white text-[12px] font-normal">
+        <Link href={"/nosotros"}>SEDES</Link>
+      </div>
+      <div className="absolute left-0 top-[4px] text-white text-[12px] font-normal">
+        <Link href={"/"}>INICIO</Link>
+      </div>
+    </nav>
+  );
+};
