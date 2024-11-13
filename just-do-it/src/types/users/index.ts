@@ -7,7 +7,8 @@ export interface Login {
 }
 
 export interface Register{
-    name: string;
+    firstName: string;
+    lastName: string;
     email: string;
     phone: string;
     adrress: string;
