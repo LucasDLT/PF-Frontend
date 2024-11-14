@@ -1,41 +1,112 @@
 'use client'
 
 import React from 'react'
-import { Button } from "@/components/ui/button"
+import styled from 'styled-components'
 import { Class } from '@/types/class'
 
-export default function ActivityDetail({ id, name, description, location, capacity, trainner, img_url, }: Class) {
+const Container = styled.div`
+  background-color: #f3f4f6;
+  min-height: 100vh;
+  padding: 1rem;
+`;
+
+const Card = styled.div`
+  max-width: 1024px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const LeftSection = styled.div`
+  width: 50%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const RightSection = styled.div`
+  padding: 1.5rem;
+  width: 50%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const Title = styled.h2`
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e11d48;
+`;
+
+const Description = styled.p`
+  margin-top: 0.5rem;
+  color: #4b5563;
+`;
+
+const Location = styled.p`
+  margin-top: 0.5rem;
+  color: #4b5563;
+`;
+
+const Trainer = styled.p`
+  margin-top: 0.5rem;
+  color: #4b5563;
+`;
+
+const Capacity = styled.div`
+  margin-top: 1rem;
+  color: #4b5563;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  background-color: #000;
+  color: #f4f4f4;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: #d97706;
+  }
+`;
+
+export default function ActivityDetail({ id, name, description, location, capacity, trainner, img_url }: Class) {
   return (
-<div className="bg-gray-100 min-h-screen p-4">
-  <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-    <div className="flex flex-col md:flex-row">
-      {/* Imagen a la izquierda */}
-      <div className="md:w-1/3">
-        <img className="h-36 w-full object-cover" src={img_url} alt={name} />
-      </div>
+    <Container>
+      <Card>
+        <CardContent>
+          <LeftSection>
+            <img className="h-36 w-full object-cover" src={img_url} alt={name} />
+          </LeftSection>
 
-      {/* Contenido a la derecha */}
-      <div className="p-6 md:w-2/3">
-        <h2 className="text-xl font-semibold text-red-700">{name}</h2>
-        <p className="mt-2 text-gray-600">{description}</p>
-        <p className="mt-2 text-gray-600">{location}</p>
-        <p className="mt-2 text-gray-600">{trainner}</p>
+          <RightSection>
+            <Title>{name}</Title>
+            <Description>{description}</Description>
+            <Location>{location}</Location>
+            <Trainer>{trainner}</Trainer>
 
-        <div className="mt-4 text-gray-600">
-          <span>Capacidad: {capacity} personas por turno</span>
-        </div>
+            <Capacity>
+              <span>Capacidad: {capacity} personas por turno</span>
+            </Capacity>
 
-        <div className="mt-6">
-         <button className="w-full bg-yellow-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-yellow-600">
-         Generar Cita</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-
-  )
+            <div className="mt-6">
+              <Button>Generar Cita</Button>
+            </div>
+          </RightSection>
+        </CardContent>
+      </Card>
+    </Container>
+  );
 }
