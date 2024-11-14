@@ -10,6 +10,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { gymClasses } from "@/lib/utils";
+import Link from "next/link";
 
 export default function ActivityCarousel() {
   return (
@@ -35,13 +36,13 @@ export default function ActivityCarousel() {
                   </p>
                   <Badge variant="secondary">{activity.location}</Badge>
                 </div>
+
               </CardContent>
             </Card>
           </CarouselItem>
         ))}
       </CarouselContent>
       <CarouselPrevious className="left-2" />
-      <CarouselNext className="right-2" />
     </Carousel>
   );
 }
