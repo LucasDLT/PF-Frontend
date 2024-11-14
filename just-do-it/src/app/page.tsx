@@ -1,5 +1,6 @@
 import ActivityCarousel from "@/component/activity-carousel";
 import { Navbar } from "@/component/navbar-landing";
+
 export const Home: React.FC = () => {
   return (
     <div style={{ backgroundColor: "black" }}>
