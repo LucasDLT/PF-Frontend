@@ -16,3 +16,4 @@ export interface Register{
     confirmPassword: string;
 
 }
+
