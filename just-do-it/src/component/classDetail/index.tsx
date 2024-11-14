@@ -1,59 +1,112 @@
 'use client'
 
 import React from 'react'
-import { Calendar, Clock, Users, ChevronRight } from 'lucide-react'
-import { Button } from "@/components/ui/button"
+import styled from 'styled-components'
+import { Class } from '@/types/class'
 
-interface ActivityDetailProps {
-  name: string
-  description: string
-  imageUrl: string
-  schedule?: string[]
-  capacity: number
-}
+const Container = styled.div`
+  background-color: #f3f4f6;
+  min-height: 100vh;
+  padding: 1rem;
+`;
 
-export default function ActivityDetail({ name, description, imageUrl, schedule = [], capacity }: ActivityDetailProps) {
+const Card = styled.div`
+  max-width: 1024px;
+  margin: 0 auto;
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+`;
+
+const CardContent = styled.div`
+  display: flex;
+  flex-direction: row;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+`;
+
+const LeftSection = styled.div`
+  width: 50%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const RightSection = styled.div`
+  padding: 1.5rem;
+  width: 50%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+`;
+
+const Title = styled.h2`
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #e11d48;
+`;
+
+const Description = styled.p`
+  margin-top: 0.5rem;
+  color: #4b5563;
+`;
+
+const Location = styled.p`
+  margin-top: 0.5rem;
+  color: #4b5563;
+`;
+
+const Trainer = styled.p`
+  margin-top: 0.5rem;
+  color: #4b5563;
+`;
+
+const Capacity = styled.div`
+  margin-top: 1rem;
+  color: #4b5563;
+`;
+
+const Button = styled.button`
+  width: 100%;
+  background-color: #000;
+  color: #f4f4f4;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.3s ease;
+  
+  &:hover {
+    background-color: #d97706;
+  }
+`;
+
+export default function ActivityDetail({ id, name, description, location, capacity, trainner, img_url }: Class) {
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen p-8">
-      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
-        <div className="md:flex">
-          <div className="md:flex-shrink-0">
-            <img className="h-96 w-full object-cover md:w-96" src={imageUrl} alt={name} />
-          </div>
-          <div className="p-8 w-full">
-            <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{name} Nombre:</div>
-            <p className="mt-2 text-gray-500">{description} Descripcion:</p>
-            <p className="mt-2 text-gray-500">{description} Profesor a cargo:</p>
+    <Container>
+      <Card>
+        <CardContent>
+          <LeftSection>
+            <img className="h-36 w-full object-cover" src={img_url} alt={name} />
+          </LeftSection>
 
-            <div className="mt-4">
-              <h3 className="text-lg font-medium text-gray-900">Horarios:</h3>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {schedule.length > 0 ? (
-                  schedule.map((time, index) => (
-                    <span key={index} className="inline-flex items-center px-3 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-                      <Clock className="mr-1 h-4 w-4" />
-                      {time}
-                    </span>
-                  ))
-                ) : (
-                  <span className="text-gray-500">No hay horarios disponibles</span>
-                )}
-              </div>
-            </div>
-            <div className="mt-4 flex items-center">
-              <Users className="h-5 w-5 text-gray-400" />
-              <span className="ml-2 text-gray-600">Capacidad: {capacity} personas por turno</span>
-            </div>
-            <div className="mt-8">
-            <Button className="w-full bg-amber-400 text-slate-900 font-bold py-2 px-3 rounded-md hover:bg-yellow-600 transition duration-300 ease-in-out transform hover:-translate-y-1">
-  Generar Cita
-  <ChevronRight className="ml-2 h-4 w-4" />
-</Button>
+          <RightSection>
+            <Title>{name}</Title>
+            <Description>{description}</Description>
+            <Location>{location}</Location>
+            <Trainer>{trainner}</Trainer>
 
+            <Capacity>
+              <span>Capacidad: {capacity} personas por turno</span>
+            </Capacity>
+
+            <div className="mt-6">
+              <Button>Generar Cita</Button>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
+          </RightSection>
+        </CardContent>
+      </Card>
+    </Container>
+  );
 }
