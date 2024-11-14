@@ -1,5 +1,6 @@
 import ActivityCarousel from "@/component/activity-carousel";
 import { Navbar } from "@/component/navbar-landing";
+import Footer from "@/component/footer";
 
 export const Home: React.FC = () => {
   return (
@@ -35,6 +36,7 @@ export const Home: React.FC = () => {
         </div>
       </div>
       <ActivityCarousel />
+      <Footer />
     </div>
   );
 };
