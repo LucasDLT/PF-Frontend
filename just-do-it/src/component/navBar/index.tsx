@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Menu, X, User, UserCog, LogOut } from 'lucide-react';
-import styles from './Navbar.module.css'; // Importa el CSS Module
+import styles from './Navbar.module.css';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,14 +10,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Link from 'next/link';
 
 export default function NavbarApp() {
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
-    { label: 'INICIO', href: '#' },
-    { label: 'SEDES', href: '#' },
-    { label: 'SERVICIOS', href: '#' },
+    { label: 'INICIO', href: '/' },
+    { label: 'SEDES', href: '/sede' },
+    { label: 'SERVICIOS', href: 'services' },
     { label: 'PLANES', href: '#' },
     { label: 'CONTÁCTANOS', href: '#' },
   ];
@@ -26,7 +27,7 @@ export default function NavbarApp() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className={styles.menuButton} // Usa la clase del CSS Module
+          className={styles.menuButton}
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className="sr-only">Open main menu</span>
@@ -36,27 +37,39 @@ export default function NavbarApp() {
       <DropdownMenuContent align={isMobile ? 'end' : 'start'} className={styles.menuContent}>
         {menuItems.map((item) => (
           <DropdownMenuItem key={item.label} className={styles.menuItem} asChild>
-            <a href={item.href}>{item.label}</a>
+            <Link href={item.href}>{item.label}</Link>
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator className={styles.menuSeparator} />
         <DropdownMenuItem className={styles.menuItem} asChild>
-          <a href="#">
-            <User className="mr-2 h-4 w-4" />
-            <span>Perfil Usuario</span>
-          </a>
+          <Link href="/login">
+            <div className="flex items-center">
+              <User className="mr-2 h-4 w-4" />
+              <span>Iniciar sesión</span>
+            </div>
+          </Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className={styles.menuItem} asChild>
+          <Link href="/userprofile">
+            <div className="flex items-center">
+              <User className="mr-2 h-4 w-4" />
+              <span>Perfil Usuario</span>
+            </div>
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className={styles.menuItem} asChild>
           <a href="#">
-            <UserCog className="mr-2 h-4 w-4" />
-            <span>Perfil Admin</span>
+            <div className="flex items-center">
+              <UserCog className="mr-2 h-4 w-4" />
+              <span>Perfil Admin</span>
+            </div>
           </a>
         </DropdownMenuItem>
         <DropdownMenuItem className={styles.menuItem} asChild>
-          <a href="#">
+          <div className="flex items-center cursor-pointer">
             <LogOut className="mr-2 h-4 w-4" />
             <span>Cerrar Sesión</span>
-          </a>
+          </div>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
