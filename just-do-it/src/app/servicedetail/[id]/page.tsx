@@ -16,7 +16,7 @@ export default function ClassDetailPage() {
 
  
   return (
-    <div className="flex justify-center items-center min-h-screen nim-w-screen ">
+    <div className="flex justify-center items-center min-h-screen min-w-screen ">
     <ActivityDetail 
       id={gymClass.id}
       name={gymClass.name}

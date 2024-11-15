@@ -24,7 +24,7 @@ export default function CardClass({ gymClass }: CardClassProps) {
         className={styles.cardImage}
       />
       <button className={styles.cardButton}>
-        <Link href={`/clases/${gymClass.id}`}>Ver más</Link>
+        <Link href={`/servicedetail/${gymClass.id}`}>Ver más</Link>
       </button>
     </div>
   );

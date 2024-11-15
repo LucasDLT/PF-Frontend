@@ -10,7 +10,7 @@ export default function ActivityDetail({ id, name, description, location, capaci
       <div className={styles.card}>
         <div className={styles.cardContent}>
           <div className={styles.leftSection}>
-            <img className="h-36 w-full object-cover" src={img_url} alt={name} />
+            <img className="h-36 w-full object-cover rounded" src={img_url} alt={name} />
           </div>
 
           <div className={styles.rightSection}>
