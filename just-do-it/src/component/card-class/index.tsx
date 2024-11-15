@@ -19,7 +19,7 @@ export default function CardClass({gymClass}:CardClassProps) {
                     <h2 >{gymClass.name}</h2>
                     <p>{gymClass.location}</p>
                     <Image src={gymClass.img_url} alt={gymClass.name} width={500} height={100}/>
-                    <button><Link href={`/clases/${gymClass.id}`}>Ver más</Link></button>
+                    <button><Link href={`/servicedetail/${gymClass.id}`}>Ver más</Link></button>
                 </Card>
           
     );
