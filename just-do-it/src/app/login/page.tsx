@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
+import { signIn } from 'next-auth/react';
 
 export default function Login() {
   const initialState = {
@@ -51,6 +52,15 @@ export default function Login() {
       console.log("Formulario enviado");
     }
   };
+
+  const handleClickGoogle = async () => {
+    try {
+      await signIn('google', { callbackUrl: '/' });
+    } catch (error) {
+      console.error('Error en signIn con Google', error);
+    }
+  };
+
 
   return (
     <div className="relative w-full h-full bg-slate-400" style={{ background: "slate", clipPath: "polygon(0% 0%, 100% 0%, 100% 90%, 0% 100%)" }}>
@@ -114,6 +124,7 @@ export default function Login() {
                 <button
                   type="button"
                   className="flex items-center justify-center w-full max-w-xs px-2 py-3 border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-100 focus:border-blue-600 transition duration-300 ease-in-out"
+                  onClick={handleClickGoogle}
                 >
                   <FcGoogle className="w-6 h-6" />
                   <span className="ml-3 text-sm font-medium text-gray-700">Continuar con Google</span>
