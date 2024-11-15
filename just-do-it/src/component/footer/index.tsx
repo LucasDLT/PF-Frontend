@@ -12,13 +12,11 @@ export default function Footer() {
           <div>Nuestras sedes</div>
         </div>
 
-        {/* Datos de contacto */}
         <div className="space-y-2">
           <div>+54(000)000-000</div>
           <div>Example@gmail.com</div>
         </div>
 
-        {/* Direcciones */}
         <div className="space-y-2">
           <div>Street 123</div>
           <div>Street 122</div>
