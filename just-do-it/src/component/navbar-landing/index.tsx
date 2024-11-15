@@ -1,29 +1,32 @@
-"use client";
-import Link from "next/link";
+'use client';
+import Link from 'next/link';
+import { RiLoginBoxLine } from 'react-icons/ri';
 
 export const Navbar: React.FC = () => {
   return (
+    
     <nav className="flex justify-end items-center p-4 bg-black absolute top-0 left-1 ">
       <ul className="flex justify-between space-x-5 flex gap-4 text-white text-[12px] font-normal list-none">
         <li>
-          <Link href={"/"}>INICIO</Link>
+          <Link href={'/'}>INICIO</Link>
         </li>
         <li>
-          <Link href={"/location"}>SEDES</Link>
+          <Link href={'/location'}>SEDES</Link>
         </li>
         <li>
-          <Link href={"/services"}>SERVICIOS</Link>
+          <Link href={'/services'}>SERVICIOS</Link>
         </li>
         <li>
-          <Link href={"/planes"}>PLANES</Link>
+          <Link href={'/planes'}>PLANES</Link>
         </li>
         <li>
-          <Link href={"/contacto"}>CONTÁCTANOS</Link>
+          <Link href={'/contacto'}>CONTÁCTANOS</Link>
         </li>
-        <div
-          className="w-[70px] h-[18px] absolute left-[3px] top-[3px] bg-contain bg-no-repeat bg-cente"
-          style={{ backgroundImage: "url('login-icon.svg')" }}
-        ></div>
+        <div>
+          <Link href={'/login'}>
+            <RiLoginBoxLine className="rgb-[#ECF014] " />
+          </Link>
+        </div>
       </ul>
       <div
         className="w-[70px] h-[18px] bg-contain bg-no-repeat bg-center"
