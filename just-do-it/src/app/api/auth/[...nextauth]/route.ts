@@ -3,51 +3,55 @@ import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 
 declare module "next-auth" {
   interface Session {
-    accessToken?: string; 
+    accessToken?: string;
     user: {
+      id?: string;
       name?: string;
       email?: string;
       image?: string;
-      providerAccountId?: string; 
-      profile?: GoogleProfile; 
+      providerAccountId?: string;
+      profile?: GoogleProfile;
     } & DefaultSession["user"];
   }
 
   interface JWT {
     accessToken?: string;
     providerAccountId?: string;
-    profile?: GoogleProfile; 
+    profile?: GoogleProfile;
   }
 }
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
   
   callbacks: {
     async jwt({ token, account, profile }) {
-      
       if (account?.provider === "google" && profile) {
         const googleProfile = profile as GoogleProfile;
 
-        token.accessToken = account.access_token; // Token de acceso de Google
-        token.providerAccountId = profile.sub; // ID de Google
-        token.profile = googleProfile; // Guardar el perfil de Google en el token
+        token.accessToken = account.access_token;
+        token.providerAccountId = googleProfile.sub;
+        token.profile = googleProfile;
       }
 
-      return token; // Retornamos el token para que persista en la sesión
+      return token;
     },
 
     async session({ session, token }) {
-      session.accessToken = token.accessToken as string | undefined; // Asegurar el tipo de accessToken
-      session.user.providerAccountId = token.providerAccountId as string | undefined; // Asegurar el tipo de providerAccountId
-      session.user.profile = token.profile as GoogleProfile | undefined; // Asegurar el tipo de perfil de Google
-
-      return session;
+      return {
+        ...session,
+        accessToken: token.accessToken,
+        user: {
+          ...session.user,
+          providerAccountId: token.providerAccountId,
+          profile: token.profile,
+        },
+      };
     },
   },
 };
