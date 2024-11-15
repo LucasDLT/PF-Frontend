@@ -2,8 +2,7 @@
 import ActivityCarousel from "@/component/activity-carousel";
 import { Navbar } from "@/component/navbar-landing";
 import Footer from "@/component/footer";
-import styled from "styled-components";
-
+import Link from "next/link";
 export const Home: React.FC = () => {
   return (
     <div style={{ backgroundColor: "black" }}>
@@ -17,18 +16,19 @@ export const Home: React.FC = () => {
           backgroundPosition: "120% 20%",
         }}
         >
-        <div className="w-[1440px] h-[608.5px] relative border border-[#ECF014]">
+        <div className="w-[1440px] h-[608.5px] relative ">
           <div className="w-[735px] h-[143px] absolute left-60 top-56">
               <span className="text-white text-[64px] font-normal">
                 AGENDA TU SESIÓN{" "}
               </span>
               <span className="text-[#ECF014] text-[64px] font-normal">
-                GRATUITA
+               GRATUITA
+                
               </span>
               <span className="text-white text-[64px] font-normal"> HOY</span>
-              <div className="text-[#ECF014] w-[114px] h-[26px] absolute left-[11px] top-[184px] text-[20px] font-normal">
-              Inscríbete
-            </div>
+              <div className="text-black rounded-full text-center p-2 w-[130px] h-[50px] absolute left-[5px] top-[200px] text-[20px] font-bold bg-[#ECF014]">
+              <Link href="/planes">INSCRIBETE</Link>           
+               </div>
             </div>
             <Navbar />
         </div>
@@ -36,7 +36,6 @@ export const Home: React.FC = () => {
 
       <ActivityCarousel />
 
-      <Footer />
     </div>
   );
 };
@@ -44,7 +43,3 @@ export const Home: React.FC = () => {
 export default Home;
 
 
-export const Greeting = styled.main`
-
-  
-`

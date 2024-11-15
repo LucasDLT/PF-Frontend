@@ -14,7 +14,8 @@ import Link from "next/link";
 
 export default function ActivityCarousel() {
   return (
-    <Carousel>
+    <Carousel className="border ">
+
       <CarouselContent>
         {gymClasses.map((activity, index) => (
           <CarouselItem key={index}>
@@ -42,7 +43,8 @@ export default function ActivityCarousel() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="left-2" />
+      <CarouselPrevious className="left-3 bg-white" />
+      <CarouselNext className=" right-4 bg-white" />
     </Carousel>
   );
 }
