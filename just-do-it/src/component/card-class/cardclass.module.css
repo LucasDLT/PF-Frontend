@@ -1,0 +1,41 @@
+/* CardClass.module.css */
+.card {
+    max-width: 1024px;
+    max-height: 21rem;
+    margin: 1rem;
+    background-color: #454545a3; /* Es un gris claro */
+    backdrop-filter: blur(3px);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .cardImage {
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 3px solid #1b1a19;
+  }
+  
+  .cardButton {
+    border-radius: 0.5rem;
+    background-color: #fbbf24;
+    color: #ffffff;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 0.3rem;
+  }
+  
+  .cardButton:hover {
+    background-color: #f0cb6e;
+    color: #000000;
+    border: 1px solid #1b1a19;
+    transition: all ease-in-out 0.4s;
+  }
+  
