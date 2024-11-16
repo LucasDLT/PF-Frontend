@@ -1,37 +1,33 @@
 'use client';
 import Link from 'next/link';
 import { RiLoginBoxLine } from 'react-icons/ri';
+import styles from './navlanding.module.css';  // Importar el archivo CSS Module
 
 export const Navbar: React.FC = () => {
   return (
-    
-    <nav className="flex justify-end items-center p-4 bg-black absolute top-0 left-1 ">
-      <ul className="flex justify-between space-x-5 flex gap-4 text-white text-[12px] font-normal list-none">
-        <li>
+    <nav className={styles.navbar}>
+      <ul className={styles.navList}>
+        <li className={styles.navItem}>
           <Link href={'/'}>INICIO</Link>
         </li>
-        <li>
+        <li className={styles.navItem}>
           <Link href={'/location'}>SEDES</Link>
         </li>
-        <li>
+        <li className={styles.navItem}>
           <Link href={'/services'}>SERVICIOS</Link>
         </li>
-        <li>
+        <li className={styles.navItem}>
           <Link href={'/planes'}>PLANES</Link>
         </li>
-        <li>
+        <li className={styles.navItem}>
           <Link href={'/contacto'}>CONTÁCTANOS</Link>
         </li>
-        <div>
+      </ul>
+        <div className={styles.iconLink}>
           <Link href={'/login'}>
-            <RiLoginBoxLine className="rgb-[#ECF014] " />
+            <RiLoginBoxLine />
           </Link>
         </div>
-      </ul>
-      <div
-        className="w-[70px] h-[18px] bg-contain bg-no-repeat bg-center"
-        style={{ backgroundImage: "url('login-icon.svg')" }}
-      ></div>
     </nav>
   );
 };

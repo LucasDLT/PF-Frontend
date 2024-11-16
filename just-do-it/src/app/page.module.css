@@ -1,0 +1,61 @@
+.container {
+    background-color: black;
+  }
+  
+  .hero {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0)), 
+                      linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)),
+                      url('/img_landing.png');
+    background-size: 70% 170%;
+    background-repeat: no-repeat;
+    background-position: 120% 20%;
+  }
+  
+  .heroTextWrapper {
+    position: absolute;
+    left: 15rem; /* 60px en Tailwind (left-60) */
+    top: 14rem; /* 56px en Tailwind (top-56) */
+    width: 46rem; /* 735px en Tailwind */
+    height: 8.9375rem; /* 143px en Tailwind */
+  }
+  
+  .heroText {
+    font-size: 4rem; /* text-6xl en Tailwind */
+    font-weight: 400; /* font-normal */
+    color: white;
+  }
+  
+  .heroTextYellow {
+    color: #ECF014; /* #ECF014 en Tailwind */
+  }
+  
+  .heroButton {
+    position: absolute;
+    left: 0.3125rem; /* 5px en Tailwind (left-[5px]) */
+    top: 12.5rem; /* 200px en Tailwind (top-[200px]) */
+    width: 8.125rem; /* 130px en Tailwind (w-[130px]) */
+    height: 3.125rem; /* 50px en Tailwind (h-[50px]) */
+    background-color: #ECF014;
+    color: black;
+    font-size: 1.25rem; /* text-[20px] en Tailwind */
+    font-weight: bold;
+    text-align: center;
+    border-radius: 9999px; /* rounded-full en Tailwind */
+    padding: 0.5rem; /* p-2 en Tailwind */
+  }
+  
+  .heroButtonLink {
+    color: black;
+    text-decoration: none;
+  }
+  
+  .heroButton:hover {
+    background-color: #d8cd12; /* Color más oscuro para hover */
+  }
+  
