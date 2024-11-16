@@ -13,27 +13,14 @@ import {
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { useAuth } from '@/context';
+import { Avatar } from '@nextui-org/react';  // Asegúrate de tener esta librería
 
 export default function NavbarApp() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession(); // Obtiene la sesión del usuario
   const { userSession } = useAuth(); // Obtener la sesión del contexto
 
-  // useEffect para verificar si el usuario está logueado y loguear la sesión
-  useEffect(() => {
-    if (session?.user) {
-      console.log('Usuario logueado (desde useSession):', session.user);
-    } else {
-      console.log('No hay usuario logueado (desde useSession)');
-    }
-
-    // Alternativa con el contexto `useAuth`
-    if (userSession?.id) {
-      console.log('Usuario logueado (desde context):', userSession);
-    } else {
-      console.log('No hay usuario logueado (desde context)');
-    }
-  }, [session, userSession]); // Dependencia de cambios en session y userSession
+  const avatarUrl = session?.user?.image || userSession?.image || "https://i.pravatar.cc/150?u=a042581f4e29026704d"; // Imagen predeterminada si no hay avatar
 
   const handleLogOut = () => {
     signOut({ callbackUrl: '/' });
@@ -55,7 +42,13 @@ export default function NavbarApp() {
           onClick={() => setIsOpen(!isOpen)}
         >
           <span className="sr-only">Open main menu</span>
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          {isOpen ? <X className="h-6 w-6" /> : (
+            session ? (
+              <Avatar src={avatarUrl} size="lg" className="h-8 w-8" /> // Mostrar avatar si está logueado
+            ) : (
+              <Menu className="h-6 w-6" /> // Mostrar icono de menú hamburguesa si no está logueado
+            )
+          )}
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={isMobile ? 'end' : 'start'} className={styles.menuContent}>

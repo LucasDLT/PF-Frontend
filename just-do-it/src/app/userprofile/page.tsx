@@ -1,7 +1,7 @@
 "use client"
-import { useSession, signOut } from "next-auth/react";
+import { useSession} from "next-auth/react";
 
-const ProfilePage = () => {
+export default function ProfilePage() {
   const { data: session } = useSession();
 
   if (!session) {
@@ -10,7 +10,7 @@ const ProfilePage = () => {
 
   return (
     <div className="max-w-lg mx-auto p-4 bg-white rounded shadow-md">
-      <h1 className="text-2xl font-semibold text-center">User Profile</h1>
+      <h1 className="text-2xl font-semibold text-center">Mi Perfil</h1>
       <div className="mt-4">
         <div className="flex justify-center">
           <img
@@ -29,4 +29,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+

@@ -7,6 +7,7 @@ export interface Login {
 }
 
 export interface Register{
+    id: string;
     firstName: string;
     lastName: string;
     email: string;
@@ -17,3 +18,16 @@ export interface Register{
 
 }
 
+export interface Session{
+id: string | null;
+role: string | null;
+firstName: string;
+lastName: string;
+email: string;
+image: string|null;
+phone: string;
+address: string;
+
+
+
+}
