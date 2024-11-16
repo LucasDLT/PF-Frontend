@@ -1,0 +1,77 @@
+.carouselContent {
+  display: flex;
+  justify-content: center; /* Para distribuir las tarjetas */
+  padding: 10px;
+  gap: 60px; /* Espacio entre las tarjetas */
+  margin-bottom: 10rem;
+  max-height: 60vh;
+}
+
+.carouselItem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 26rem; /* Asegura que solo haya tres tarjetas visibles a la vez */
+  margin: 1rem ; /* Centra las tarjetas */
+}
+
+.cardContent {
+  width: 100%;
+  border: none;
+  height: 100%;
+}
+
+.imageContainer {
+  height: 10rem;
+  width: 15rem; /* h-64 en Tailwind */
+  border-radius: 0.75rem; /* rounded-t-lg en Tailwind */
+  
+
+}
+
+.image {
+  object-fit: cover;
+}
+
+.cardBody {
+  padding: 16px;
+  background-color: rgba(226, 231, 93, 0.338);
+  border-radius: 0 0 0.75rem 0.75rem;
+  color: #e0e0e0;
+}
+
+.cardTitle {
+  font-size: 1.25rem; /* text-xl en Tailwind */
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  
+}
+
+.cardDescription {
+  font-size: 0.875rem; /* text-sm en Tailwind */
+  margin-bottom: 0.5rem;
+  color: #e0e0e0;
+
+}
+
+
+
+/* Estilos para los controles del carrusel */
+.carouselPrevious,
+.carouselNext {
+  background-color: white;
+  border-radius: 50%;
+  padding: 0.5rem; /* Ajusta el tamaño según sea necesario */
+  position: absolute;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.carouselPrevious {
+  left: 10px;
+}
+
+.carouselNext {
+  right: 10px;
+}

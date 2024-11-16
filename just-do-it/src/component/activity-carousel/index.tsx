@@ -1,50 +1,49 @@
-'use client'
-import Image from "next/image";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { gymClasses } from "@/lib/utils";
-import Link from "next/link";
+'use client';
+import React from 'react';
+import styles from './carousel.module.css'; // Importar el archivo CSS Module
+
+import Image from 'next/image';
+import { gymClasses } from '@/lib/utils';
+import { Card, CardContent } from '@/components/ui/card';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Link from 'next/link';
 
 export default function ActivityCarousel() {
   return (
-    <Carousel className="border ">
-
-      <CarouselContent>
+    <Carousel>
+      {/* Contenido del carrusel */}
+      <CarouselContent className={styles.carouselContent}>
         {gymClasses.map((activity, index) => (
-          <CarouselItem key={index}>
-            <Card className="border-none bg-black flex items-center justify-center h-full">
-              <CardContent className="p-0">
-                <div className="relative h-64 md:h-96 overflow-hidden rounded-t-lg	">
+          <CarouselItem key={index} className={styles.carouselItem}>
+            <Card className={styles.cardContent}>
+              <Link href={`/servicedetail/${activity.id}`}>
+              <CardContent className={styles.cardContent}>
+                {/* Imagen */}
+                <div >
                   <Image
                     src={activity.img_url}
                     alt={`Imagen de ${activity.name}`}
-                    className="object-cover"
+                    className={styles.image}
                     width={500}
                     height={100}
                   />
                 </div>
-                <div className="p-4 bg-white dark:bg-gray-800 rounded-b-lg">
-                  <h3 className="text-xl font-bold mb-2">{activity.name}</h3>
-                  <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                    {activity.description}
-                  </p>
-                  <Badge variant="secondary">{activity.location}</Badge>
+                {/* Contenido del Card */}
+                <div className={styles.cardBody}>
+                  <h3 className={styles.cardTitle}>{activity.name}</h3>
+                  <p className={styles.cardDescription}>{activity.description}</p>
                 </div>
-
               </CardContent>
+              </Link>
+
             </Card>
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious className="left-3 bg-white" />
-      <CarouselNext className=" right-4 bg-white" />
+
+      {/* Controles del carrusel */}
+      <CarouselPrevious className={styles.carouselPrevious} />
+      <CarouselNext className={styles.carouselNext} />
     </Carousel>
   );
 }

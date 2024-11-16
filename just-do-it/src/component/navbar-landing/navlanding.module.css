@@ -1,0 +1,33 @@
+.navbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 1rem;
+    background-color: transparent;
+    position: absolute;
+    top: 0;
+    right: 4rem;
+  }
+  
+  .navList {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: white;
+    font-size: 12px;
+    font-weight: normal;
+    list-style-type: none;
+    align-items: center; /* Alinea verticalmente los items */
+  }
+  
+  .navItem {
+    text-align: center;
+
+  }
+  
+  .iconLink {
+    color: #ECF014; /* Color amarillo para el icono */
+    font-size: 1.5rem; /* Ajusta el tamaño si es necesario */
+    margin-left: 10rem;
+  }
+ 
