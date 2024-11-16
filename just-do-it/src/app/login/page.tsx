@@ -8,7 +8,7 @@ import { useAuth } from '@/context';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { setToken, setUserSession } = useAuth();
+  const { token, setToken, setUserSession } = useAuth();
 
   const initialState = {
     email: '',
@@ -55,10 +55,11 @@ export default function Login() {
 
     if (valid) {
       try {
-        const response = await fetch(`http://localhost:${port}/api/login`, {
+        const response = await fetch(`http://localhost:${port}/auth/signin`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             email: formData.email,

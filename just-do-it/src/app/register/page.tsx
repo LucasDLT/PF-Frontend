@@ -6,7 +6,7 @@ import { useAuth } from '@/context';
 
 export default function Register() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { setToken, setUserSession } = useAuth();
+  const { token, setToken, setUserSession } = useAuth();
 
   const initialState = {
     name: '',
@@ -87,6 +87,7 @@ export default function Register() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(formData),
         });

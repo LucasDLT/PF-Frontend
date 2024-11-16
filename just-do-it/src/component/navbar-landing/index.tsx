@@ -1,33 +1,92 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { RiLoginBoxLine } from 'react-icons/ri';
-import styles from './navlanding.module.css';  // Importar el archivo CSS Module
+import { Avatar } from '@nextui-org/react'; // Para mostrar el avatar
+import { useSession } from 'next-auth/react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { LogOut, User, UserCog } from 'lucide-react'; // Iconos para las opciones de menú
+import styles from './navlanding.module.css'; // Importar el archivo CSS Module
 
 export const Navbar: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const { data: session } = useSession(); // Obtener la sesión
+
+  // URL del avatar, o predeterminado si no está disponible
+  const avatarUrl =
+    session?.user?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
+
+  const handleLogOut = () => {
+    // Aquí manejas la lógica de cierre de sesión
+  };
+
+  const menuItems = [
+    { label: 'INICIO', href: '/' },
+    { label: 'SEDES', href: '/location' },
+    { label: 'SERVICIOS', href: '/services' },
+    { label: 'PLANES', href: '/planes' },
+    { label: 'CONTÁCTANOS', href: '/contacto' },
+  ];
+
   return (
     <nav className={styles.navbar}>
       <ul className={styles.navList}>
-        <li className={styles.navItem}>
-          <Link href={'/'}>INICIO</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link href={'/location'}>SEDES</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link href={'/services'}>SERVICIOS</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link href={'/planes'}>PLANES</Link>
-        </li>
-        <li className={styles.navItem}>
-          <Link href={'/contacto'}>CONTÁCTANOS</Link>
-        </li>
+        {menuItems.map((item) => (
+          <li key={item.label} className={styles.navItem}>
+            <Link href={item.href}>{item.label}</Link>
+          </li>
+        ))}
       </ul>
-        <div className={styles.iconLink}>
-          <Link href={'/login'}>
+
+      {/* Aquí empieza el Dropdown del avatar o login */}
+      <div className={styles.iconLink}>
+        {session ? (
+          // Si hay sesión, mostramos el avatar y el dropdown
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className={styles.menuButton}>
+                <Avatar src={avatarUrl} size="md" />
+              </button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent>
+              <DropdownMenuItem asChild>
+                <Link href="/userprofile" className={styles.menuItem}>
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Perfil Usuario</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <Link href="/adminprofile" className={styles.menuItem}>
+                  <UserCog className="mr-2 h-4 w-4" />
+                  <span>Perfil Admin</span>
+                </Link>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={handleLogOut}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Cerrar Sesión</span>
+                </div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          // Si no hay sesión, mostramos el icono de login
+          <Link href="/login" className={styles.loginIcon}>
             <RiLoginBoxLine />
           </Link>
-        </div>
+        )}
+      </div>
     </nav>
   );
 };
