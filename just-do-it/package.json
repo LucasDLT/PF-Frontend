@@ -19,6 +19,7 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@shadcn/ui": "^0.0.4",
+    "aos": "^2.3.4",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -37,6 +38,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/aos": "^3.0.7",
     "@types/next-auth": "^3.15.0",
     "@types/node": "^20",
     "@types/react": "^18",

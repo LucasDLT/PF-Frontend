@@ -23,9 +23,10 @@ export default function ClassDetailPage() {
       description={gymClass.description}
       location={gymClass.location}
       capacity={gymClass.capacity}
-      current_participant={gymClass.current_participant}
-      trainner={gymClass.trainner}
-      img_url={gymClass.img_url}
+      current_participants={gymClass.current_participants}
+      trainerName={gymClass.trainerName}
+      imgUrl={gymClass.imgUrl}
+      schedule={gymClass.schedule}
     />
     </div>
   );

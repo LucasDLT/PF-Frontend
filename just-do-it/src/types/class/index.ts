@@ -1,13 +1,15 @@
 export interface Class {
+  
   id: string;
   name: string;
   description: string;
   location: string;
   capacity: number;
   current_participants: number;
-  schedule: string; 
+  schedule: string;
   imgUrl: string;
-  trainerId: string; 
+  trainerName: string;
+
 }
 
 interface CardClassProps {

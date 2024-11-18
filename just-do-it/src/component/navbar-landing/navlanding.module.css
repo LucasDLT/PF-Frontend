@@ -17,7 +17,7 @@
     font-size: 12px;
     font-weight: normal;
     list-style-type: none;
-    align-items: center; /* Alinea verticalmente los items */
+    align-items: center;
   }
   
   .navItem {
@@ -26,8 +26,8 @@
   }
   
   .iconLink {
-    color: #ECF014; /* Color amarillo para el icono */
-    font-size: 1.5rem; /* Ajusta el tamaño si es necesario */
+    color: #ECF014; 
+    font-size: 1.5rem; 
     margin-left: 10rem;
   }
   .menuButton {
@@ -42,13 +42,13 @@
   }
   
   .menuButton:hover {
-    color: #fbbf24; /* amarillo */
+    color: #fbbf24;
   }
   
   .menuContent {
     width: 14rem;
     background-color: black;
-    border: 1px solid #fbbf24; /* amarillo */
+    border: 1px solid #fbbf24;
   }
   
   .menuItem {
@@ -57,9 +57,9 @@
   }
   
   .menuItem:hover {
-    color: #fbbf24; /* amarillo */
+    color: #fbbf24; 
   }
   
   .menuSeparator {
-    background-color: #fbbf24; /* amarillo */
+    background-color: #fbbf24; 
   }

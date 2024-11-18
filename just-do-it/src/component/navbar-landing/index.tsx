@@ -15,14 +15,12 @@ import styles from './navlanding.module.css'; // Importar el archivo CSS Module
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession(); // Obtener la sesión
+  const { data: session } = useSession(); 
 
-  // URL del avatar, o predeterminado si no está disponible
   const avatarUrl =
     session?.user?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
 
   const handleLogOut = () => {
-    // Aquí manejas la lógica de cierre de sesión
   };
 
   const menuItems = [

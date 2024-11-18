@@ -1,8 +1,7 @@
 .carouselContent {
   display: flex;
-  justify-content: center; /* Para distribuir las tarjetas */
-  padding: 10px;
-  gap: 60px; /* Espacio entre las tarjetas */
+  justify-content: center;
+  gap: 60px; 
   margin-bottom: 10rem;
   max-height: 60vh;
 }
@@ -11,8 +10,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 26rem; /* Asegura que solo haya tres tarjetas visibles a la vez */
-  margin: 1rem ; /* Centra las tarjetas */
+  max-width: 26rem; 
+  margin: 1rem ;
 }
 
 .cardContent {
@@ -23,8 +22,8 @@
 
 .imageContainer {
   height: 10rem;
-  width: 15rem; /* h-64 en Tailwind */
-  border-radius: 0.75rem; /* rounded-t-lg en Tailwind */
+  width: 15rem; 
+  border-radius: 0.75rem; 
   
 
 }
@@ -41,14 +40,14 @@
 }
 
 .cardTitle {
-  font-size: 1.25rem; /* text-xl en Tailwind */
+  font-size: 1.25rem; 
   font-weight: bold;
   margin-bottom: 0.5rem;
   
 }
 
 .cardDescription {
-  font-size: 0.875rem; /* text-sm en Tailwind */
+  font-size: 0.875rem; 
   margin-bottom: 0.5rem;
   color: #e0e0e0;
 
@@ -61,7 +60,7 @@
 .carouselNext {
   background-color: white;
   border-radius: 50%;
-  padding: 0.5rem; /* Ajusta el tamaño según sea necesario */
+  padding: 0.5rem; 
   position: absolute;
   z-index: 10;
   top: 50%;

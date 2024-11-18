@@ -9,45 +9,45 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0)), 
-                      linear-gradient(to left, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0)),
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 5), rgba(0, 0, 0, 0)), 
                       url('/img_landing.png');
     background-size: 70% 170%;
     background-repeat: no-repeat;
     background-position: 120% 20%;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
   }
   
   .heroTextWrapper {
     position: absolute;
-    left: 15rem; /* 60px en Tailwind (left-60) */
-    top: 14rem; /* 56px en Tailwind (top-56) */
-    width: 46rem; /* 735px en Tailwind */
-    height: 8.9375rem; /* 143px en Tailwind */
+    left: 15rem; 
+    top: 14rem; 
+    width: 46rem; 
+    height: 8.9375rem; 
   }
   
   .heroText {
-    font-size: 4rem; /* text-6xl en Tailwind */
-    font-weight: 400; /* font-normal */
+    font-size: 4rem; 
+    font-weight: 400; 
     color: white;
   }
   
   .heroTextYellow {
-    color: #ECF014; /* #ECF014 en Tailwind */
+    color: #ECF014; 
   }
   
   .heroButton {
     position: absolute;
-    left: 0.3125rem; /* 5px en Tailwind (left-[5px]) */
-    top: 12.5rem; /* 200px en Tailwind (top-[200px]) */
-    width: 8.125rem; /* 130px en Tailwind (w-[130px]) */
-    height: 3.125rem; /* 50px en Tailwind (h-[50px]) */
+    left: 0.3125rem; 
+    top: 12.5rem; 
+    width: 8.125rem; 
+    height: 3.125rem; 
     background-color: #ECF014;
     color: black;
-    font-size: 1.25rem; /* text-[20px] en Tailwind */
+    font-size: 1.25rem; 
     font-weight: bold;
     text-align: center;
-    border-radius: 9999px; /* rounded-full en Tailwind */
-    padding: 0.5rem; /* p-2 en Tailwind */
+    border-radius: 9999px; 
+    padding: 0.5rem;
   }
   
   .heroButtonLink {
@@ -56,6 +56,6 @@
   }
   
   .heroButton:hover {
-    background-color: #d8cd12; /* Color más oscuro para hover */
+    background-color: #d8cd12;
   }
   
