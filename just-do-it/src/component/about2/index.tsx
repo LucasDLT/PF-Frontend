@@ -5,7 +5,7 @@ export default function About2() {
       <div className={styles.container}>
         <div className={styles.header}>
           <div className={styles.headerText}>
-            Sobre Nosotros
+            Por que elegirnos
           </div>
         </div>
   
@@ -18,9 +18,15 @@ export default function About2() {
             </div>
             
             <div data-aos="fade-left">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna. 
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+            En nuestro gimnasio, tu bienestar es nuestra prioridad. No somos solo un lugar para entrenar, somos una comunidad dedicada a ayudarte a alcanzar tus objetivos.
+
+Lo que nos hace diferentes:
+Equipamiento moderno y áreas diseñadas para todo tipo de entrenamiento.
+Planes personalizados adaptados a tus metas y necesidades.
+Horarios flexibles que se ajustan a tu estilo de vida.
+Clases grupales dinámicas como yoga, spinning y HIIT.
+Asesoría integral para equilibrar tu entrenamiento con una buena alimentación.
+Ven y empieza a construir una mejor versión de ti mismo hoy mismo! 💪
             </div>
           </div>
   
