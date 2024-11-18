@@ -5,11 +5,12 @@ import { FcGoogle } from 'react-icons/fc';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useAuth } from '@/context';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
   const { token, setToken, setUserSession } = useAuth();
-
+  const Router = useRouter()
   const initialState = {
     email: '',
     password: '',
@@ -77,6 +78,7 @@ export default function Login() {
         setToken(result.token);
 
         console.log('Usuario logueado con éxito:', result);
+        Router.push("/")
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
         setErrors({

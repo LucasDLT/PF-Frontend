@@ -9,4 +9,14 @@ export interface Class {
   schedule: string;
   imgUrl: string;
   trainerName: string;
+
+}
+
+interface CardClassProps {
+  gymClass: {
+    id: string;
+    name: string;
+    location: string;
+    img_url: string;
+  };
 }
