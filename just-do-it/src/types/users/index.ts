@@ -12,22 +12,22 @@ export interface Register{
     lastName: string;
     email: string;
     phone: string;
+    country: string;
     adrress: string;
     password: string;
-    confirmPassword: string;
+    paswordConfirmation: string;
 
 }
 
-export interface Session{
-id: string | null;
-role: string | null;
-firstName: string;
-lastName: string;
-email: string;
-image: string|null;
-phone: string;
-address: string;
-
-
-
-}
+export interface Session {
+    id: string | null;
+    name: string | null;
+    email: string;
+    image: string | null;
+    phone: string;
+    address: string;
+    country: string;
+    roles: string[];  // Agregado el campo roles
+    membership_status: string;  // Agregado el campo membership_status
+  }
+  

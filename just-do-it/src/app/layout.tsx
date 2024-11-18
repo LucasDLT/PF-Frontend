@@ -5,6 +5,7 @@ import NavbarApp from '@/component/navBar';
 import ShowComponent from '@/component/showComponents';
 import Footer from '@/component/footer';
 import AppProvider from '@/context';
+import AuthProvider from '@/context';
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
   variable: '--font-geist-sans',
@@ -31,11 +32,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <AuthProvider>
         <AppProvider>
           <NavbarApp />
           {children}
           <Footer />
         </AppProvider>
+        </AuthProvider>
       </body>
     </html>
   );
