@@ -15,9 +15,9 @@ export const gymClasses: Class[] = [
     "capacity": 20,
     "current_participants": 10,
     "schedule": "2024-11-20T19:00:00Z",
-    "imgUrl": "/clases/yoga.jpg",
+    "imgUrl": "/yoga.jpg",
     "trainerName": "Jane Doe",
-    id: "1"
+    "id": "7b8a1f3e-8be9-4bfe-a8bc-11c77e4b7769"
   },
   {
     "name": "Entrenamiento Funcional",
@@ -26,9 +26,9 @@ export const gymClasses: Class[] = [
     "capacity": 15,
     "current_participants": 12,
     "schedule": "2024-11-21T08:00:00Z",
-    "imgUrl": "/yoga.jpg",
+    "imgUrl": "/funcional.jpg",
     "trainerName": "John Smith",
-    id: "2"
+    "id": "8d456b7e-423a-4a4a-a9b9-d72ea491bcbb"
   },
   {
     "name": "Zumba Energizante",
@@ -37,9 +37,9 @@ export const gymClasses: Class[] = [
     "capacity": 25,
     "current_participants": 18,
     "schedule": "2024-11-22T17:30:00Z",
-    "imgUrl": "/yoga.jpg",
+    "imgUrl": "/zumba.jpg",
     "trainerName": "Maria Gonzalez",
-    id: "3"
+    "id": "5d1b1f3a-967e-46a0-b52a-fcfed1de84a3"
   },
   {
     "name": "CrossFit de Alto Rendimiento",
@@ -48,9 +48,9 @@ export const gymClasses: Class[] = [
     "capacity": 12,
     "current_participants": 8,
     "schedule": "2024-11-23T06:30:00Z",
-    "imgUrl": "/yoga.jpg",
+    "imgUrl": "/crossfit.jpg",
     "trainerName": "Alex Turner",
-    id: "4"
+    "id": "a32f8d7d-c9f1-47c7-9b9f-47a9d0f65a60"
   },
   {
     "name": "Pilates para Principiantes",
@@ -59,8 +59,9 @@ export const gymClasses: Class[] = [
     "capacity": 10,
     "current_participants": 6,
     "schedule": "2024-11-24T10:00:00Z",
-    "imgUrl": "/yoga.jpg",
+    "imgUrl": "/pilates.jpeg",
     "trainerName": "Sofia Ruiz",
-    id: "5"
+    "id": "f8d67e89-3b92-4a0c-ae5e-bb8a567c9d34"
   }
 ]
+
