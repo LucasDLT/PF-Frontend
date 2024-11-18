@@ -12,11 +12,12 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogOut, User, UserCog } from 'lucide-react'; // Iconos para las opciones de menú
 import styles from './navlanding.module.css'; // Importar el archivo CSS Module
+import { useAuth } from '@/context';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession(); 
-
+  const { userSession, token , logout  } = useAuth();
   const avatarUrl =
     session?.user?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
 
@@ -43,7 +44,7 @@ export const Navbar: React.FC = () => {
 
       {/* Aquí empieza el Dropdown del avatar o login */}
       <div className={styles.iconLink}>
-        {session ? (
+        {session || token ? (
           // Si hay sesión, mostramos el avatar y el dropdown
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

@@ -33,9 +33,13 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
        
         <AuthProvider>
+          <ShowComponent>
           <NavbarApp />
+          </ShowComponent>
           {children}
+          <ShowComponent>
           <Footer />
+          </ShowComponent>
         </AuthProvider>
       </body>
     </html>
