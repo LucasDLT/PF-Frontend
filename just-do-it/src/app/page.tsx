@@ -3,7 +3,10 @@ import ActivityCarousel from "@/component/activity-carousel";
 import { Navbar } from "@/component/navbar-landing";
 import Footer from "@/component/footer";
 import Link from "next/link";
-import styles from './page.module.css'; // Importar el archivo de estilos
+import styles from './page.module.css'; 
+import HoursAttention from "@/component/hours-attention";
+import About from "@/component/about";
+import About2 from "@/component/about2";
 
 export const Home: React.FC = () => {
   return (
@@ -27,6 +30,9 @@ export const Home: React.FC = () => {
       </div>
 
       <ActivityCarousel />
+      <HoursAttention />
+      <About />
+      <About2 />
 
     </div>
   );

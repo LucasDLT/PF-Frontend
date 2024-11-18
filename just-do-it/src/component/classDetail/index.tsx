@@ -4,13 +4,13 @@ import React from 'react'
 import styles from './ActivityDetail.module.css'  // Importamos el archivo CSS Module
 import { Class } from '@/types/class'
 
-export default function ActivityDetail({ id, name, description, location, capacity, trainner, img_url }: Class) {
+export default function ActivityDetail({ id, name, description, location, capacity, trainerName, imgUrl }: Class) {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
         <div className={styles.cardContent}>
           <div className={styles.leftSection}>
-            <img className="h-36 w-full object-cover rounded" src={img_url} alt={name} />
+            <img className="h-36 w-full object-cover rounded" src={imgUrl} alt={name} />
           </div>
 
           <div className={styles.rightSection}>
@@ -19,7 +19,7 @@ export default function ActivityDetail({ id, name, description, location, capaci
             <p className={styles.description}>{description}</p>
             <p className={styles.description}>Ubicacion</p>
             <p className={styles.location}>{location}</p>
-            <p className={styles.trainer}>Entrenador : {trainner}</p>
+            <p className={styles.trainer}>Entrenador : {trainerName}</p>
 
             <div className={styles.capacity}>
               <span>Capacidad: {capacity} personas por turno</span>

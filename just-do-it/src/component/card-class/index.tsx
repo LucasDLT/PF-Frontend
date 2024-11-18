@@ -7,7 +7,7 @@ interface CardClassProps {
     id: string;
     name: string;
     location: string;
-    img_url: string;
+    imgUrl: string;
   };
 }
 
@@ -17,7 +17,7 @@ export default function CardClass({ gymClass }: CardClassProps) {
       <h2>{gymClass.name}</h2>
       <p>{gymClass.location}</p>
       <Image
-        src={gymClass.img_url}
+        src={gymClass.imgUrl}
         alt={gymClass.name}
         width={500}
         height={100}

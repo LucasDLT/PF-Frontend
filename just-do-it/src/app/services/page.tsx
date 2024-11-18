@@ -1,24 +1,13 @@
 'use client'
 import { gymClasses } from "@/lib/utils"
 import SearchBar from "@/component/searchBar"
-import styled from "styled-components"
+import styles from './service.module.css'
+
 export default function Services(){
     return(
-        <ServicePage className="bg-[#100f0f] ">
-            <Title>Nuestros Servicios</Title>
-                <SearchBar  gymClasses={gymClasses}/>
-        </ServicePage>
+        <main className={`${styles.servicePage} ${styles.bg}`}>
+            <h1 className={styles.title}>Nuestros Servicios</h1>
+            <SearchBar gymClasses={gymClasses}/>
+        </main>
     )
 }
-
-export const Title= styled.h1`
-  font-size: 8rem;
-  color: #fff;
-  text-align: left;
-`;
-
-export const ServicePage = styled.main`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
