@@ -18,7 +18,7 @@ import { Avatar } from '@nextui-org/react'; // Asegúrate de tener esta librerí
 export default function NavbarApp() {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
-  const { userSession, token, logout } = useAuth();
+  const { userSession, token , logout  } = useAuth();
 
   const avatarUrl =
     session?.user?.image ||
@@ -38,17 +38,28 @@ export default function NavbarApp() {
     { label: 'CONTÁCTANOS', href: '#' },
   ];
   useEffect(() => {
+    // Inspección del estado actual
     console.log('--- Verificando estado de sesión ---');
-
+    console.log('Google Session (NextAuth):', session);
+   
     console.log('User Session:', userSession);
     console.log('Token:', token);
 
-    if (userSession?.email || token) {
+    // Verificar datos almacenados en localStorage
+    const storedToken = localStorage.getItem('token');
+    const storedUserSession = localStorage.getItem('userSession');
+    
+    console.log('Token almacenado:', storedToken);
+    console.log('User Session almacenada:', JSON.parse(storedUserSession || 'null'));
+    
+
+    // Confirmar si existe alguna sesión activa
+    if (session || token) {
       console.log('Sesión activa detectada.');
     } else {
       console.log('No hay sesión activa.');
     }
-  }, [userSession, token]);
+  }, [session, userSession,  token])
 
   const NavMenu = ({ isMobile = false }) => (
     <DropdownMenu>
@@ -81,7 +92,7 @@ export default function NavbarApp() {
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator className={styles.menuSeparator} />
-        {session || userSession ? (
+        {session || token ? (
           // Si hay sesión (desde Google o desde formulario), muestra las opciones de usuario
           <>
             <DropdownMenuItem className={styles.menuItem} asChild>
