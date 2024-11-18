@@ -9,8 +9,9 @@ import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { token, setToken, setSession } = useAuth();
-  const Router = useRouter()
+  const { setToken, setSession } = useAuth(); // Asegúrate de tener acceso a estos métodos en el contexto
+  const Router = useRouter();
+  
   const initialState = {
     email: '',
     password: '',
@@ -60,7 +61,6 @@ export default function Login() {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
           },
           body: JSON.stringify({
             email: formData.email,
@@ -74,11 +74,12 @@ export default function Login() {
 
         const result = await response.json();
 
-        setSession(result.userSession);
-        setToken(result.token);
+        // Guarda los datos del usuario y el token en el contexto
+        setSession(result.usedData); // Guarda los datos del usuario
+        setToken(result.token);       // Guarda el token
 
         console.log('Usuario logueado con éxito:', result);
-        Router.push("/")
+        Router.push("/"); // Redirige a la página principal después del login
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
         setErrors({

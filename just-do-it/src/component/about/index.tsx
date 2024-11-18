@@ -20,14 +20,16 @@ export default function About() {
       <div className={styles.contentWrapper}>
         <div className={styles.textWrapper}>
           <div className={styles.titleText}>
-            <span>LOS PROGRAMAS FITNESS EN </span>
+            <span> EN </span>
             <span className={styles.highlightText}>JUST DO IT</span>
           </div>
           
           <div data-aos="fade-right">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna. 
-            Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+          creemos que cada paso cuenta hacia una vida más activa y saludable. Somos más que un gimnasio: somos un espacio donde la motivación, el esfuerzo y los resultados se encuentran.
+
+Nuestra misión es inspirarte a superar tus límites, ofreciendo un ambiente acogedor, equipamiento de última generación y un equipo de profesionales comprometidos con tu éxito. Ya sea que estés comenzando tu viaje fitness o buscando alcanzar nuevas metas, estamos aquí para acompañarte en cada etapa.
+
+En Just Do It, tu meta es nuestra inspiración. 💪
           </div>
         </div>
         

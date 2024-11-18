@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { RiLoginBoxLine } from 'react-icons/ri';
 import { Avatar } from '@nextui-org/react'; // Para mostrar el avatar
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,13 +16,17 @@ import { useAuth } from '@/context';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession(); 
-  const { userSession, token , logout  } = useAuth();
+  const { data: session } = useSession();
+  const { userSession, token, logout } = useAuth();
   const avatarUrl =
     session?.user?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
 
-  const handleLogOut = () => {
-  };
+    const handleLogOut = () => {
+      
+      signOut({ callbackUrl: '/' });  
+    
+      
+      logout();  }
 
   const menuItems = [
     { label: 'INICIO', href: '/' },
@@ -55,14 +59,20 @@ export const Navbar: React.FC = () => {
 
             <DropdownMenuContent>
               <DropdownMenuItem asChild>
-                <Link href="/userprofile" className={styles.menuItem}>
+                <Link
+                  href="/userprofile"
+                  className={`${styles.menuItem} flex items-center`}
+                >
                   <User className="mr-2 h-4 w-4" />
                   <span>Perfil Usuario</span>
                 </Link>
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
-                <Link href="/adminprofile" className={styles.menuItem}>
+                <Link
+                  href="/adminprofile"
+                  className={`${styles.menuItem} flex items-center`}
+                >
                   <UserCog className="mr-2 h-4 w-4" />
                   <span>Perfil Admin</span>
                 </Link>
@@ -70,7 +80,7 @@ export const Navbar: React.FC = () => {
 
               <DropdownMenuItem asChild>
                 <div
-                  className="flex items-center cursor-pointer"
+                  className={`${styles.menuItem} flex items-center cursor-pointer`} // Aplica el mismo estilo
                   onClick={handleLogOut}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
