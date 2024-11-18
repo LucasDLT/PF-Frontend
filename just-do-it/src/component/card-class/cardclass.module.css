@@ -3,7 +3,7 @@
     max-width: 1024px;
     max-height: 21rem;
     margin: 1rem;
-    background-color: #454545a3; /* Es un gris claro */
+    background-color: #504e4e6e; /* Es un gris claro */
     backdrop-filter: blur(3px);
     border-radius: 0.5rem;
     overflow: hidden;
@@ -12,13 +12,15 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    color: white;
+    font-size: 1rem;
   }
   
   .cardImage {
     border-radius: 0.5rem;
     margin-top: 1rem;
     margin-bottom: 1rem;
-    border: 3px solid #1b1a19;
+    border: 2px solid #1b1a19;
   }
   
   .cardButton {

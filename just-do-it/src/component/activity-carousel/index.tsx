@@ -21,7 +21,7 @@ export default function ActivityCarousel() {
                 {/* Imagen */}
                 <div >
                   <Image
-                    src={activity.img_url}
+                    src={activity.imgUrl}
                     alt={`Imagen de ${activity.name}`}
                     className={styles.image}
                     width={500}
