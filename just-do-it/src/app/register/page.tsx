@@ -8,8 +8,9 @@ import { useRouter } from 'next/navigation';
 
 export default function Register() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { token, setToken, setUserSession } = useAuth();
-const router = useRouter();
+  const { token, setToken, setSession } = useAuth();
+  const router = useRouter();
+
   const initialState = {
     name: '',
     email: '',
@@ -32,6 +33,7 @@ const router = useRouter();
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Manejo de carga
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -51,7 +53,8 @@ const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
+    // Resetear los errores
     const newErrors = {
       name: '',
       email: '',
@@ -61,11 +64,12 @@ const router = useRouter();
       password: '',
       confirmPassword: '',
     };
-
+  
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const phoneRegex = /^[0-9]{10}$/;
     const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
-
+  
+    // Validaciones
     if (!formData.name.trim()) newErrors.name = 'El nombre es obligatorio.';
     if (!emailRegex.test(formData.email)) newErrors.email = 'Correo electrónico inválido.';
     if (!phoneRegex.test(formData.phone)) newErrors.phone = 'El número de teléfono debe tener 10 dígitos.';
@@ -75,11 +79,15 @@ const router = useRouter();
     if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Las contraseñas no coinciden.';
     }
-
-    setErrors(newErrors);
-
+  
+    setErrors(newErrors); 
+  
+  
     if (Object.values(newErrors).every((err) => !err)) {
       try {
+        setIsLoading(true); 
+  
+    
         const response = await fetch(`http://localhost:${PORT}/auth/signup`, {
           method: 'POST',
           headers: {
@@ -88,24 +96,31 @@ const router = useRouter();
           },
           body: JSON.stringify(formData),
         });
-
+  
+      
         if (!response.ok) {
           throw new Error('Error en el registro del usuario.');
         }
-
+  
         const result = await response.json();
-        setUserSession(result.user);
+  
+      
+        setSession(result.user);
         setToken(result.token);
-
+  
+       
         alert('Usuario registrado con éxito. Bienvenido a Just do it.');
-        router.push('/dashboard')
+        router.push('/'); 
+  
       } catch (error) {
         alert('Error al registrar usuario.');
         console.error(error);
+      } finally {
+        setIsLoading(false); 
       }
     }
   };
-
+  
   return (
     <div className="relative w-full h-full bg-slate-400">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
@@ -253,19 +268,24 @@ const router = useRouter();
               {errors.confirmPassword && <p className="text-red-500 text-sm">{errors.confirmPassword}</p>}
             </div>
 
-            <button
-              type="submit"
-              className="w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-100"
-            >
-              Registrarte
-            </button>
+            <div className="flex items-center justify-between">
+              <button
+                type="submit"
+                disabled={isLoading} // Deshabilitar botón mientras se carga
+                className="w-full rounded-md bg-blue-500 text-white px-4 py-2"
+              >
+                {isLoading ? 'Registrando...' : 'Registrarme'}
+              </button>
+            </div>
 
-            <p className="mt-6 text-sm text-gray-500 text-center">
-              ¿Ya tienes una cuenta?{' '}
-              <Link href="/login" className="text-blue-500 font-bold hover:underline">
-                Inicia sesión aquí
-              </Link>
-            </p>
+            <div className="mt-4 text-center">
+              <p>
+                ¿Ya tienes una cuenta?{' '}
+                <Link href="/login" className="text-blue-500">
+                  Inicia sesión
+                </Link>
+              </p>
+            </div>
           </form>
         </div>
       </div>

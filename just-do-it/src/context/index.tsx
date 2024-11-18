@@ -1,11 +1,8 @@
-'use client';
+"use client"
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import { SessionProvider } from 'next-auth/react';
 
-import React, { useState, createContext, useContext, useEffect } from 'react';
-
-interface AuthContextProps {
-  children: React.ReactNode;
-}
-
+// Definición de la sesión
 interface Session {
   id: string | null;
   name: string;
@@ -18,17 +15,28 @@ interface Session {
   membership_status: string;
 }
 
+// Definición del contexto
 interface AuthContextType {
   token: string | null;
   userSession: Session;
   setToken: (token: string | null) => void;
-  setUserSession: (userSession: Session) => void;
+  setSession: (userSession: Session) => void;
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({
-  token: null,
-  userSession: {
+// Creación del contexto
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [userSession, setSessionState] = useState<Session>({
     id: null,
     name: '',
     email: '',
@@ -37,38 +45,25 @@ const AuthContext = createContext<AuthContextType>({
     address: '',
     country: '',
     roles: [],
-    membership_status: ''
-  },
-  setToken: () => {},
-  setUserSession: () => {},
-  logout: () => {},
-});
-
-export const useAuth = () => useContext(AuthContext);
-
-const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(null);
-  const [userSession, setUserSession] = useState<Session>({
-    id: null,
-    name: '',
-    email: '',
-    image: null,
-    phone: '',
-    address: '',
-    country: '',
-    roles: [],
-    membership_status: ''
+    membership_status: '',
   });
+  const [token, setTokenState] = useState<string | null>(null);
 
+  // Lógica para obtener datos de la sesión y el token
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
-    const storedUserSession = JSON.parse(localStorage.getItem('userSession') || 'null');
+    const storedSession = localStorage.getItem('userSession');
 
-    if (storedUserSession && storedToken) {
-      setUserSession(storedUserSession);
-      setToken(storedToken);
+    if (storedToken && storedSession) {
+      try {
+        const parsedSession = JSON.parse(storedSession);
+        setSessionState(parsedSession);
+        setTokenState(storedToken);
+      } catch (error) {
+        console.error('Error al parsear la sesión almacenada:', error);
+      }
     } else {
-      setUserSession({
+      setSessionState({
         id: null,
         name: '',
         email: '',
@@ -77,31 +72,50 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
         address: '',
         country: '',
         roles: [],
-        membership_status: ''
+        membership_status: '',
       });
-      setToken(null);
+      setTokenState(null);
     }
   }, []);
 
+  // Función para establecer el token
   const handleSetToken = (newToken: string | null) => {
-    setToken(newToken);
-    if (newToken) {
-      localStorage.setItem('token', newToken);
-    } else {
+    setTokenState(newToken);
+    if (!newToken) {
+      setSessionState({
+        id: null,
+        name: '',
+        email: '',
+        image: null,
+        phone: '',
+        address: '',
+        country: '',
+        roles: [],
+        membership_status: '',
+      });
       localStorage.removeItem('token');
+      localStorage.removeItem('userSession');
+    } else {
+      localStorage.setItem('token', newToken);
     }
   };
 
-  const handleSetUserSession = (newSession: Session) => {
-    setUserSession(newSession);
-    if (newSession) {
-      localStorage.setItem('userSession', JSON.stringify(newSession));
+  // Función para manejar los datos de sesión
+  const handleUserData = (userSession: Session) => {
+    setSessionState(userSession);
+    if (!userSession) {
+      setTokenState(null);
+      localStorage.removeItem('token');
+      localStorage.removeItem('userSession');
+    } else {
+      localStorage.setItem('userSession', JSON.stringify(userSession));
     }
   };
 
+  // Función para cerrar sesión
   const logout = () => {
-    setToken(null);
-    setUserSession({
+    setTokenState(null);
+    setSessionState({
       id: null,
       name: '',
       email: '',
@@ -110,24 +124,26 @@ const AuthProvider: React.FC<AuthContextProps> = ({ children }) => {
       address: '',
       country: '',
       roles: [],
-      membership_status: ''
+      membership_status: '',
     });
     localStorage.removeItem('token');
     localStorage.removeItem('userSession');
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        token,
-        setToken: handleSetToken,
-        userSession,
-        setUserSession: handleSetUserSession,
-        logout,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+    <SessionProvider>
+      <AuthContext.Provider
+        value={{
+          token,
+          userSession,
+          setToken: handleSetToken,
+          setSession: handleUserData,
+          logout,
+        }}
+      >
+        {children}
+      </AuthContext.Provider>
+    </SessionProvider>
   );
 };
 
