@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { token, setToken, setUserSession } = useAuth();
+  const { token, setToken, setSession } = useAuth();
   const Router = useRouter()
   const initialState = {
     email: '',
@@ -74,7 +74,7 @@ export default function Login() {
 
         const result = await response.json();
 
-        setUserSession(result.userSession);
+        setSession(result.userSession);
         setToken(result.token);
 
         console.log('Usuario logueado con éxito:', result);
