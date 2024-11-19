@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { CameraIcon, Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import styles from './edicionperfil.module.css';
+import styles from './prueba.module.css';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
@@ -29,7 +29,7 @@ export default function EdicionPerfil() {
 
     const formData = new FormData();
     formData.append('file', selectedFile);
-    formData.append('upload_preset', 'just-do-it');
+    formData.append('upload_preset', 'just-do-it'); // Cambia a tu preset de Cloudinary
 
     try {
       const response = await fetch('https://api.cloudinary.com/v1_1/lucasebas/image/upload', {
@@ -38,8 +38,8 @@ export default function EdicionPerfil() {
       });
 
       const data = await response.json();
-      setImageUrl(data.secure_url); 
-      console.log(data); 
+      setImageUrl(data.secure_url); // Guarda la URL de la imagen de Cloudinary
+      console.log(data); // Puedes ver toda la información de la imagen, incluyendo el `public_id`
     } catch (error) {
       console.error('Error uploading image:', error);
     }
@@ -51,33 +51,27 @@ export default function EdicionPerfil() {
       onSubmit={async (e) => {
         e.preventDefault();
 
-        const form = e.target as HTMLFormElement;
-
-        const nameField = form.elements.namedItem('name') as HTMLInputElement;
-        const usernameField = form.elements.namedItem('username') as HTMLInputElement;
-        const emailField = form.elements.namedItem('email') as HTMLInputElement;
-        const phoneField = form.elements.namedItem('phone') as HTMLInputElement;
-        const locationField = form.elements.namedItem('location') as HTMLInputElement;
-        const bioField = form.elements.namedItem('bio') as HTMLTextAreaElement;
-
-        const formData = new FormData();
-        formData.append('file', file!);
-        formData.append('name', nameField.value);
-        formData.append('username', usernameField.value);
-        formData.append('email', emailField.value);
-        formData.append('phone', phoneField.value); 
-        formData.append('location', locationField.value); 
-        formData.append('bio', bioField.value); 
-        formData.append('imageUrl', imageUrl!); 
         
-        const userId = session?.user.id; 
-        
-        if (!userId) {
-          console.error('No se encontró el ID del usuario');
-          return;
-        }
+               const form = e.target as HTMLFormElement;
 
-        const response = await fetch(`http://localhost:3000/users/${userId}`, {
+               const nameField = form.elements.namedItem('name') as HTMLInputElement;
+               const usernameField = form.elements.namedItem('username') as HTMLInputElement;
+               const emailField = form.elements.namedItem('email') as HTMLInputElement;
+               const phoneField = form.elements.namedItem('phone') as HTMLInputElement;
+               const locationField = form.elements.namedItem('location') as HTMLInputElement;
+               const bioField = form.elements.namedItem('bio') as HTMLTextAreaElement;
+       
+               const formData = new FormData();
+               formData.append('file', file!);
+               formData.append('name', nameField.value); 
+               formData.append('username', usernameField.value); 
+               formData.append('email', emailField.value); 
+               formData.append('phone', phoneField.value); 
+               formData.append('location', locationField.value); 
+               formData.append('bio', bioField.value); 
+               formData.append('imageUrl', imageUrl!); 
+
+        const response = await fetch('http://localhost:3000/users/:id', {
           method: 'PUT',
           body: formData,
         });
