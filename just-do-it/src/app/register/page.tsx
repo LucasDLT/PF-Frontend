@@ -88,7 +88,7 @@ export default function Register() {
         setIsLoading(true); 
   
     
-        const response = await fetch(`http://localhost:3000/auth/signup`, {
+        const response = await fetch(`http://localhost:${PORT}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
