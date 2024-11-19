@@ -110,7 +110,7 @@ export default function Register() {
   
        
         alert('Usuario registrado con éxito. Bienvenido a Just do it.');
-        router.push('/'); 
+        router.push('/login'); 
   
       } catch (error) {
         alert('Error al registrar usuario.');
