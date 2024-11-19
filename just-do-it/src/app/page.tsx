@@ -21,9 +21,9 @@ export const Home: React.FC = () => {
           </span>
           <span className={styles.heroText}> HOY</span>
           <div className={styles.heroButton}>
-            <Link href="/planes" className={styles.heroButtonLink}>
+            <h1 className={styles.heroButtonLink}>
               INSCRIBETE
-            </Link>
+            </h1>
           </div>
         </div>
         <Navbar />
