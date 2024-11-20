@@ -108,4 +108,11 @@
     outline: none;
     border-color: #f59e0b;
   }
+  /* esto es para manejar la visibilidad de la bio*/
+  .hidden {
+    display: none;
+  }
   
+  .showBio {
+    display: block;
+  }

@@ -1,9 +1,9 @@
 /* ActivityDetail.module.css */
 
 .container {
-    background-color: #000000f4;
+    background-color: #000000d2;
     background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 1) 5%, rgba(0, 0, 0, 0) 90%), 
+    linear-gradient(to right, rgba(0, 0, 0, 1) 9%, rgba(0, 0, 0, 0) 90%), 
     url('/bg-classdetail.jpg');
     background-size: 70% 100%;
     background-repeat: no-repeat;
@@ -16,16 +16,19 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;}
+    justify-content: center;
+    
+  }
   
   .card {
     
     max-width: 1024px;
     margin: 0 auto;
-    background-color: #18170e8c;
+    background-color: #000000d2;
     border-radius: 0.5rem;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 1px 1px 100px #fbbe244b;
     overflow: hidden;
+    font-size: large;
   }
   
   .cardContent {
@@ -82,11 +85,13 @@
     font-weight: 600;
     padding: 0.5rem 1rem;
     border-radius: 0.375rem;
+    border: #fbbf24 solid 2px;
     transition: background-color 0.3s ease;
   }
   
   .button:hover {
     background-color: #fbbf24;
     color: #000;
+  
   }
   
