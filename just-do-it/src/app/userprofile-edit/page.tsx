@@ -212,7 +212,7 @@ console.log('Datos que devuelve el servidor:', data);
                   Biografía
                 </Label>
                 <Textarea
-                  className={`${styles.textarea} min-h-[100px]`}
+                  className={`${styles.textarea}   min-h-[100px]` }
                   id="bio"
                   name="bio"
                   defaultValue={userSession?.bio || ''}

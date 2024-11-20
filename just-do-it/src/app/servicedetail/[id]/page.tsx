@@ -2,6 +2,9 @@
 import { useParams } from 'next/navigation'; 
 import { gymClasses } from '@/lib/utils';
 import ActivityDetail from '@/component/classDetail';
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+import { useEffect } from 'react';
 
 export default function ClassDetailPage() {
   const { id } = useParams(); 
@@ -15,8 +18,15 @@ export default function ClassDetailPage() {
   }
 
  
+  useEffect(() => {
+    AOS.init({});
+  }, []);
+
   return (
-    <div className="flex justify-center items-center min-h-screen min-w-screen ">
+    <div className="flex justify-center items-center min-h-screen min-w-screen" 
+   
+    data-aos="fade-right"
+>
     <ActivityDetail 
       id={gymClass.id}
       name={gymClass.name}
