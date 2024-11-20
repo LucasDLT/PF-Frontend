@@ -29,5 +29,6 @@ export interface Session {
     country: string;
     roles: string[];  // Agregado el campo roles
     membership_status: string;  // Agregado el campo membership_status
+    bio?: string;
   }
   

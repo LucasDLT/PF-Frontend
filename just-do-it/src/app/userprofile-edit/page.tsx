@@ -48,7 +48,6 @@ export default function EdicionPerfil() {
 
       const data = await response.json();
       setImageUrl(data.secure_url);
-      console.log(data);
     } catch (error) {
       console.error('Error uploading image:', error);
     }
@@ -62,47 +61,54 @@ export default function EdicionPerfil() {
 
         const form = e.target as HTMLFormElement;
 
-        const nameField = form.elements.namedItem('name') as HTMLInputElement;
-        const usernameField = form.elements.namedItem(
-          'username',
-        ) as HTMLInputElement;
-        const emailField = form.elements.namedItem('email') as HTMLInputElement;
-        const phoneField = form.elements.namedItem('phone') as HTMLInputElement;
-        const locationField = form.elements.namedItem(
-          'location',
-        ) as HTMLInputElement;
-        const bioField = form.elements.namedItem('bio') as HTMLTextAreaElement;
+const nameField = form.elements.namedItem('name') as HTMLInputElement;
+const emailField = form.elements.namedItem('email') as HTMLInputElement;
+const phoneField = form.elements.namedItem('phone') as HTMLInputElement;
+const addressField = form.elements.namedItem('address') as HTMLInputElement;
+const countryField = form.elements.namedItem('country') as HTMLInputElement;
+const bioField = form.elements.namedItem('bio') as HTMLTextAreaElement;
 
-        const formData = new FormData();
-        formData.append('file', file!);
-        formData.append('name', nameField.value);
-        formData.append('username', usernameField.value);
-        formData.append('email', emailField.value);
-        formData.append('phone', phoneField.value);
-        formData.append('location', locationField.value);
-        formData.append('bio', bioField.value);
-        formData.append('imageUrl', imageUrl!);
+if (!nameField || !emailField || !phoneField || !addressField || !bioField) {
+  console.error('Faltan campos obligatorios en el formulario');
+  return;
+}
 
-        const userId = userSession?.id;
+const formData = {
+  name: nameField.value,
+  email: emailField.value,
+  phone: phoneField.value,
+  address: addressField.value,
+  country: countryField.value,
+  bio: bioField.value,
+  image: imageUrl || '',  
+};
 
-        if (!userId) {
-          console.error('No se encontró el ID del usuario');
-          return;
-        }
+console.log('Datos que se enviarán como JSON:', formData);
 
-        const response = await fetch(
-          `http://localhost:${PORT}/users/${userId}`,
-          {
-            method: 'PUT',
-            body: formData,
-          },
-        );
+const userId = userSession?.id;
 
-        const data = await response.json();
-        setSession(data);
+if (!userId) {
+  console.error('No se encontró el ID del usuario');
+  return;
+}
 
-        console.log(data);
-      }}
+const response = await fetch(
+  `http://localhost:${PORT}/users/${userId}`,
+  {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json', 
+    },
+    body: JSON.stringify(formData), 
+  }
+);
+
+const data = await response.json();
+setSession(data);
+
+console.log('Datos que devuelve el servidor:', data);
+
+}}
     >
       <div className={styles.header}>
         <div className={styles.headerContent}>
@@ -163,6 +169,7 @@ export default function EdicionPerfil() {
                   className={styles.input}
                 />
               </div>
+
               <div className={styles.formGroup}>
                 <Label htmlFor="phone" className={styles.label}>
                   Teléfono
@@ -175,9 +182,10 @@ export default function EdicionPerfil() {
                   className={styles.input}
                 />
               </div>
+
               <div className={styles.formGroup}>
                 <Label htmlFor="country" className={styles.label}>
-                  Ubicación
+                  País
                 </Label>
                 <Input
                   id="country"
@@ -186,17 +194,19 @@ export default function EdicionPerfil() {
                   className={styles.input}
                 />
               </div>
+
               <div className={styles.formGroup}>
-                <Label htmlFor="location" className={styles.label}>
-                  Ubicación
+                <Label htmlFor="address" className={styles.label}>
+                  Dirección
                 </Label>
                 <Input
-                  id="location"
-                  name="location"
+                  id="address"
+                  name="address"
                   defaultValue={userSession?.address}
                   className={styles.input}
                 />
               </div>
+
               <div className={styles.formGroup}>
                 <Label htmlFor="bio" className={styles.label}>
                   Biografía
@@ -205,7 +215,7 @@ export default function EdicionPerfil() {
                   className={`${styles.textarea} min-h-[100px]`}
                   id="bio"
                   name="bio"
-                  defaultValue="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+                  defaultValue={userSession?.bio || ''}
                 />
               </div>
             </div>
