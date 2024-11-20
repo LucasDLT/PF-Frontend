@@ -2,28 +2,23 @@
 import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import CardClass from '../card-class';
-import styles from './searchbar.module.css'
-interface SearchBarProps {
-  gymClasses: {
-    id: string;
-    name: string;
-    location: string;
-    imgUrl: string;
-  }[];
-}
+import styles from './searchbar.module.css';
+import { useAuth } from '@/context';
 
-export default function SearchBar({ gymClasses }: SearchBarProps) {
+export default function SearchBar() {
+  const { classes } = useAuth(); // Obtener las clases del contexto
   const [searchTerm, setSearchTerm] = useState('');
   const [filterMethod, setFilterMethod] = useState('name');
 
-  const filteredClasses = gymClasses.filter((gymClass) => {
+  // Filtrar las clases según el criterio seleccionado
+  const filteredClasses = classes?.filter((gymClass) => {
     if (filterMethod === 'name') {
       return gymClass.name.toLowerCase().includes(searchTerm.toLowerCase());
     } else if (filterMethod === 'location') {
       return gymClass.location.toLowerCase().includes(searchTerm.toLowerCase());
     }
     return true;
-  });
+  }) || [];
 
   return (
     <div className={styles.searchBarContainer}>
@@ -37,7 +32,7 @@ export default function SearchBar({ gymClasses }: SearchBarProps) {
           id="filter"
           value={filterMethod}
           onChange={(e) => setFilterMethod(e.target.value)}
-          className={styles.select} 
+          className={styles.select}
         >
           <option value="name" className="bg-black text-white">
             Nombre de la clase
@@ -50,9 +45,7 @@ export default function SearchBar({ gymClasses }: SearchBarProps) {
 
       <Input
         type="text"
-        placeholder={`Buscar por ${
-          filterMethod === 'name' ? 'nombre de clase' : 'sala'
-        }...`}
+        placeholder={`Buscar por ${filterMethod === 'name' ? 'nombre de clase' : 'sala'}...`}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         className={`${styles.input} mb-6`} // Usamos la clase del CSS Module
