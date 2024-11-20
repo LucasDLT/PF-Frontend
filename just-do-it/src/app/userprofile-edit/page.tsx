@@ -61,6 +61,7 @@ export default function EdicionPerfil() {
 
         const form = e.target as HTMLFormElement;
 
+
 const nameField = form.elements.namedItem('name') as HTMLInputElement;
 const emailField = form.elements.namedItem('email') as HTMLInputElement;
 const phoneField = form.elements.namedItem('phone') as HTMLInputElement;
@@ -86,6 +87,7 @@ const formData = {
 console.log('Datos que se enviarán como JSON:', formData);
 
 const userId = userSession?.id;
+
 
 if (!userId) {
   console.error('No se encontró el ID del usuario');

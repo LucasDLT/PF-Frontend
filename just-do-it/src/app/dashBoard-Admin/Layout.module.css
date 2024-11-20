@@ -1,0 +1,79 @@
+/* Layout.module.css */
+
+.container {
+    display: flex;
+    height: 100vh; /* Hace que el contenedor principal ocupe toda la altura de la pantalla */
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: white;
+    height: 100vh; /* Esto asegura que la sidebar ocupe toda la altura */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  
+  .sidebar button {
+    margin-bottom: 1rem;
+  }
+  
+  .menuItem {
+    padding: 0.5rem 1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .menuItem:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .customButton {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .customButton:hover {
+    background-color: #f0f0f0;
+  }
+  
+  .subMenu {
+    padding-left: 20px;
+    padding-top: 10px;
+  }
+  
+  .subMenu li {
+    padding: 8px 0;
+  }
+  
+  .transitionIcon {
+    transition: transform 0.3s ease;
+  }
+  
+  .rotate180 {
+    transform: rotate(180deg);
+  }
+  
+  .logout {
+    margin-top: auto;
+    padding: 1rem;
+  }
+  
+  .main {
+    flex-grow: 1; /* Hace que el contenido principal ocupe el espacio restante */
+    padding: 2rem;
+    background-color: #f9f9f9;
+    overflow-y: auto; /* Permite desplazamiento si el contenido es largo */
+  }
+  
