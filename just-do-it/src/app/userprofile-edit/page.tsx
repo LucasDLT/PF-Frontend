@@ -45,7 +45,7 @@ export default function EdicionPerfil() {
           body: formData,
         },
       );
-
+        
       const data = await response.json();
       setImageUrl(data.secure_url);
     } catch (error) {

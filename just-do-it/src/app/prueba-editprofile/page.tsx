@@ -44,7 +44,7 @@ export default function EdicionPerfil() {
       console.error('Error uploading image:', error);
     }
   };
-
+ 
   return (
     <form
       className={styles.container}
