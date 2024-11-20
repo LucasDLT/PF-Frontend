@@ -1,6 +1,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { Class } from "@/types/class";
+import { Membership } from "@/types/membership";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -64,4 +65,23 @@ export const gymClasses: Class[] = [
     "id": "f8d67e89-3b92-4a0c-ae5e-bb8a567c9d34"
   }
 ]
+/* lista de membresias de practrica */
 
+export const memberships: Membership[] = [
+  {
+    id: '1',
+    name: 'Premium',
+    price: 29.99,
+    duration: 30,
+    description: 'Membresía premium con acceso completo a todos los servicios y contenido exclusivo.',
+    created_at: new Date('2024-01-01')
+  },
+  {
+    id: '2',
+    name: 'Standard',
+    price: 9.99,
+    duration: 30, 
+    description: 'Membresía estándar con acceso limitado a contenido básico.',
+    created_at: new Date('2024-01-01')
+  }
+];
