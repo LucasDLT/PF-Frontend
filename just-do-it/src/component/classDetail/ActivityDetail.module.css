@@ -1,7 +1,7 @@
 /* ActivityDetail.module.css */
 
 .container {
-    background-color: #000000;
+    background-color: #000000d2;
     background-image: 
     linear-gradient(to right, rgba(0, 0, 0, 1) 9%, rgba(0, 0, 0, 0) 90%), 
     url('/bg-classdetail.jpg');
