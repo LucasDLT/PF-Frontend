@@ -13,7 +13,7 @@ import {
 import Link from 'next/link';
 import { signOut, useSession } from 'next-auth/react';
 import { useAuth } from '@/context';
-import { Avatar } from '@nextui-org/react'; // Asegúrate de tener esta librería
+import { Avatar, user } from '@nextui-org/react'; // Asegúrate de tener esta librería
 
 export default function NavbarApp() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +43,9 @@ export default function NavbarApp() {
     console.log('Google Session (NextAuth):', session);
    
     console.log('User Session:', userSession);
+    console.log('id de usuario:', userSession?.id);
     console.log('Token:', token);
+    
 
     // Verificar datos almacenados en localStorage
     const storedToken = localStorage.getItem('token');

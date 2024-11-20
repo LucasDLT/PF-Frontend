@@ -4,6 +4,7 @@ import { SessionProvider } from 'next-auth/react';
 
 // Definición de la sesión
 interface Session {
+  bio: string;
   id: string | null;
   name: string;
   email: string;
