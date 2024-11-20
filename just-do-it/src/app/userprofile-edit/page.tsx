@@ -12,6 +12,7 @@ import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 
 export default function EdicionPerfil() {
+  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const route = useRouter();
   const { data: session } = useSession();
   const [file, setFile] = useState<File | undefined>(undefined);
@@ -77,7 +78,7 @@ export default function EdicionPerfil() {
           return;
         }
 
-        const response = await fetch(`http://localhost:3000/users/${userId}`, {
+        const response = await fetch(`http://localhost:${PORT}/users/${userId}`, {
           method: 'PUT',
           body: formData,
         });
