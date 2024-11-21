@@ -1,0 +1,55 @@
+/* SubscriptionSuccess.module.css */
+.container {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f3f4f6; /* bg-gray-100 */
+  }
+  
+  .backgroundImage {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    object-fit: cover;
+  }
+  
+  .overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* bg-black opacity-50 */
+    z-index: 10;
+  }
+  
+  .card {
+    width: 100%;
+    max-width: 32rem; /* max-w-md */
+    z-index: 20;
+    background-color: rgba(255, 255, 255, 0.8); /* bg-white/80 */
+    backdrop-filter: blur(10px); /* backdrop-blur-md */
+  }
+  
+  .cardHeader {
+    text-align: center;
+  }
+  
+  .cardTitle {
+    font-size: 1.5rem; /* text-2xl */
+    font-weight: bold; /* font-bold */
+  }
+  
+  .cardContent {
+    text-align: center;
+    color: #4b5563; /* text-gray-600 */
+  }
+  
+  .cardFooter {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .button {
+    /* Tailwind classes for button styling */
+  }
+  

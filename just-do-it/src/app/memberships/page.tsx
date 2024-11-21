@@ -48,7 +48,7 @@ export default function MembershipsPage() {
     console.log('Datos a enviar al backend:', userData); 
 
     try {
-      const response = await fetch(`http://localhost:${PORT}/payments/create-customer`, {
+      const response = await fetch(`http://localhost:${PORT}/payment/create-customer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
