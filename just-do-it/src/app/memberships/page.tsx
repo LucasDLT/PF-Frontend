@@ -17,8 +17,13 @@ export default function MembershipsPage() {
         const response = await fetch(`http://localhost:${PORT}/memberships`, {
           method: 'GET',
         });
+        if (!response.ok) {
+          throw new Error(`Error fetching memberships: ${response.statusText}`);
+        }
         const data = await response.json();
         setMemberships(data);
+        console.log('Data que llega de membresias:', data); 
+        
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -27,31 +32,50 @@ export default function MembershipsPage() {
     fetchMemberships();
   }, [PORT]);
 
-  const handleClick = async (membershipId: string) => {
+  const handleClick = async (stripePriceId: string) => {
+    // Verificar si los datos de la sesión del usuario están correctamente definidos
+    if (!userSession?.name || !userSession?.email) {
+      console.error('La sesión del usuario está incompleta. Nombre o correo no definidos.');
+      return;
+    }
+
     const userData = {
-      id: userSession?.id,
-      name: userSession?.name,
-      email: userSession?.email,
+      userEmail: userSession?.email,
+      userName: userSession?.name,
+      stripePriceId: stripePriceId,
     };
 
+    console.log('Datos a enviar al backend:', userData); 
+
     try {
-      const response = await fetch(`http://localhost:${PORT}/payments`, {
+      const response = await fetch(`http://localhost:${PORT}/payments/create-customer`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          userData,
-          membershipId,
-        }),
+        body: JSON.stringify( userData ),
       });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Membresía seleccionada exitosamente', result);
-      } else {
-        console.error('Error al seleccionar la membresía');
+      console.log(response);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error en la solicitud POST:', errorText); 
+
+        throw new Error(`Error al crear la membresía: ${response.statusText}`);
       }
+
+      const result = await response.json();
+      console.log('Membresía seleccionada exitosamente', result);
+      
+      if (result?.url) {
+        console.log('Redirigiendo a Stripe Checkout:', result.url);
+        
+        window.location.href = result.url; 
+      } else {
+        console.error('La respuesta no contiene la URL de checkout');
+      }
+
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
     }
@@ -61,16 +85,16 @@ export default function MembershipsPage() {
     <div className={styles.container}>
       <div className={styles.cardContainer}>
         <h1 className={styles.title}>
-          Selecciona el tipo de membresia que se ajuste a tus requerimientos
+          Selecciona el tipo de membresía que se ajuste a tus requerimientos
         </h1>
         {memberships.map((membership) => (
           <div key={membership.id} className={styles.card}>
             <h2>{membership.name}</h2>
             <p className={styles.cardPrice}>Precio: Us$ {membership.price}</p>
-            <p>Duracion de: {membership.duration} dias</p>
-            <p>Contaras con: {membership.description}</p>
+            <p>Duración de: {membership.duration} días</p>
+            <p>Contarás con: {membership.description}</p>
             <button
-              onClick={() => handleClick(membership.id)}
+              onClick={() => handleClick(membership.stripePriceId)}
               className={styles.cardButton}
             >
               Seleccionar

@@ -5,4 +5,7 @@ export interface Membership {
     duration: number;
     description: string;
     created_at: Date;
+    stripeProductId: string,
+    stripePriceId: string,
 }
+
