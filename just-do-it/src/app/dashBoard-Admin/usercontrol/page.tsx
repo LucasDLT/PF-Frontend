@@ -1,179 +1,183 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
+import styles from './UserList.module.css'
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-
-import { ScrollArea } from '@/components/ui/scroll-area';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-import { signOut } from 'next-auth/react';
-import { useAuth } from '@/context';
-
-interface User {
-  id: string;
-  name: string;
+interface Session {
+  id: string | null;
+  name: string | null;
   email: string;
-  status: 'active' | 'partialactive' | 'pending' | 'banned' | 'inactive';
-  role: 'user' | 'admin' | 'superadmin';
-  image: string;
-  previousStatus?: string;
+  image: string | null;
+  phone: string;
+  address: string;
+  country: string;
+  roles: string[];
+  membership_status: string;
 }
 
-export default function AdminPanel() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
-  const [statusFilter, setStatusFilter] = useState<
-    'all' | 'active' | 'inactive'
-  >('all');
-  const [nameFilter, setNameFilter] = useState('');
-  const { userSession, token, logout } = useAuth();
+interface ApiResponse {
+  users: Session[];
+  total: number;
+}
 
-  const fetchUsers = async () => {
+const PORT = process.env.NEXT_PUBLIC_APP_API_PORT
+const fetchUsers = async (page: number, filters: any): Promise<ApiResponse> => {
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    ...filters
+  }).toString()
+
+  const response = await fetch(`http://localhost:${PORT}}/users`)
+  if (!response.ok) {
+    throw new Error('Failed to fetch users')
+  }
+  return response.json()
+}
+
+export default function UserList() {
+  const [users, setUsers] = useState<Session[]>([])
+  const [page, setPage] = useState(1)
+  const [totalUsers, setTotalUsers] = useState(0)
+  const [filters, setFilters] = useState({
+    name: '',
+    country: '',
+    role: '',
+    status: ''
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const fetchData = async () => {
+    setIsLoading(true)
+    setError(null)
     try {
-      console.log('Funcion fetchUsers', token);
-      const response = await fetch('http://localhost:3003/auth/user/get/all', {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setUsers(data);
-      } else {
-        console.error('Error fetching users:', response.statusText);
-      }
+      const { users, total } = await fetchUsers(page, filters)
+      setUsers(users)
+      setTotalUsers(total)
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching users:', error)
+      setError('Failed to fetch users. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    if (userSession) {
-      fetchUsers();
-    }
-  }, [userSession]);
+    fetchData()
+  }, [page, filters])
 
-  const handleToggleAction = async (id: string) => {
-    const currentUser = users.find((u) => u.id === id);
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value === 'all' ? '' : value
+    }))
+    setPage(1) // Reset to first page when filters change
+  }
 
-    if (!currentUser) {
-      console.error('User not found');
-      return;
-    }
-
-    const newStatus:
-      | 'active'
-      | 'partialactive'
-      | 'pending'
-      | 'banned'
-      | 'inactive' =
-      currentUser.status === 'banned'
-        ? (currentUser.previousStatus as
-            | 'active'
-            | 'partialactive'
-            | 'pending'
-            | 'banned'
-            | 'inactive')
-        : 'banned';
-
-    try {
-      const response = await fetch(
-        `http://localhost:3003/auth/user/ban/${id}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      // if (response.status === 441) {
-      //   toast.error(`Su cuenta ah sido suspendida, por favor contactarse con nosotros via Email`)
-      //   logout()
-      //   signOut({ callbackUrl: '/' });
-      // }
-
-      if (response.ok) {
-        const updatedUser = {
-          ...currentUser,
-          status: newStatus,
-          previousStatus: currentUser.status,
-        };
-
-        setUsers((prevUsers) =>
-          prevUsers.map((u) => (u.id === id ? updatedUser : u)),
-        );
-      } else {
-        console.error('Error updating user status:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error updating user status:', error);
-    }
-  };
-
-  const handleToggleAdminRole = async (id: string) => {
-    try {
-      const response = await fetch(
-        `http://localhost:3003/auth/user/role/administrator/${id}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      if (response.status === 441) {
-        
-        logout()
-        signOut({ callbackUrl: '/' });
-      }
-
-      if (response.ok) {
-        const updatedUser = await response.json();
-        setUsers((prevUsers) =>
-          prevUsers.map((u) =>
-            u.id === id ? { ...u, role: updatedUser.role } : u,
-          ),
-        );
-      } else {
-        console.error('Error updating user admin role:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error updating user admin role:', error);
-    }
-  };
-
-  useEffect(() => {
-    const filtered = users
-      .filter((user) => {
-        if (statusFilter === 'active')
-          return user.status === 'active' || user.status === 'partialactive';
-        if (statusFilter === 'inactive') return user.status === 'banned';
-        return true;
-      })
-      .filter((user) =>
-        user.name.toLowerCase().includes(nameFilter.toLowerCase()),
-      );
-
-    setFilteredUsers(filtered);
-  }, [statusFilter, nameFilter, users]);
+  const totalPages = Math.ceil(totalUsers / 10)
 
   return (
-   <div>
-    <h3>Control de usuarios</h3>
-   </div>
-  );
+    <div className={styles.container}>
+      <h1 className={styles.title}>User List</h1>
+      
+      {error && (
+        <div className={styles.alert}>
+          <strong>Error:</strong> {error}
+        </div>
+      )}
+      
+      <div className={styles.filters}>
+        <input
+          type="text"
+          placeholder="Filter by name"
+          value={filters.name}
+          onChange={(e) => handleFilterChange('name', e.target.value)}
+          className={styles.input}
+        />
+        <select
+          onChange={(e) => handleFilterChange('country', e.target.value)}
+          className={styles.select}
+        >
+          <option value="">All Countries</option>
+          <option value="USA">USA</option>
+          <option value="Canada">Canada</option>
+          <option value="Mexico">Mexico</option>
+          <option value="UK">UK</option>
+          <option value="France">France</option>
+        </select>
+        <select
+          onChange={(e) => handleFilterChange('role', e.target.value)}
+          className={styles.select}
+        >
+          <option value="">All Roles</option>
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+          <option value="moderator">Moderator</option>
+        </select>
+        <select
+          onChange={(e) => handleFilterChange('status', e.target.value)}
+          className={styles.select}
+        >
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+          <option value="pending">Pending</option>
+        </select>
+      </div>
+
+      {isLoading ? (
+        <div className={styles.loading}>Loading...</div>
+      ) : (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Country</th>
+              <th>Roles</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.country}</td>
+                <td>{user.roles.join(', ')}</td>
+                <td>{user.membership_status}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      <div className={styles.pagination}>
+        <button 
+          onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+          disabled={page === 1 || isLoading}
+          className={styles.paginationButton}
+        >
+          Previous
+        </button>
+        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+          <button
+            key={pageNum}
+            onClick={() => setPage(pageNum)}
+            disabled={isLoading}
+            className={`${styles.paginationButton} ${pageNum === page ? styles.activePage : ''}`}
+          >
+            {pageNum}
+          </button>
+        ))}
+        <button 
+          onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+          disabled={page === totalPages || isLoading}
+          className={styles.paginationButton}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  )
 }
