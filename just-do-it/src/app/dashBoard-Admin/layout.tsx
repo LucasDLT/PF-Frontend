@@ -64,12 +64,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 {activeMenu === 'eventos' && (
                   <ul className={styles.subMenu}>
                     <li>
-                      <Link href="/dashBoard-Admin/classes/editclasses">
+                      <Link href="/dashBoard-Admin/classes/currentclasses">
                         Crear Clase
                       </Link>
                     </li>
                     <li>
-                      <Link href="/dashBoard-Admin/classes/currentclasses">
+                      <Link href="/dashBoard-Admin/classes/editclasses">
                         Ver y Editar Clases
                       </Link>
                     </li>

@@ -1,0 +1,46 @@
+.label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  
+  .uploadContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espaciado entre los elementos */
+  }
+  
+  .inputHidden {
+    display: none; /* Oculta el input de archivo */
+  }
+  
+  .uploadButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem; /* Espaciado entre ícono y texto */
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .uploadButton:hover {
+    background-color: #0056b3;
+  }
+  
+  .icon {
+    width: 1rem;
+    height: 1rem;
+  }
+  
+  .previewImage {
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+  
