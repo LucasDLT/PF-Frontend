@@ -51,10 +51,13 @@ export default function SearchBar() {
         className={`${styles.input} mb-6`} // Usamos la clase del CSS Module
       />
 
-      <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredClasses.map((gymClass) => (
-          <CardClass key={gymClass.id} gymClass={gymClass} />
-        ))}
+      {/* Contenedor con scroll solo para las tarjetas */}
+      <div className={styles.cardsContainer}>
+        <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredClasses.map((gymClass) => (
+            <CardClass key={gymClass.id} gymClass={gymClass} />
+          ))}
+        </div>
       </div>
 
       {filteredClasses.length === 0 && (

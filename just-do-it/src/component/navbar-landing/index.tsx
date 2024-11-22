@@ -32,7 +32,7 @@ export const Navbar: React.FC = () => {
     { label: 'INICIO', href: '/' },
     { label: 'SEDES', href: '/location' },
     { label: 'SERVICIOS', href: '/services' },
-    { label: 'PLANES', href: '/planes' },
+    { label: 'PLANES', href: '/memberships' },
     { label: 'CONTÁCTANOS', href: '/contacto' },
   ];
 

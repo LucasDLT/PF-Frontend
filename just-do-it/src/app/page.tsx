@@ -20,11 +20,11 @@ export const Home: React.FC = () => {
             GRATUITA
           </span>
           <span className={styles.heroText}> HOY</span>
+            <Link href={'/memberships'} >
           <div className={styles.heroButton}>
-            <h1 className={styles.heroButtonLink}>
               INSCRIBETE
-            </h1>
           </div>
+            </Link>
         </div>
         <Navbar />
       </div>

@@ -1,27 +1,37 @@
+/* searchbar.module.css */
 .searchBarContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 2rem;
-  }
-  
-  .titleSearchBar {
-    font-size: 2rem;
-    color: #b9db82;
-    text-align: center;
-  }
-  
-  .select {
-    padding: 0.5rem 1rem;
-    border-radius: 0.2rem;
-    font-size: 1rem;
-  }
-  
-  .input {
-    padding: 0.5rem 1rem;
-    border-radius: 0.2rem;
-    font-size: 1rem;
-    background-color: #c9c9c9;
-    max-width: 100%;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem;
+}
+
+.titleSearchBar {
+  font-size: 1rem;
+  color: #b9db82;
+  text-align: center;
+}
+
+.select {
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  background-color: #4b4b4b;
+  color: aliceblue;
+}
+
+.input {
+  padding: 0.5rem 1rem;
+  border-radius: 0.2rem;
+  font-size: 1rem;
+  background-color: #c9c9c9;
+  max-width: 100%;
+}
+
+.cardsContainer {
+  width: 125%;
+  max-height: 400px;   
+  overflow-y: auto;   
+  padding-right: 1rem; 
+  margin-top: 1rem;
+}

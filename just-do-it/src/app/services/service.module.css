@@ -1,5 +1,5 @@
 .title {
-  font-size: 6rem;
+  font-size: 3rem;
   color: #a3a54f;
   border-radius: 10px;
   margin: 0.5rem;
@@ -10,17 +10,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: black;
   background-image: linear-gradient(
       to right,
-      rgba(0, 0, 0, 0.8),
-      rgba(0, 0, 0, 0.8)
-    
+      rgba(0, 0, 0, 1) 10%,
+      rgba(0, 0, 0, 0.8) 30%
     ),
     url('/bg-services.jpg');
 
-  background-size: 100% 100%;
+  background-size: 70% 100%;
   background-repeat: no-repeat;
-  background-position: 10% 10%;
-  mask-size: cover;
-  mask-position: center;
+  background-position: 100% 10%;
+  height: 100vh;
 }

@@ -9,7 +9,7 @@ export default function Services(){
     return(
         <main className={`${styles.servicePage} ${styles.bg}`}>
             <h1 className={styles.title}>Nuestros Servicios</h1>
-            <SearchBar gymClasses={classes}/>
+            <SearchBar />
         </main>
     )
 }
