@@ -1,0 +1,69 @@
+.card {
+    margin-top: 1rem;
+  }
+  
+  .cardContent {
+    padding-top: 1.5rem;
+  }
+  
+  .label {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1rem;
+  }
+  
+  .emptyHeader {
+    font-weight: bold;
+    grid-column: span 1;
+  }
+  
+  .dayHeader {
+    font-weight: bold;
+    text-align: center;
+    grid-column: span 1;
+  }
+  
+  .hourRow {
+    font-weight: 600;
+    text-align: right;
+    padding-right: 0.5rem;
+  }
+  
+  .cell {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .checkboxContainer {
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+  }
+  
+  .checkbox {
+    width: 1rem;
+    height: 1rem;
+    appearance: none;
+    background-color: transparent;
+    border: none;
+  }
+  
+  .checkbox:checked {
+    background-color: #1d4ed8;
+    border-radius: 50%;
+  }
+  
