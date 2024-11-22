@@ -1,9 +1,7 @@
 .navbarWrapper {
-    background-color: black;
-    border: 1px solid #fbbf24; /* amarillo */
-    box-shadow: 0 4px 6px rgba(250, 179, 36, 0.2);
-  }
-  
+  background: linear-gradient(to top, rgba(0, 0, 0, 1) 40%, rgb(65, 67, 37)100%);
+}
+
   .navContainer {
     max-width: 7xl;
     margin: 0 auto;
