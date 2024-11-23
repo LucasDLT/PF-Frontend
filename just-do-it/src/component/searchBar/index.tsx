@@ -24,7 +24,7 @@ export default function SearchBar() {
     <div className={styles.searchBarContainer}>
       <h1 className={styles.titleSearchBar}>Buscar Clases de Gimnasio</h1>
 
-      <div className="mb-4 bg-black align-center justify-center content-center">
+      <div className="mb-4">
         <label htmlFor="filter" className="mr-2 text-white">
           Filtrar por:
         </label>
@@ -53,11 +53,9 @@ export default function SearchBar() {
 
       {/* Contenedor con scroll solo para las tarjetas */}
       <div className={styles.cardsContainer}>
-        <div className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredClasses.map((gymClass) => (
-            <CardClass key={gymClass.id} gymClass={gymClass} />
-          ))}
-        </div>
+        {filteredClasses.map((gymClass) => (
+          <CardClass key={gymClass.id} gymClass={gymClass} />
+        ))}
       </div>
 
       {filteredClasses.length === 0 && (

@@ -14,8 +14,6 @@ interface CardClassProps {
 export default function CardClass({ gymClass }: CardClassProps) {
   return (
     <div className={styles.card} key={gymClass.id}>
-      <h2>{gymClass.name}</h2>
-      <p>{gymClass.location}</p>
       <Image
         src={gymClass.imgUrl}
         alt={gymClass.name}
@@ -23,9 +21,13 @@ export default function CardClass({ gymClass }: CardClassProps) {
         height={100}
         className={styles.cardImage}
       />
+      <div className={styles.cardContent} >
+      <h2>{gymClass.name}</h2>
+      <p>{gymClass.location}</p>
       <button className={styles.cardButton}>
         <Link href={`/servicedetail/${gymClass.id}`}>Ver más</Link>
       </button>
+      </div>
     </div>
   );
 }
