@@ -46,7 +46,7 @@ export default function AdminClassCreator() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Aquí iría la lógica para enviar los datos al servidor
+  
     console.log('Datos de la clase:', classData)
   }
 

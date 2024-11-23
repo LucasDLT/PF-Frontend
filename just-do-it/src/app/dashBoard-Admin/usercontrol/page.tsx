@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { useState, useEffect } from 'react';
 import styles from './UserList.module.css';
@@ -11,84 +11,58 @@ interface Session {
   phone: string;
   address: string;
   country: string;
-  roles: string; 
+  roles: string[] | string;
   membership_status: string;
-}
-
-interface ApiResponse {
-  users: Session[];
-  total: number;
 }
 
 const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
 
-const RoleDescriptions: Record<string, string> = {
-  ADMIN: 'Administrador',
-  USER: 'Usuario',
-  MODERATOR: 'Entrenador',
+const fetchUsers = async (page: number, limit: number): Promise<Session[]> => {
+  const queryParams = new URLSearchParams({
+    page: page.toString(),
+    limit: limit.toString(),
+  }).toString();
+
+  if (!PORT) {
+    throw new Error(
+      'El puerto de la API no está configurado. Verifica la variable NEXT_PUBLIC_APP_API_PORT'
+    );
+  }
+
+  const response = await fetch(`http://localhost:${PORT}/users?${queryParams}`);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch users. Status: ${response.status}`);
+  }
+
+  return response.json();
 };
 
 export default function UserList() {
   const [users, setUsers] = useState<Session[]>([]);
   const [page, setPage] = useState(1);
-  const [totalUsers, setTotalUsers] = useState(0);
-  const [filters, setFilters] = useState({
-    name: '',
-    country: '',
-    role: '',
-    status: '',
-  });
+  const [limit] = useState(10); // Cantidad de usuarios por página
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchUsers = async (page: number, filters: any): Promise<ApiResponse> => {
-    const queryParams = new URLSearchParams({
-      page: page.toString(),
-      ...filters,
-    }).toString();
-
-    if (!PORT) {
-      throw new Error(
-        'El puerto de la API no está configurado. Verifica la variable NEXT_PUBLIC_APP_API_PORT'
-      );
+  const fetchData = async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await fetchUsers(page, limit);
+      setUsers(data);
+    } catch (error: any) {
+      console.error('Error fetching users:', error);
+      setError('Error al buscar usuarios, intente de nuevo');
+    } finally {
+      setIsLoading(false);
     }
-
-    const response = await fetch(`http://localhost:${PORT}/users?${queryParams}`);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch users. Status: ${response.status}`);
-    }
-
-    const data: Session[] = await response.json();
-    return { users: data, total: data.length };
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      setError(null);
-      try {
-        const { users, total } = await fetchUsers(page, filters);
-        setUsers(users);
-        setTotalUsers(total);
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchData();
-  }, [page, filters]);
+  }, [page]);
 
-  const handleFilterChange = (key: string, value: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: value === 'all' ? '' : value,
-    }));
-    setPage(1);
-  };
-
-  const totalPages = Math.ceil(totalUsers / 10);
+  const totalPages = Math.ceil(users.length / limit); // Esto depende de cuántos usuarios totales tengas.
 
   return (
     <div className={styles.container}>
@@ -100,45 +74,6 @@ export default function UserList() {
         </div>
       )}
 
-      <div className={styles.filters}>
-        <input
-          type="text"
-          placeholder="Filtrar por nombre"
-          value={filters.name}
-          onChange={(e) => handleFilterChange('name', e.target.value)}
-          className={styles.input}
-        />
-        <select
-          onChange={(e) => handleFilterChange('country', e.target.value)}
-          className={styles.select}
-        >
-          <option value="">All Countries</option>
-          <option value="USA">USA</option>
-          <option value="Canada">Canada</option>
-          <option value="Mexico">Mexico</option>
-          <option value="UK">UK</option>
-          <option value="France">France</option>
-        </select>
-        <select
-          onChange={(e) => handleFilterChange('role', e.target.value)}
-          className={styles.select}
-        >
-          <option value="">Todos los usuarios</option>
-          <option value="USER">Usuario</option>
-          <option value="ADMIN">Administrador</option>
-          <option value="MODERATOR">Entrenador</option>
-        </select>
-        <select
-          onChange={(e) => handleFilterChange('status', e.target.value)}
-          className={styles.select}
-        >
-          <option value="">All Statuses</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="pending">Pending</option>
-        </select>
-      </div>
-
       {isLoading ? (
         <div className={styles.loading}>Loading...</div>
       ) : (
@@ -146,31 +81,26 @@ export default function UserList() {
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Correo electronico</th>
-              <th>Direccion</th>
+              <th>Correo electrónico</th>
+              <th>Dirección</th>
               <th>Roles</th>
-              <th>Subscripcion</th>
+              <th>Subscripción</th>
             </tr>
           </thead>
           <tbody>
-            {users.length > 0 ? (
-              users.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.name || 'Sin nombre'}</td>
-                  <td>{user.email || 'Sin correo'}</td>
-                  <td>{user.address || 'Sin dirección'}</td>
-                  <td>
-                    {RoleDescriptions[user.roles as keyof typeof RoleDescriptions] ||
-                      'Rol desconocido'}
-                  </td>
-                  <td>{user.membership_status || 'Sin estado'}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5}>No se encontraron usuarios.</td>
+            {users.map((user) => (
+              <tr key={user.id}>
+                <td>{user.name}</td>
+                <td>{user.email}</td>
+                <td>{user.address}</td>
+                <td>
+                  {Array.isArray(user.roles)
+                    ? user.roles.join(', ')
+                    : user.roles}
+                </td>
+                <td>{user.membership_status}</td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
       )}
@@ -196,8 +126,8 @@ export default function UserList() {
           </button>
         ))}
         <button
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page === totalPages || isLoading}
+          onClick={() => setPage((prev) => prev + 1)}
+          disabled={isLoading}
           className={styles.paginationButton}
         >
           Siguiente
