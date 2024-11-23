@@ -1,9 +1,9 @@
 'use client';
 import { useEffect, useState } from 'react';
-import AOS from 'aos';
 import { Membership } from '@/types/membership';
 import styles from './membership.module.css';
 import { useAuth } from '@/context';
+import { Fade } from 'react-awesome-reveal';
 
 export default function MembershipsPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -13,7 +13,6 @@ export default function MembershipsPage() {
   useEffect(() => {
     const fetchMemberships = async () => {
       try {
-        AOS.init();
         const response = await fetch(`http://localhost:${PORT}/memberships`, {
           method: 'GET',
         });
@@ -22,8 +21,7 @@ export default function MembershipsPage() {
         }
         const data = await response.json();
         setMemberships(data);
-        console.log('Data que llega de membresias:', data); 
-        
+        console.log('Data que llega de membresias:', data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -33,9 +31,10 @@ export default function MembershipsPage() {
   }, [PORT]);
 
   const handleClick = async (stripePriceId: string) => {
-    // Verificar si los datos de la sesión del usuario están correctamente definidos
     if (!userSession?.name || !userSession?.email) {
-      console.error('La sesión del usuario está incompleta. Nombre o correo no definidos.');
+      console.error(
+        'La sesión del usuario está incompleta. Nombre o correo no definidos.',
+      );
       return;
     }
 
@@ -45,37 +44,39 @@ export default function MembershipsPage() {
       stripePriceId: stripePriceId,
     };
 
-    console.log('Datos a enviar al backend:', userData); 
+    console.log('Datos a enviar al backend:', userData);
 
     try {
-      const response = await fetch(`http://localhost:${PORT}/payment/create-customer`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const response = await fetch(
+        `http://localhost:${PORT}/payment/create-customer`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
         },
-        body: JSON.stringify( userData ),
-      });
+      );
 
       console.log(response);
 
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error en la solicitud POST:', errorText); 
+        console.error('Error en la solicitud POST:', errorText);
 
         throw new Error(`Error al crear la membresía: ${response.statusText}`);
       }
 
       const result = await response.json();
       console.log('Membresía seleccionada exitosamente', result);
-      
-      if (result?.url) {
-        console.log('Redirigiendo a Stripe Checkout:', result.url);
-        
-        window.location.href = result.url; 
+
+      if (result?.sessionUrl) {
+        console.log('Redirigiendo a Stripe Checkout:', result.sessionUrl);
+
+        window.location.href = result.sessionUrl;
       } else {
         console.error('La respuesta no contiene la URL de checkout');
       }
-
     } catch (error) {
       console.error('Error en la solicitud POST:', error);
     }
@@ -83,25 +84,27 @@ export default function MembershipsPage() {
 
   return (
     <div className={styles.container}>
-        <h1 className={styles.title}>
-          Selecciona el tipo de membresía que se ajuste a tus requerimientos
-        </h1>
-      <div className={styles.cardContainer}>
-        {memberships.map((membership) => (
-          <div key={membership.id} className={styles.card}>
-            <h2>{membership.name}</h2>
-            <p className={styles.cardPrice}>Us$ {membership.price}</p>
-            <p>DURACION DE: {membership.duration} días</p>
-            <p>CONTARAS CON: {membership.description}</p>
-            <button
-              onClick={() => handleClick(membership.stripePriceId)}
-              className={styles.cardButton}
-            >
-              Seleccionar
-            </button>
-          </div>
-        ))}
-      </div>
+      <h1 className={styles.title}>
+        Selecciona el tipo de membresía que se ajuste a tus requerimientos
+      </h1>
+      <Fade>
+        <div className={styles.cardContainer}>
+          {memberships.map((membership) => (
+            <div key={membership.id} className={styles.card}>
+              <h2>{membership.name}</h2>
+              <p className={styles.cardPrice}>Us$ {membership.price}</p>
+              <p>DURACION DE: {membership.duration} días</p>
+              <p>CONTARAS CON: {membership.description}</p>
+              <button
+                onClick={() => handleClick(membership.stripePriceId)}
+                className={styles.cardButton}
+              >
+                Seleccionar
+              </button>
+            </div>
+          ))}
+        </div>
+      </Fade>
     </div>
   );
 }

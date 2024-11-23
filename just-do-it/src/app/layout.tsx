@@ -5,7 +5,7 @@ import NavbarApp from '@/component/navBar';
 import ShowComponent from '@/component/showComponents';
 import Footer from '@/component/footer';
 import AuthProvider from '@/context';
- 
+import { Toaster } from 'sonner';
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -36,6 +36,17 @@ export default function RootLayout({
           <ShowComponent>
           <NavbarApp />
           </ShowComponent>
+            <Toaster position="top-center"
+            toastOptions={{
+              style: {
+                background: '#fbff0099',
+                color: '#000000',
+                borderRadius: '0.75rem',
+                padding: '0.5rem 1rem',
+                fontSize: '1.25rem',
+              },
+            }}
+            />
           {children}
           <ShowComponent>
           <Footer />

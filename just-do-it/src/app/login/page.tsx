@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useAuth } from '@/context';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner'; 
+
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -51,6 +53,7 @@ export default function Login() {
       newErrors.password =
         'La contraseña debe tener al menos 8 caracteres y 1 número.';
       valid = false;
+      toast.error('Hubo un error al intentar iniciar sesión');
     }
 
     setErrors(newErrors);
@@ -78,6 +81,9 @@ export default function Login() {
         setSession(result.usedData); // Guarda los datos del usuario
         setToken(result.token);       // Guarda el token
 
+        toast.success(`¡Hola, ${result.usedData.name}! Bienvenido a tu cuenta.`);
+
+
         console.log('Usuario logueado con éxito:', result);
         Router.push("/"); // Redirige a la página principal después del login
       } catch (error) {
@@ -85,6 +91,7 @@ export default function Login() {
         setErrors({
           ...errors,
           password: 'Hubo un error al intentar iniciar sesión',
+          
         });
       }
     }

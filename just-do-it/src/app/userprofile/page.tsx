@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Mail, MapPin, PhoneCall, UserCircle, Edit } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import styles from './perfilusuario.module.css'; // Importar el archivo CSS Module
+import styles from './perfilusuario.module.css'; // Importando el CSS Module
 import { useAuth } from '@/context';
 
 export default function PerfilUsuario() {
@@ -17,6 +17,9 @@ export default function PerfilUsuario() {
     route.push('/userprofile-edit');
   };
 
+  // rodri aca dejo el condicional que te decia 
+  const isTrainer = userSession?.roles === 'super' || session?.roles === 'super';
+  const membershipActive = userSession?.membership_status === 'active' || session?.membership_status === 'active';
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -60,13 +63,26 @@ export default function PerfilUsuario() {
                 <MapPin className="h-5 w-5 text-blue-500" />
                 <span>{userSession?.address}</span>
               </div>
-              <div className="flex items-start gap-4">
-                <UserCircle className="h-5 w-5 text-blue-500 mt-1" />
-                <p className="text-gray-700">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                  incididunt ut labore et dolore magna aliqua.
-                </p>
-              </div>
+
+              {isTrainer && (
+                <div className="flex items-start gap-4">
+                  <UserCircle className="h-5 w-5 text-blue-500 mt-1" />
+                  <p className="text-gray-700">
+                    {userSession?.bio || 'No tienes una biografía definida.'}
+                  </p>
+                </div>
+              )}
+              {membershipActive?(
+                <div className="flex items-center gap-4">
+                  <UserCircle className="h-5 w-5 text-blue-500" />
+                  <span>{userSession?.membership_status}</span>
+                </div>
+              ):(
+                <h1>No tienes membresía activa</h1>
+              )
+              }
+
+
             </div>
           </CardContent>
         </Card>

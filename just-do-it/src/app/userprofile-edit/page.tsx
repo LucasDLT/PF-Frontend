@@ -1,16 +1,17 @@
 'use client';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar,  AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { CameraIcon, Save } from 'lucide-react';
+import {  Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import styles from './edicionperfil.module.css';
 import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useAuth } from '@/context';
+import { toast } from 'sonner';
 
 export default function EdicionPerfil() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -45,7 +46,7 @@ export default function EdicionPerfil() {
           body: formData,
         },
       );
-        
+
       const data = await response.json();
       setImageUrl(data.secure_url);
     } catch (error) {
@@ -60,57 +61,68 @@ export default function EdicionPerfil() {
         e.preventDefault();
 
         const form = e.target as HTMLFormElement;
+        const nameField = form.elements.namedItem('name') as HTMLInputElement;
+        const emailField = form.elements.namedItem('email') as HTMLInputElement;
+        const phoneField = form.elements.namedItem('phone') as HTMLInputElement;
+        const addressField = form.elements.namedItem(
+          'address',
+        ) as HTMLInputElement;
+        const countryField = form.elements.namedItem(
+          'country',
+        ) as HTMLInputElement;
+        const bioField = form.elements.namedItem('bio') as HTMLTextAreaElement;
 
+        if (
+          !nameField ||
+          !emailField ||
+          !phoneField ||
+          !addressField ||
+          !bioField
+        ) {
+          console.error('Faltan campos obligatorios en el formulario');
+          return;
+        }
 
-const nameField = form.elements.namedItem('name') as HTMLInputElement;
-const emailField = form.elements.namedItem('email') as HTMLInputElement;
-const phoneField = form.elements.namedItem('phone') as HTMLInputElement;
-const addressField = form.elements.namedItem('address') as HTMLInputElement;
-const countryField = form.elements.namedItem('country') as HTMLInputElement;
-const bioField = form.elements.namedItem('bio') as HTMLTextAreaElement;
+        const formData = {
+          name: nameField.value,
+          email: emailField.value,
+          phone: phoneField.value,
+          address: addressField.value,
+          country: countryField.value,
+          bio: bioField.value,
+          image: imageUrl || '',
+        };
 
-if (!nameField || !emailField || !phoneField || !addressField || !bioField) {
-  console.error('Faltan campos obligatorios en el formulario');
-  return;
-}
+        console.log('Datos que se enviarán como JSON:', formData);
 
-const formData = {
-  name: nameField.value,
-  email: emailField.value,
-  phone: phoneField.value,
-  address: addressField.value,
-  country: countryField.value,
-  bio: bioField.value,
-  image: imageUrl || '',  
-};
+        const userId = userSession?.id;
+        if (!userId) {
+          console.error('No se encontró el ID del usuario');
+          return;
+        }
 
-console.log('Datos que se enviarán como JSON:', formData);
+        const response = await fetch(
+          `http://localhost:${PORT}/users/${userId}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData),
+          },
+        );
 
-const userId = userSession?.id;
+        const data = await response.json();
+        setSession(data);
 
-
-if (!userId) {
-  console.error('No se encontró el ID del usuario');
-  return;
-}
-
-const response = await fetch(
-  `http://localhost:${PORT}/users/${userId}`,
-  {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json', 
-    },
-    body: JSON.stringify(formData), 
-  }
-);
-
-const data = await response.json();
-setSession(data);
-
-console.log('Datos que devuelve el servidor:', data);
-
-}}
+        console.log('Datos que devuelve el servidor:', data);
+        if (window.confirm('¿Estás seguro de que deseas guardar los cambios?')) {
+          toast.success('Perfil editado con éxito!');
+        } else {
+          toast.error('No se guardaron los cambios.');
+        }
+        
+      }}
     >
       <div className={styles.header}>
         <div className={styles.headerContent}>
@@ -121,7 +133,7 @@ console.log('Datos que devuelve el servidor:', data);
           </Button>
         </div>
       </div>
-      <div className="max-w-4xl mx-auto mt-8 p-4">
+      <div className={styles.form}>
         <Card className="shadow-lg">
           <CardContent className="p-6">
             <div className="flex items-center space-x-4 mb-6">
@@ -130,20 +142,26 @@ console.log('Datos que devuelve el servidor:', data);
                   {imageUrl ? (
                     <AvatarImage alt="Foto de perfil" src={imageUrl} />
                   ) : (
-                    <AvatarFallback className={styles.avatarFallback}>
+                    <h3 className={styles.name}>
                       {session?.user.name || userSession?.name}
-                    </AvatarFallback>
+                    </h3>
                   )}
                 </Avatar>
-
-                <Button size="icon" className={styles.avatarButton}>
-                  <CameraIcon className="h-4 w-4" />
-                </Button>
-
-                <input type="file" onChange={handleImageChange} />
-              </div>
-              <div>
-                <h2 className="text-2xl font-bold">Editar Foto de Perfil</h2>
+                <div className={styles.cameraIcon}>
+                  <input
+                    type="file"
+                    onChange={handleImageChange}
+                    id="file-input"
+                    className={styles.hiddenFileInput}
+                  />
+                  <label htmlFor="file-input" className={styles.cameraLabel}>
+                    <img
+                      src="/camera.png"
+                      alt="Cambiar foto"
+                      className={styles.cameraImage}
+                    />
+                  </label>
+                </div>
               </div>
             </div>
             <div className="grid gap-6">
@@ -214,7 +232,7 @@ console.log('Datos que devuelve el servidor:', data);
                   Biografía
                 </Label>
                 <Textarea
-                  className={`${styles.textarea}   min-h-[100px]` }
+                  className={`${styles.textarea} min-h-[100px]`}
                   id="bio"
                   name="bio"
                   defaultValue={userSession?.bio || ''}
