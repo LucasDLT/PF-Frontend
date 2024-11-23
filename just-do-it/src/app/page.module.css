@@ -9,7 +9,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 5), rgba(0, 0, 0, 0)), 
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0)), 
                       url('/img_landing.png');
     background-size: 70% 170%;
     background-repeat: no-repeat;
@@ -26,9 +26,11 @@
   }
   
   .heroText {
-    font-size: 4rem; 
+    font-size: 6rem; 
     font-weight: 400; 
     color: white;
+    font-family: 'Truecolor Personal Use', sans-serif;
+
   }
   
   .heroTextYellow {
@@ -38,16 +40,17 @@
   .heroButton {
     position: absolute;
     left: 0.3125rem; 
-    top: 12.5rem; 
-    width: 8.125rem; 
-    height: 3.125rem; 
+    top: 18rem; 
+    width: 10rem; 
+    height: 4.5rem; 
     background-color: #ECF014;
     color: black;
-    font-size: 1.25rem; 
-    font-weight: bold;
+    font-size: 2rem; 
     text-align: center;
-    border-radius: 9999px; 
-    padding: 0.5rem;
+    border-radius: 16px; 
+    padding: 1rem;
+    font-family: 'Truecolor Personal Use', sans-serif;
+    letter-spacing: 1px;
   }
   
   .heroButtonLink {

@@ -90,9 +90,10 @@ export const Navbar: React.FC = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          // Si no hay sesión, mostramos el icono de login
-          <Link href="/login" className={styles.loginIcon}>
-            <RiLoginBoxLine />
+          <Link href="/login" >
+          <button  className={styles.botonLed}>
+            INICIAR SESIÓN
+          </button>
           </Link>
         )}
       </div>

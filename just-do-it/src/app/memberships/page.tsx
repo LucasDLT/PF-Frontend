@@ -83,16 +83,16 @@ export default function MembershipsPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.cardContainer}>
         <h1 className={styles.title}>
           Selecciona el tipo de membresía que se ajuste a tus requerimientos
         </h1>
+      <div className={styles.cardContainer}>
         {memberships.map((membership) => (
           <div key={membership.id} className={styles.card}>
             <h2>{membership.name}</h2>
-            <p className={styles.cardPrice}>Precio: Us$ {membership.price}</p>
-            <p>Duración de: {membership.duration} días</p>
-            <p>Contarás con: {membership.description}</p>
+            <p className={styles.cardPrice}>Us$ {membership.price}</p>
+            <p>DURACION DE: {membership.duration} días</p>
+            <p>CONTARAS CON: {membership.description}</p>
             <button
               onClick={() => handleClick(membership.stripePriceId)}
               className={styles.cardButton}

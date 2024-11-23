@@ -16,8 +16,8 @@
   
   .headerText {
     color: white;
-    font-family: 'MADE Outer Sans', sans-serif;
-    font-size: 32px;
+  font-family: 'Colotus Personal Use', sans-serif;
+    font-size: 5rem;
     font-weight: 400;
   }
   
@@ -47,8 +47,8 @@
   
   .titleText {
     color: white;
-    font-size: 32px;
-    font-family: 'MADE Outer Sans', sans-serif;
+    font-size: 4rem;
+    font-family: 'Colotus Personal Use', sans-serif;
     font-weight: 400;
   }
   
