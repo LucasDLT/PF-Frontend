@@ -1,9 +1,7 @@
 .cardContainer {
-  display: flex;
-  flex-wrap: wrap;
   gap: 20px;
-  justify-content: center;
   padding: 20px;
+  display: flex;
 }
 
 .card {
@@ -11,11 +9,14 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 250px;
+  width: 300px;
+  height: 400px;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  margin-top: 4rem;
-
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .card:hover {
@@ -24,9 +25,12 @@
 }
 
 .card h2 {
-  font-size: 1.5rem;
+  font-size: 2rem;
   margin-bottom: 10px;
   color: #fff205;
+  font-family: 'Colotus Personal Use', sans-serif;
+letter-spacing: 2px;
+
 }
 
 .card p {
@@ -34,7 +38,6 @@
   color: #ffffff;
   margin-bottom: 10px;
   text-align: justify;
-
 }
 
 .cardPrice {
@@ -42,18 +45,19 @@
   font-weight: bold;
   color: #b0ba22;
   text-align: center;
-
 }
 
 .cardButton {
   background-color: #000;
   color: white;
-  border: none;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
   border: #fff205 1px solid;
+  font-family: 'Colotus Personal Use', sans-serif;
+  letter-spacing: 2px;
+  font-size: x-large;
 }
 
 .cardButton:hover {
@@ -63,19 +67,19 @@
 
 .container {
   background-image: url('/bg-membershipPage.jpg');
-  height: 90vh;
+  height: 100vh;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
-.title{
+
+.title {
   text-align: center;
   color: #000000;
-  font-size: 3rem;
-  font-weight: 400;
-  margin: 0.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  margin-top: 1rem;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.178);
-  backdrop-filter: blur(5px);
-  border-radius: 10px;}
+  font-size: 5rem;
+  font-family: 'Colotus Personal Use', sans-serif;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+}

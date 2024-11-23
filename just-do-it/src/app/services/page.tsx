@@ -1,5 +1,4 @@
 'use client'
-import { gymClasses } from "@/lib/utils"
 import SearchBar from "@/component/searchBar"
 import styles from './service.module.css'
 import { useAuth } from "@/context"

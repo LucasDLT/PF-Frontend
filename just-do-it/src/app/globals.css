@@ -1,5 +1,9 @@
+@import url('https://fonts.cdnfonts.com/css/truecolor-personal-use');
+@import url('https://fonts.cdnfonts.com/css/colotus-personal-use');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
 
