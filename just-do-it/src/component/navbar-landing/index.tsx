@@ -19,7 +19,7 @@ export const Navbar: React.FC = () => {
   const { data: session } = useSession();
   const { userSession, token, logout } = useAuth();
   const avatarUrl =
-    session?.user?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
+    userSession?.image || session?.user?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
 
     const handleLogOut = () => {
       
@@ -70,7 +70,7 @@ export const Navbar: React.FC = () => {
 
               <DropdownMenuItem asChild>
                 <Link
-                  href="/adminprofile"
+                  href="/dashBoard-Admin"
                   className={`${styles.menuItem} flex items-center`}
                 >
                   <UserCog className="mr-2 h-4 w-4" />

@@ -1,138 +1,209 @@
-'use client'
+'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui/pagination";
+import { Button } from "@/components/ui/button";
 import styles from './UserList.module.css';
 
-interface Session {
-  id: string | null;
-  name: string | null;
+interface User {
+  id: string;
+  name: string;
   email: string;
-  image: string | null;
-  phone: string;
-  address: string;
-  country: string;
-  roles: string[] | string;
+  roles: string;
   membership_status: string;
 }
 
-const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+interface ApiResponse {
+  users: User[];
+  totalElements: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
-const fetchUsers = async (page: number, limit: number): Promise<Session[]> => {
-  const queryParams = new URLSearchParams({
-    page: page.toString(),
-    limit: limit.toString(),
-  }).toString();
+const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
-  if (!PORT) {
-    throw new Error(
-      'El puerto de la API no está configurado. Verifica la variable NEXT_PUBLIC_APP_API_PORT'
-    );
-  }
-
-  const response = await fetch(`http://localhost:${PORT}/users?${queryParams}`);
+const fetchUsersFromAPI = async (page: number, limit: number): Promise<ApiResponse> => {
+  const response = await fetch(`http://localhost:${port}/users?page=${page}&limit=${limit}`);
   if (!response.ok) {
-    throw new Error(`Failed to fetch users. Status: ${response.status}`);
+    throw new Error('Failed to fetch users');
   }
-
-  return response.json();
+  return await response.json();
 };
 
 export default function UserList() {
-  const [users, setUsers] = useState<Session[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
   const [page, setPage] = useState(1);
-  const [limit] = useState(10); // Cantidad de usuarios por página
+  const [totalPages, setTotalPages] = useState(0);
+  const [filters, setFilters] = useState({
+    search: '',
+    status: 'all',
+    role: 'all',
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const ITEMS_PER_PAGE = 5;
 
-  const fetchData = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const data = await fetchUsers(page, limit);
-      setUsers(data);
-    } catch (error: any) {
-      console.error('Error fetching users:', error);
-      setError('Error al buscar usuarios, intente de nuevo');
-    } finally {
-      setIsLoading(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const data = await fetchUsersFromAPI(1, 1000); 
+        setAllUsers(data.users);
+        setTotalPages(Math.ceil(data.users.length / ITEMS_PER_PAGE));
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const filteredUsers = useMemo(() => {
+    return allUsers.filter(user => {
+      const matchesSearch = user.name.toLowerCase().includes(filters.search.toLowerCase()) ||
+                            user.email.toLowerCase().includes(filters.search.toLowerCase());
+      const matchesStatus = filters.status === 'all' || user.membership_status === filters.status;
+      const matchesRole = filters.role === 'all' || user.roles === filters.role;
+      return matchesSearch && matchesStatus && matchesRole;
+    });
+  }, [allUsers, filters]);
+
+  const paginatedUsers = useMemo(() => {
+    const startIndex = (page - 1) * ITEMS_PER_PAGE;
+    return filteredUsers.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredUsers, page]);
+
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [page]);
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
 
-  const totalPages = Math.ceil(users.length / limit); // Esto depende de cuántos usuarios totales tengas.
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [key]: value,
+    }));
+    setPage(1);
+  };
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(filteredUsers.length / ITEMS_PER_PAGE));
+  }, [filteredUsers]);
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Lista de usuarios</h1>
+      <h1 className={styles.title}>Lista de Usuarios</h1>
 
-      {error && (
-        <div className={styles.alert}>
-          <strong>Error:</strong> {error}
-        </div>
-      )}
+      <div className={styles.filters}>
+        <input
+          type="text"
+          placeholder="Buscar por nombre o email"
+          value={filters.search}
+          onChange={(e) => handleFilterChange('search', e.target.value)}
+          className={styles.filterInput}
+          aria-label="Buscar por nombre o email"
+        />
+        <select
+          onChange={(e) => handleFilterChange('status', e.target.value)}
+          value={filters.status}
+          className={styles.filterSelect}
+          aria-label="Filtrar por estado"
+        >
+          <option value="all">Todos los estados</option>
+          <option value="active">Activo</option>
+          <option value="inactive">Inactivo</option>
+        </select>
+        <select
+          onChange={(e) => handleFilterChange('role', e.target.value)}
+          value={filters.role}
+          className={styles.filterSelect}
+          aria-label="Filtrar por rol"
+        >
+          <option value="all">Todos los roles</option>
+          <option value="super">Super</option>
+          <option value="admin">Admin</option>
+          <option value="trainer">Trainer</option>
+        </select>
+      </div>
 
       {isLoading ? (
-        <div className={styles.loading}>Loading...</div>
+        <div className={styles.loading} aria-live="polite">Cargando...</div>
       ) : (
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Nombre</th>
-              <th>Correo electrónico</th>
-              <th>Dirección</th>
-              <th>Roles</th>
-              <th>Subscripción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.address}</td>
-                <td>
-                  {Array.isArray(user.roles)
-                    ? user.roles.join(', ')
-                    : user.roles}
-                </td>
-                <td>{user.membership_status}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Nombre</TableHead>
+                <TableHead>Email</TableHead>
+                <TableHead>Roles</TableHead>
+                <TableHead>Estado</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {paginatedUsers.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.roles}</TableCell>
+                  <TableCell>{user.membership_status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
 
-      <div className={styles.pagination}>
-        <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page === 1 || isLoading}
-          className={styles.paginationButton}
-        >
-          Anterior
-        </button>
-        {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-          <button
-            key={pageNum}
-            onClick={() => setPage(pageNum)}
-            disabled={isLoading}
-            className={`${styles.paginationButton} ${
-              pageNum === page ? styles.activePage : ''
-            }`}
-          >
-            {pageNum}
-          </button>
-        ))}
-        <button
-          onClick={() => setPage((prev) => prev + 1)}
-          disabled={isLoading}
-          className={styles.paginationButton}
-        >
-          Siguiente
-        </button>
-      </div>
+          <div className={styles.paginationInfo} aria-live="polite">
+            Mostrando {paginatedUsers.length} de {filteredUsers.length} usuarios
+          </div>
+
+          <Pagination className={styles.pagination}>
+            <PaginationContent>
+              <PaginationItem>
+                <Button
+                  onClick={handlePreviousPage}
+                  disabled={page === 1}
+                  variant="outline"
+                  aria-label="Página anterior"
+                >
+                  Anterior
+                </Button>
+              </PaginationItem>
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                <PaginationItem key={pageNum}>
+                  <PaginationLink
+                    onClick={() => setPage(pageNum)}
+                    isActive={pageNum === page}
+                    aria-label={`Ir a la página ${pageNum}`}
+                    aria-current={pageNum === page ? 'page' : undefined}
+                  >
+                    {pageNum}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              <PaginationItem>
+                <Button
+                  onClick={handleNextPage}
+                  disabled={page === totalPages}
+                  variant="outline"
+                  aria-label="Página siguiente"
+                >
+                  Siguiente
+                </Button>
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </>
+      )}
     </div>
   );
 }
+

@@ -1,5 +1,6 @@
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { MapPin, User, Calendar } from 'lucide-react'
+import styles from './ClassPreview.module.css'  // Importa el CSS Module
 
 interface ClassPreviewProps {
   classData: {
@@ -15,32 +16,39 @@ interface ClassPreviewProps {
 
 export function ClassPreview({ classData }: ClassPreviewProps) {
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>{classData.name}</CardTitle>
-        <CardDescription>{classData.description}</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
+    <div className={styles.card}>
+      <div className={styles.cardHeader}>
+        <h3 className={styles.cardTitle}>{classData.name}</h3>
+        <p className={styles.cardDescription}>{classData.description}</p>
+      </div>
+      <div className={styles.cardContent}>
         {classData.image && (
-          <img src={classData.image} alt={classData.name} className="w-full h-48 object-cover rounded-md" />
+          <img src={classData.image} alt={classData.name} className={styles.cardImage} />
         )}
-        <div className="flex items-center space-x-2">
-          <MapPin className="h-4 w-4" />
-          <span>{classData.location}</span>
+        <div className={styles.flexRow}>
+          <MapPin className={styles.icon} />
+          {/* Enlace a Google Maps */}
+          <a
+            href={`https://www.google.com/maps/search/?q=${encodeURIComponent(classData.location)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.locationLink}
+          >
+            <span>{classData.location}</span>
+          </a>
         </div>
-        <div className="flex items-center space-x-2">
-          <User className="h-4 w-4" />
+        <div className={styles.flexRow}>
+          <User className={styles.icon} />
           <span>{classData.teacher || 'No asignado'}</span>
         </div>
-        <div className="flex items-center space-x-2">
-          <Calendar className="h-4 w-4" />
+        <div className={styles.flexRow}>
+          <Calendar className={styles.icon} />
           <span>{classData.schedule.join(', ') || 'No hay horarios seleccionados'}</span>
         </div>
-      </CardContent>
-      <CardFooter>
+      </div>
+      <div className={styles.cardFooter}>
         <p>Capacidad máxima: {classData.capacity} estudiantes</p>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   )
 }
-
