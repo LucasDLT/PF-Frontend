@@ -32,9 +32,9 @@ export default function NavbarApp() {
 
   const menuItems = [
     { label: 'INICIO', href: '/' },
-    { label: 'SEDES', href: '/sede' },
+    { label: 'SEDES', href: '/location' },
     { label: 'SERVICIOS', href: '/services' },
-    { label: 'PLANES', href: '#' },
+    { label: 'PLANES', href: '/memberships' },
     { label: 'CONTÁCTANOS', href: '#' },
   ];
   useEffect(() => {

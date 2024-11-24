@@ -20,6 +20,7 @@ export interface Register{
 }
 
 export interface Session {
+    bio: string;
     id: string | null;
     name: string | null;
     email: string;
