@@ -1,54 +1,53 @@
-"use client"
+"use client";
 
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Label } from "@/components/ui/label"
-import { MapPin } from 'lucide-react'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+import { MapPin } from "lucide-react";
 
-import { ImageUploader } from '@/component/ClassAdmin/imageUpdate'
-import MyMap from '@/component/GoogleMaps/index'
-import ScheduleSelector from '@/component/ClassAdmin/shedule-selector'
-import { ClassPreview } from '@/component/ClassAdmin/CardPreview'
-import styles from './AdminClassCreator.module.css'
+import { ImageUploader } from "@/component/ClassAdmin/imageUpdate";
+import MyMap from "@/component/GoogleMaps/index";
+import ScheduleSelector from "@/component/ClassAdmin/shedule-selector";
+import { ClassPreview } from "@/component/ClassAdmin/CardPreview";
+import styles from "./AdminClassCreator.module.css";
 
 export default function AdminClassCreator() {
   const [classData, setClassData] = useState({
-    name: '',
-    description: '',
-    image: '',
-    location: '',
-    mapUrl: '',
-    teacher: '',
+    name: "",
+    description: "",
+    image: "",
+    location: "",
+    mapUrl: "",
+    teacher: "",
     schedule: [] as string[],
-    capacity: 0
-  })
+    capacity: 0,
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setClassData({ ...classData, [e.target.name]: e.target.value })
-  }
+    setClassData({ ...classData, [e.target.name]: e.target.value });
+  };
 
-  const handleImageUpload = (imageUrl: string) => {
-    setClassData({ ...classData, image: imageUrl })
-  }
+  const handleImageUpload = (uploadedImageUrl: string) => {
+    setClassData({ ...classData, image: uploadedImageUrl });
+  };
 
   const generateMapLink = () => {
-    const encodedLocation = encodeURIComponent(classData.location)
-    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`
-    setClassData({ ...classData, mapUrl })
-  }
+    const encodedLocation = encodeURIComponent(classData.location);
+    const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodedLocation}`;
+    setClassData({ ...classData, mapUrl });
+  };
 
   const handleScheduleChange = (schedule: string[]) => {
-    setClassData({ ...classData, schedule })
-  }
+    setClassData({ ...classData, schedule });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-  
-    console.log('Datos de la clase:', classData)
-  }
+    e.preventDefault();
+    console.log("Datos de la clase:", classData);
+  };
 
   return (
     <div className={styles.container}>
@@ -107,5 +106,5 @@ export default function AdminClassCreator() {
         </div>
       </div>
     </div>
-  )
+  );
 }

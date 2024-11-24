@@ -48,7 +48,7 @@ export default function UserList() {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const data = await fetchUsersFromAPI(1, 1000); // Fetch all users
+        const data = await fetchUsersFromAPI(1, 1000); 
         setAllUsers(data.users);
         setTotalPages(Math.ceil(data.users.length / ITEMS_PER_PAGE));
       } catch (error) {
