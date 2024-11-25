@@ -1,9 +1,7 @@
 'use client';
 import React from 'react';
-import styles from './carousel.module.css'; // Importar el archivo CSS Module
-
+import styles from './carousel.module.css';
 import Image from 'next/image';
-import { gymClasses } from '@/lib/utils';
 import { Card, CardContent } from '@/components/ui/card';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
 import Link from 'next/link';
@@ -26,13 +24,13 @@ export default function ActivityCarousel() {
               <Link href={`/servicedetail/${activity.id}`}>
                 <CardContent className={styles.cardContent}>
                   {/* Imagen */}
-                  <div>
+                  <div className={styles.imageContainer}>
                     <Image
                       src={activity.imgUrl}
                       alt={`Imagen de ${activity.name}`}
                       className={styles.image}
-                      width={500}
-                      height={100}
+                      width={500} // Ajustar según sea necesario
+                      height={200} // Ajustar altura según la imagen
                     />
                   </div>
                   {/* Contenido del Card */}

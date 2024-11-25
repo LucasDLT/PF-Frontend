@@ -69,19 +69,15 @@ export default function EdicionPerfil() {
         ) as HTMLInputElement;
         const countryField = form.elements.namedItem(
           'country',
-        ) as HTMLInputElement;
-        const bioField = form.elements.namedItem('bio') as HTMLTextAreaElement;
-
-        if (
+        ) 
+       { if (
           !nameField ||
           !emailField ||
           !phoneField ||
-          !addressField ||
-          !bioField
-        ) {
+          !addressField         ) {
           console.error('Faltan campos obligatorios en el formulario');
           return;
-        }
+        }}
 
         const formData = {
           name: nameField.value,
@@ -89,7 +85,6 @@ export default function EdicionPerfil() {
           phone: phoneField.value,
           address: addressField.value,
           country: countryField.value,
-          bio: bioField.value,
           image: imageUrl || '',
         };
 
@@ -116,11 +111,8 @@ export default function EdicionPerfil() {
         setSession(data);
 
         console.log('Datos que devuelve el servidor:', data);
-        if (window.confirm('¿Estás seguro de que deseas guardar los cambios?')) {
           toast.success('Perfil editado con éxito!');
-        } else {
-          toast.error('No se guardaron los cambios.');
-        }
+
         
       }}
     >
@@ -134,8 +126,6 @@ export default function EdicionPerfil() {
         </div>
       </div>
       <div className={styles.form}>
-        <Card className="shadow-lg">
-          <CardContent className="p-6">
             <div className="flex items-center space-x-4 mb-6">
               <div className={styles.avatarWrapper}>
                 <Avatar className={styles.avatar}>
@@ -227,7 +217,7 @@ export default function EdicionPerfil() {
                 />
               </div>
 
-              <div className={styles.formGroup}>
+             {/* <div className={styles.formGroup}>
                 <Label htmlFor="bio" className={styles.label}>
                   Biografía
                 </Label>
@@ -238,9 +228,7 @@ export default function EdicionPerfil() {
                   defaultValue={userSession?.bio || ''}
                 />
               </div>
-            </div>
-          </CardContent>
-        </Card>
+*/}            </div> 
       </div>
     </form>
   );
