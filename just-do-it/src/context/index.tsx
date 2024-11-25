@@ -3,7 +3,6 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { Session } from '@/types/users';
 
-// Definición de las clases
 export interface Class {
   id: string;
   name: string;
@@ -39,7 +38,9 @@ export const useAuth = () => {
   return context;
 };
 
-const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const [userSession, setSessionState] = useState<Session>({
     id: null,
@@ -49,13 +50,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     phone: '',
     address: '',
     country: '',
-    roles: [],
+    roles: '',
     membership_status: '',
   });
   const [token, setTokenState] = useState<string | null>(null);
   const [classes, setClasses] = useState<Class[] | null>(null);
 
-  // Lógica para obtener datos de la sesión y el token
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedToken = localStorage.getItem('token');
@@ -78,7 +78,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           phone: '',
           address: '',
           country: '',
-          roles: [],
+          roles: '',
           membership_status: '',
         });
         setTokenState(null);
@@ -86,12 +86,10 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     }
   }, []);
 
-  // Llamada a la función para obtener las clases
   useEffect(() => {
     fetchClasses();
-  }, []); // Llamar solo una vez cuando el componente se monta
+  }, []);
 
-  // Función para obtener las clases desde el servidor
   const fetchClasses = async () => {
     try {
       const response = await fetch(`http://localhost:${PORT}/classes`, {
@@ -108,7 +106,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     }
   };
 
-  // Función para establecer el token
   const handleSetToken = (newToken: string | null) => {
     setTokenState(newToken);
     if (!newToken) {
@@ -120,7 +117,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         phone: '',
         address: '',
         country: '',
-        roles: [],
+        roles: '',
         membership_status: '',
       });
       if (typeof window !== 'undefined') {
@@ -134,7 +131,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     }
   };
 
-  // Función para manejar los datos de sesión
   const handleUserData = (userSession: Session) => {
     setSessionState(userSession);
     if (!userSession) {
@@ -150,7 +146,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     }
   };
 
-  // Función de cierre de sesión
   const logout = () => {
     setTokenState(null);
     setSessionState({
@@ -161,7 +156,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       phone: '',
       address: '',
       country: '',
-      roles: [],
+      roles: '',
       membership_status: '',
     });
 
