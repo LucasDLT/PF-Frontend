@@ -11,7 +11,7 @@ import { toast } from 'sonner';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { setToken, setSession } = useAuth(); // Asegúrate de tener acceso a estos métodos en el contexto
+  const { setToken, setSession , userSession } = useAuth(); 
   const Router = useRouter();
   
   const initialState = {
@@ -77,15 +77,20 @@ export default function Login() {
 
         const result = await response.json();
 
-        // Guarda los datos del usuario y el token en el contexto
-        setSession(result.usedData); // Guarda los datos del usuario
-        setToken(result.token);       // Guarda el token
+        
+        setSession(result.usedData);
+        setToken(result.token);       
 
         toast.success(`¡Hola, ${result.usedData.name}! Bienvenido a tu cuenta.`);
 
 
         console.log('Usuario logueado con éxito:', result);
-        Router.push("/"); // Redirige a la página principal después del login
+        if (userSession?.roles !== "user") {
+          Router.push("/dashBoard-Admin");
+        } else {
+          Router.push("/");
+        }
+        
       } catch (error) {
         console.error('Error al iniciar sesión:', error);
         setErrors({
@@ -99,7 +104,7 @@ export default function Login() {
 
   const handleClickGoogle = async () => {
     try {
-      await signIn('google', { callbackUrl: '/' });
+      await signIn('google', { callbackUrl: '/loading' });
     } catch (error) {
       console.error('Error en signIn con Google', error);
     }
