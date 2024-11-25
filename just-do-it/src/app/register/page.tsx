@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context';
 import { Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export default function Register() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -108,8 +109,7 @@ export default function Register() {
         setSession(result.user);
         setToken(result.token);
   
-       
-        alert('Usuario registrado con éxito. Bienvenido a Just do it.');
+        toast.success('Usuario registrado con éxito. Bienvenido a Just do it.');
         router.push('/login'); 
   
       } catch (error) {

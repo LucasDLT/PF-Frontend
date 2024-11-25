@@ -1,9 +1,11 @@
 .carouselContent {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 60px; 
   margin-bottom: 10rem;
   max-height: 60vh;
+  padding: 10rem;
 }
 
 .carouselItem {
@@ -11,25 +13,28 @@
   justify-content: center;
   align-items: center;
   max-width: 26rem; 
-  margin: 1rem ;
+  margin: 1rem;
 }
 
 .cardContent {
   width: 100%;
-  border: none;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: none;
 }
 
 .imageContainer {
-  height: 10rem;
-  width: 15rem; 
-  border-radius: 0.75rem; 
-  
-
+  height: 200px; 
+  width: 100%;
+  overflow: hidden; 
+  border-radius: 0.75rem 0.75rem 0 0;
 }
 
 .image {
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
 }
 
 .cardBody {
@@ -37,40 +42,39 @@
   background-color: rgba(226, 231, 93, 0.338);
   border-radius: 0 0 0.75rem 0.75rem;
   color: #e0e0e0;
+  height: 150px; 
 }
 
 .cardTitle {
   font-size: 1.25rem; 
   font-weight: bold;
   margin-bottom: 0.5rem;
-  
 }
 
 .cardDescription {
   font-size: 0.875rem; 
   margin-bottom: 0.5rem;
   color: #e0e0e0;
-
 }
 
-
-
-/* Estilos para los controles del carrusel */
 .carouselPrevious,
 .carouselNext {
-  background-color: white;
   border-radius: 50%;
   padding: 0.5rem; 
   position: absolute;
   z-index: 10;
   top: 50%;
   transform: translateY(-50%);
+  background-color: antiquewhite;
+  cursor: pointer;
 }
 
 .carouselPrevious {
   left: 10px;
+  top: 13rem ;
 }
 
 .carouselNext {
+  top: 13rem ;
   right: 10px;
 }

@@ -7,13 +7,13 @@
   }
   
   .cardContainer {
-    display: grid;
+    display: grid; 
     gap: 2rem;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
   
   .cardHeaderCustom {
-    background: linear-gradient(90deg, #3b82f6, #10b981);
+    background: linear-gradient(90deg, #edf63b, #000000);
     color: white;
     border-radius: 0.75rem 0.75rem 0 0;
   }

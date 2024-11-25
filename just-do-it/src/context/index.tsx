@@ -164,7 +164,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       roles: [],
       membership_status: '',
     });
-        toast.success('¡Hasta luego! Hemos cerrado tu sesión.');
 
     setClasses(null);
     if (typeof window !== 'undefined') {
