@@ -1,11 +1,11 @@
 'use client';
-import { Avatar,  AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import {  Save } from 'lucide-react';
+import { Save } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import styles from './edicionperfil.module.css';
 import { useSession } from 'next-auth/react';
@@ -16,7 +16,6 @@ import { toast } from 'sonner';
 export default function EdicionPerfil() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const route = useRouter();
-  const { data: session } = useSession();
   const { token, userSession, setSession } = useAuth();
   const [file, setFile] = useState<File | undefined>(undefined);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -70,11 +69,14 @@ export default function EdicionPerfil() {
         const countryField = form.elements.namedItem(
           'country',
         ) 
-       { if (
+
+        if (
           !nameField ||
           !emailField ||
           !phoneField ||
-          !addressField         ) {
+          !addressField 
+        ) {
+
           console.error('Faltan campos obligatorios en el formulario');
           return;
         }}
@@ -111,9 +113,15 @@ export default function EdicionPerfil() {
         setSession(data);
 
         console.log('Datos que devuelve el servidor:', data);
-          toast.success('Perfil editado con éxito!');
 
-        
+        if (
+          window.confirm('¿Estás seguro de que deseas guardar los cambios?')
+        ) {
+          toast.success('Perfil editado con éxito!');
+        } else {
+          toast.error('No se guardaron los cambios.');
+        }
+
       }}
     >
       <div className={styles.header}>
@@ -132,9 +140,7 @@ export default function EdicionPerfil() {
                   {imageUrl ? (
                     <AvatarImage alt="Foto de perfil" src={imageUrl} />
                   ) : (
-                    <h3 className={styles.name}>
-                      {session?.user.name || userSession?.name}
-                    </h3>
+                    <h3 className={styles.name}>{userSession?.name}</h3>
                   )}
                 </Avatar>
                 <div className={styles.cameraIcon}>
@@ -162,7 +168,7 @@ export default function EdicionPerfil() {
                 <Input
                   id="name"
                   name="name"
-                  defaultValue={session?.user.name || userSession?.name}
+                  defaultValue={userSession?.name}
                   className={styles.input}
                 />
               </div>
@@ -175,7 +181,7 @@ export default function EdicionPerfil() {
                   id="email"
                   name="email"
                   type="email"
-                  defaultValue={session?.user.email || userSession?.email}
+                  defaultValue={userSession?.email}
                   className={styles.input}
                 />
               </div>
@@ -217,18 +223,10 @@ export default function EdicionPerfil() {
                 />
               </div>
 
-             {/* <div className={styles.formGroup}>
-                <Label htmlFor="bio" className={styles.label}>
-                  Biografía
-                </Label>
-                <Textarea
-                  className={`${styles.textarea} min-h-[100px]`}
-                  id="bio"
-                  name="bio"
-                  defaultValue={userSession?.bio || ''}
-                />
-              </div>
-*/}            </div> 
+            </div>
+          </CardContent>
+        </Card>
+
       </div>
     </form>
   );

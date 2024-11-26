@@ -11,17 +11,17 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context';
-import { Avatar, user } from '@nextui-org/react'; 
+
+import { Avatar } from '@nextui-org/react'; // Asegúrate de tener esta librería
+
 
 export default function NavbarApp() {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession();
-  const { userSession, token , logout  } = useAuth();
+  const { userSession, token, logout } = useAuth();
 
   const avatarUrl =
-    session?.user?.image ||
     userSession?.image ||
     'https://i.pravatar.cc/150?u=a042581f4e29026704d'; 
 
@@ -37,31 +37,32 @@ export default function NavbarApp() {
     { label: 'PLANES', href: '/memberships' },
     { label: 'CONTÁCTANOS', href: '#' },
   ];
+
+  // Verificación de la sesión y el token
+  const isUserLoggedIn = userSession && token;
+  const isAdmin = userSession?.roles !== 'user'; // Verifica si el usuario no tiene el rol de 'user'
+
   useEffect(() => {
     // Inspección del estado actual
     console.log('--- Verificando estado de sesión ---');
-    console.log('Google Session (NextAuth):', session);
-   
     console.log('User Session:', userSession);
     console.log('id de usuario:', userSession?.id);
     console.log('Token:', token);
-    
 
     // Verificar datos almacenados en localStorage
     const storedToken = localStorage.getItem('token');
     const storedUserSession = localStorage.getItem('userSession');
-    
+
     console.log('Token almacenado:', storedToken);
     console.log('User Session almacenada:', JSON.parse(storedUserSession || 'null'));
-    
 
     // Confirmar si existe alguna sesión activa
-    if (session || token) {
+    if (token) {
       console.log('Sesión activa detectada.');
     } else {
       console.log('No hay sesión activa.');
     }
-  }, [session, userSession,  token])
+  }, [userSession, token]);
 
   const NavMenu = ({ isMobile = false }) => (
     <DropdownMenu>
@@ -73,7 +74,7 @@ export default function NavbarApp() {
           <span className="sr-only">Open main menu</span>
           {isOpen ? (
             <X className="h-6 w-6" />
-          ) : session ? (
+          ) : userSession ? (
             <Avatar src={avatarUrl} size="lg" className="h-8 w-8" /> // Mostrar avatar si está logueado
           ) : (
             <Menu className="h-6 w-6" /> // Mostrar icono de menú hamburguesa si no está logueado
@@ -94,25 +95,33 @@ export default function NavbarApp() {
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator className={styles.menuSeparator} />
-        {session || token ? (
-          // Si hay sesión (desde Google o desde formulario), muestra las opciones de usuario
+        {isUserLoggedIn ? (
           <>
-            <DropdownMenuItem className={styles.menuItem} asChild>
-              <Link href="/userprofile">
-                <div className="flex items-center">
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Perfil Usuario</span>
-                </div>
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className={styles.menuItem} asChild>
-              <a href="#">
-                <div className="flex items-center">
-                  <UserCog className="mr-2 h-4 w-4" />
-                  <span>Perfil Admin</span>
-                </div>
-              </a>
-            </DropdownMenuItem>
+            {/* Mostrar opciones de usuario si el rol es 'user' */}
+            {userSession?.roles === 'user' && (
+              <DropdownMenuItem className={styles.menuItem} asChild>
+                <Link href="/userprofile">
+                  <div className="flex items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Perfil Usuario</span>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+            )}
+
+            {/* Mostrar opciones de admin si el rol no es 'user' */}
+            {isAdmin && (
+              <DropdownMenuItem className={styles.menuItem} asChild>
+                <a href="#">
+                  <div className="flex items-center">
+                    <UserCog className="mr-2 h-4 w-4" />
+                    <span>Perfil Admin</span>
+                  </div>
+                </a>
+              </DropdownMenuItem>
+            )}
+
+            {/* Opción para cerrar sesión */}
             <DropdownMenuItem className={styles.menuItem} asChild>
               <div
                 className="flex items-center cursor-pointer"
@@ -124,7 +133,7 @@ export default function NavbarApp() {
             </DropdownMenuItem>
           </>
         ) : (
-          // Si no hay sesión (ni desde Google ni desde formulario), muestra solo la opción de iniciar sesión
+          // Si no hay sesión, solo mostrar opción de iniciar sesión
           <DropdownMenuItem className={styles.menuItem} asChild>
             <Link href="/login">
               <div className="flex items-center">

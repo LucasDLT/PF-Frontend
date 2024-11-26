@@ -58,17 +58,17 @@ export default function MembershipsPage() {
         },
       );
 
-      console.log(response);
-
+      
       if (!response.ok) {
         const errorText = await response.text();
         console.error('Error en la solicitud POST:', errorText);
-
+        
         throw new Error(`Error al crear la membresía: ${response.statusText}`);
       }
-
+      
       const result = await response.json();
       console.log('Membresía seleccionada exitosamente', result);
+      console.log('respuesta del back',result);
 
       if (result?.sessionUrl) {
         console.log('Redirigiendo a Stripe Checkout:', result.sessionUrl);
