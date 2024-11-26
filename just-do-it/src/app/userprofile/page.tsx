@@ -10,7 +10,6 @@ import { useAuth } from '@/context';
 
 export default function PerfilUsuario() {
   const route = useRouter();
-  const { data: session } = useSession();
   const { userSession } = useAuth();
 
   const handleEdit = () => {
@@ -41,7 +40,6 @@ export default function PerfilUsuario() {
                 <AvatarImage
                   alt="Foto de perfil"
                   src={
-                    session?.user?.image ??
                     userSession?.image ??
                     '/default-avatar.png'
                   }
@@ -52,10 +50,10 @@ export default function PerfilUsuario() {
               </Avatar>
               <div>
                 <h2 className="text-2xl font-bold">
-                  {session?.user.name || userSession?.name}
+                  { userSession?.name}
                 </h2>
                 <p className="text-gray-500">
-                  {session?.user.email || userSession?.email}
+                  {userSession?.email}
                 </p>
               </div>
             </div>
@@ -64,7 +62,7 @@ export default function PerfilUsuario() {
               {/* Espaciado entre detalles */}
               <div className="flex items-center gap-4">
                 <Mail className="h-5 w-5 text-blue-500" />
-                <span>{session?.user.email || userSession?.email}</span>
+                <span>{ userSession?.email}</span>
               </div>
               <div className="flex items-center gap-4">
                 <PhoneCall className="h-5 w-5 text-blue-500" />

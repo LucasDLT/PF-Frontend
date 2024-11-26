@@ -3,7 +3,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { RiLoginBoxLine } from 'react-icons/ri';
 import { Avatar } from '@nextui-org/react'; // Para mostrar el avatar
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,17 +16,15 @@ import { useAuth } from '@/context';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session } = useSession();
   const { userSession, token, logout } = useAuth();
   const avatarUrl =
-    userSession?.image || session?.user?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
+    userSession?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
 
-    const handleLogOut = () => {
-      
-      signOut({ callbackUrl: '/' });  
-    
-      
-      logout();  }
+  // Lógica para cerrar sesión
+  const handleLogOut = () => {
+    signOut({ callbackUrl: '/' });
+    logout();
+  };
 
   const menuItems = [
     { label: 'INICIO', href: '/' },
@@ -35,6 +33,9 @@ export const Navbar: React.FC = () => {
     { label: 'PLANES', href: '/memberships' },
     { label: 'CONTÁCTANOS', href: '/contacto' },
   ];
+
+  // Verificación de rol: Si el rol no es 'user', entonces es un admin
+  const isAdmin = userSession?.roles !== 'user'; // Cambiar 'user' por el rol adecuado
 
   return (
     <nav className={styles.navbar}>
@@ -48,7 +49,7 @@ export const Navbar: React.FC = () => {
 
       {/* Aquí empieza el Dropdown del avatar o login */}
       <div className={styles.iconLink}>
-        {session || token ? (
+        {token ? (
           // Si hay sesión, mostramos el avatar y el dropdown
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -58,26 +59,33 @@ export const Navbar: React.FC = () => {
             </DropdownMenuTrigger>
 
             <DropdownMenuContent>
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/userprofile"
-                  className={`${styles.menuItem} flex items-center`}
-                >
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Perfil Usuario</span>
-                </Link>
-              </DropdownMenuItem>
+              {/* Mostrar solo el perfil de usuario si el rol es 'user' */}
+              {userSession?.roles === 'user' && (
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/userprofile"
+                    className={`${styles.menuItem} flex items-center`}
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Perfil Usuario</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/dashBoard-Admin"
-                  className={`${styles.menuItem} flex items-center`}
-                >
-                  <UserCog className="mr-2 h-4 w-4" />
-                  <span>Perfil Admin</span>
-                </Link>
-              </DropdownMenuItem>
+              {/* Mostrar solo el perfil de admin si el rol no es 'user' */}
+              {isAdmin && (
+                <DropdownMenuItem asChild>
+                  <Link
+                    href="/dashBoard-Admin"
+                    className={`${styles.menuItem} flex items-center`}
+                  >
+                    <UserCog className="mr-2 h-4 w-4" />
+                    <span>Perfil Admin</span>
+                  </Link>
+                </DropdownMenuItem>
+              )}
 
+              {/* Opción para cerrar sesión */}
               <DropdownMenuItem asChild>
                 <div
                   className={`${styles.menuItem} flex items-center cursor-pointer`} // Aplica el mismo estilo
@@ -90,10 +98,10 @@ export const Navbar: React.FC = () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Link href="/login" >
-          <button  className={styles.botonLed}>
-            INICIAR SESIÓN
-          </button>
+          <Link href="/login">
+            <button className={styles.botonLed}>
+              INICIAR SESIÓN
+            </button>
           </Link>
         )}
       </div>

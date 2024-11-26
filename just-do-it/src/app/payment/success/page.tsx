@@ -1,7 +1,5 @@
 'use client';
 import Link from 'next/link';
-import AOS from 'aos';
-import { Button } from '@/components/ui/button';
 import {
   CardContent,
   CardFooter,
@@ -10,11 +8,44 @@ import {
 } from '@/components/ui/card';
 import styles from './succes.module.css';
 import { useEffect } from 'react';
+import { useAuth } from '@/context';
 
 export default function SubscriptionSuccess() {
+  const { setSession, userSession } = useAuth();
+  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+
+  const checkPaymentStatus = async () => {
+    if (userSession?.id) {
+      try {
+        const response = await fetch(
+          `http://localhost:${PORT}/users/profile/${userSession?.id}`,
+
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+        const data = await response.json();
+        console.log('datos del pago', data);
+
+        if (response.ok) {
+          const data = await response.json();
+          setSession(data.userData);
+        } else {
+          console.error('Error registering user');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  };
+
+  // Usamos useEffect para ejecutar la función solo cuando el componente se monta
   useEffect(() => {
-    AOS.init({});
-  }, []);
+    checkPaymentStatus(); // Llamamos la función asincrónica al montar el componente
+  }, [userSession]); // Dependemos de userSession para ejecutarse correctamente
 
   return (
     <div className={styles.container} data-aos="fade-right">
