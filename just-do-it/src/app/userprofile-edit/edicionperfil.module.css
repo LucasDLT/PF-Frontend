@@ -1,0 +1,165 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  background-color: #000000;
+  padding: 20px;
+  min-height: 80vh;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  color: #fff;
+}
+
+/* Header */
+.header {
+  background-color: #000000;
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
+  width: 90%;
+}
+
+.headerContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Botón de guardar */
+.buttonSave {
+  background-color: #f59e0b;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.buttonSave:hover {
+  background-color: #eab308;
+}
+
+/* Avatar */
+.avatarWrapper {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 3px solid #f59e0b;
+  position: absolute;
+  top: 3rem;
+  left: 27rem;
+}
+
+.avatarButton {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: 10px;
+}
+
+.avatarFallback {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.formGroup {
+  margin-bottom: 20px;
+  margin-right: 100px;
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.input,
+.textarea {
+  width: 200%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #b9a50b;
+  margin-top: 8px;
+}
+
+.textarea {
+  min-height: 150px;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: #f59e0b;
+}
+
+/* Estilo de la cámara */
+.cameraIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.cameraLabel {
+  display: inline-block;
+  color: #eab308;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  cursor: pointer;
+}
+
+.cameraImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-color: #ffbf00;
+  border-radius: 50%;
+  padding: 5px;
+  position: absolute;
+  right: 5rem;
+  top: -14rem;
+}
+
+/* Centrado del nombre */
+.name {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 2rem;
+  font-family: 'Colotus Personal Use', sans-serif;
+}
+
+/* Centrado de la tarjeta y aumento del ancho */
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+  border: #b9a50b solid 1px;
+  position: relative;
+  padding: 8rem;
+
+}
+
+.card {
+  margin: 0 auto; /* Centrado horizontal */
+  padding: 20px; /* Opcional, para darle un poco de espacio dentro de la tarjeta */
+  border-radius: 8px; /* Opcional, para bordes redondeados */
+  background-color: #000000;}

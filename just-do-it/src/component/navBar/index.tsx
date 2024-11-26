@@ -13,7 +13,9 @@ import {
 import Link from 'next/link';
 import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context';
+
 import { Avatar } from '@nextui-org/react'; // Asegúrate de tener esta librería
+
 
 export default function NavbarApp() {
   const [isOpen, setIsOpen] = useState(false);
@@ -21,7 +23,7 @@ export default function NavbarApp() {
 
   const avatarUrl =
     userSession?.image ||
-    'https://i.pravatar.cc/150?u=a042581f4e29026704d'; // Imagen predeterminada si no hay avatar
+    'https://i.pravatar.cc/150?u=a042581f4e29026704d'; 
 
   const handleLogOut = () => {
     logout();
