@@ -2,13 +2,14 @@
 
 .container {
     display: flex;
-    height: 100vh; /* Hace que el contenedor principal ocupe toda la altura de la pantalla */
+    height: 100vh; 
   }
   
   .sidebar {
     width: 250px;
-    background-color: white;
-    height: 100vh; /* Esto asegura que la sidebar ocupe toda la altura */
+    background-color: rgb(0, 0, 0);
+    color: #f0f0f0;
+    height: 100vh; 
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     padding: 1rem;
     display: flex;
@@ -18,6 +19,8 @@
   
   .sidebar button {
     margin-bottom: 1rem;
+    border: #f0f0f0 solid 2px;
+    border-radius: 10px;
   }
   
   .menuItem {
@@ -25,10 +28,11 @@
     font-size: 1.1rem;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    border-radius: 10px;
   }
   
   .menuItem:hover {
-    background-color: #f0f0f0;
+    border: #f0f0f0 solid 1px;
   }
   
   .customButton {
@@ -45,16 +49,23 @@
   }
   
   .customButton:hover {
-    background-color: #f0f0f0;
+    color: #ffee00b0;
   }
   
   .subMenu {
     padding-left: 20px;
     padding-top: 10px;
+    border-radius: 10px;
+    
   }
   
   .subMenu li {
     padding: 8px 0;
+  }
+
+  .subMenu li:hover {
+    color: #ffee00b0;
+
   }
   
   .transitionIcon {
@@ -73,7 +84,7 @@
   .main {
     flex-grow: 1; /* Hace que el contenido principal ocupe el espacio restante */
     padding: 2rem;
-    background-color: #f9f9f9;
+    background-color: #ffffff57;
     overflow-y: auto; /* Permite desplazamiento si el contenido es largo */
   }
   

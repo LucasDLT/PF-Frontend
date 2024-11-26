@@ -76,9 +76,10 @@ export default function EdicionPerfil() {
           !phoneField ||
           !addressField 
         ) {
+
           console.error('Faltan campos obligatorios en el formulario');
           return;
-        }
+        }}
 
         const formData = {
           name: nameField.value,
@@ -112,6 +113,7 @@ export default function EdicionPerfil() {
         setSession(data);
 
         console.log('Datos que devuelve el servidor:', data);
+
         if (
           window.confirm('¿Estás seguro de que deseas guardar los cambios?')
         ) {
@@ -119,6 +121,7 @@ export default function EdicionPerfil() {
         } else {
           toast.error('No se guardaron los cambios.');
         }
+
       }}
     >
       <div className={styles.header}>
@@ -131,8 +134,6 @@ export default function EdicionPerfil() {
         </div>
       </div>
       <div className={styles.form}>
-        <Card className="shadow-lg">
-          <CardContent className="p-6">
             <div className="flex items-center space-x-4 mb-6">
               <div className={styles.avatarWrapper}>
                 <Avatar className={styles.avatar}>
@@ -221,9 +222,11 @@ export default function EdicionPerfil() {
                   className={styles.input}
                 />
               </div>
+
             </div>
           </CardContent>
         </Card>
+
       </div>
     </form>
   );
