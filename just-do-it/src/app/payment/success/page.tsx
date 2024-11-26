@@ -7,57 +7,73 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import styles from './succes.module.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/context';
+import { log } from 'console';
 
 export default function SubscriptionSuccess() {
   const { setSession, userSession } = useAuth();
+  const [paymentStatus, setPaymentStatus] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
 
-  const checkPaymentStatus = async () => {
-    if (userSession?.id) {
-      try {
-        const response = await fetch(
-          `http://localhost:${PORT}/users/profile/${userSession?.id}`,
-
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
+  const checkPaymentStatus = async (sessionId: string) => {
+    try {
+      const response = await fetch(
+        `http://localhost:${PORT}/payment/success?session_id=${sessionId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
           },
-        );
-        const data = await response.json();
-        console.log('datos del pago', data);
+        },
+      );
+      const data = await response.json();
+      
 
-        if (response.ok) {
-          const data = await response.json();
-          setSession(data.userData);
-        } else {
-          console.error('Error registering user');
-        }
-      } catch (error) {
-        console.error('Error:', error);
+      if (response.ok) {
+        setSession(data.userData);
+        setPaymentStatus('success');
+      } else {
+        setPaymentStatus('error');
+        setErrorMessage(
+          'Hubo un problema al registrar tu suscripción. Intenta nuevamente.',
+        );
       }
+    } catch (error) {
+      console.error('Error:', error);
+      setPaymentStatus('error');
+      setErrorMessage('Hubo un error de conexión. Intenta nuevamente.');
     }
   };
 
-  // Usamos useEffect para ejecutar la función solo cuando el componente se monta
   useEffect(() => {
-    checkPaymentStatus(); // Llamamos la función asincrónica al montar el componente
-  }, [userSession]); // Dependemos de userSession para ejecutarse correctamente
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionId = urlParams.get('session_id');
+
+    if (sessionId) {
+      checkPaymentStatus(sessionId);
+    } else {
+      setPaymentStatus('error');
+      setErrorMessage('No se pudo completar el pago');
+    }
+  }, []);
 
   return (
     <div className={styles.container} data-aos="fade-right">
       <div className={styles.card}>
         <CardHeader>
           <CardTitle className={styles.cardTitle}>
-            ¡Suscripción Exitosa!
+            {paymentStatus === 'success'
+              ? '¡Suscripción Exitosa!'
+              : 'Error en la Suscripción'}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className={styles.cardContent}>
-            Gracias por suscribirte. Ahora formas parte de nuestra comunidad.
+            {paymentStatus === 'success'
+              ? 'Gracias por suscribirte. Ahora formas parte de nuestra comunidad.'
+              : errorMessage}
           </p>
         </CardContent>
         <CardFooter className={styles.cardFooter}>
