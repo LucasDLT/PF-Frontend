@@ -6,6 +6,8 @@ import ShowComponent from '@/component/showComponents';
 import Footer from '@/component/footer';
 import AuthProvider from '@/context';
 import { Toaster } from 'sonner';
+import ChatBotComponent from "@/component/chatBot";
+
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -47,6 +49,7 @@ export default function RootLayout({
               },
             }}
             />
+            <ChatBotComponent />
           {children}
           <ShowComponent>
           <Footer />

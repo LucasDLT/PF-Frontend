@@ -4,6 +4,8 @@ const nextConfig = {
   images: {
     domains: ['i.imgur.com'],
   },
+  reactStrictMode: false,
+
 };
 
 module.exports = nextConfig;
