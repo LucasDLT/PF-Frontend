@@ -1,11 +1,19 @@
-"use client";
+"use client"
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ActivityDetail from '@/component/classDetail';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-// Define la interfaz para la clase de gimnasio
+interface Schedule {
+  id: string;
+  day: string;
+  startTime: string;
+  endTime: string;
+  currentParticipants: number;
+  remainingCapacity: number;
+}
+
 interface GymClass {
   id: string;
   name: string;
@@ -13,15 +21,15 @@ interface GymClass {
   location: string;
   capacity: number;
   current_participants: number;
-  trainerName: string;
+  trainerName: string | null;
   imgUrl: string;
-  schedule: string; 
+  schedules: Schedule[];
 }
 
 export default function ClassDetailPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const { id } = useParams();
-  const [gymClass, setGymClass] = useState<GymClass | null>(null); 
+  const [gymClass, setGymClass] = useState<GymClass | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -33,10 +41,9 @@ export default function ClassDetailPage() {
           throw new Error('Clase no encontrada');
         }
         const data: GymClass = await response.json();
-        setGymClass(data); 
+        setGymClass(data);
       } catch (err) {
-        // Asegúrate de pasar un mensaje de error aquí
-        setError('Hubo un problema al cargar la clase'); 
+        setError('Hubo un problema al cargar la clase');
       } finally {
         setLoading(false);
       }
@@ -48,6 +55,11 @@ export default function ClassDetailPage() {
   useEffect(() => {
     AOS.init({});
   }, []);
+
+  const handleScheduleClick = (scheduleId: string) => {
+    console.log(`Horario con ID ${scheduleId} clickeado`);
+    // Aquí puedes manejar la lógica que desees al hacer clic en un horario
+  };
 
   if (loading) {
     return <p>Cargando...</p>;
@@ -62,18 +74,25 @@ export default function ClassDetailPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen min-w-screen" data-aos="fade-right">
-      <ActivityDetail 
-        id={gymClass.id}
-        name={gymClass.name}
-        description={gymClass.description}
-        location={gymClass.location}
-        capacity={gymClass.capacity}
-        current_participants={gymClass.current_participants}
-        trainerName={gymClass.trainerName}
-        imgUrl={gymClass.imgUrl}
-        schedule={gymClass.schedule}
-      />
+    <div
+      className="flex justify-center items-center min-h-screen min-w-screen"
+      data-aos="fade-right"
+    >
+      {gymClass.schedules && gymClass.schedules.length > 0 ? (
+        <ActivityDetail
+          id={gymClass.id}
+          name={gymClass.name}
+          description={gymClass.description}
+          location={gymClass.location}
+          capacity={gymClass.capacity}
+          trainerName={gymClass.trainerName}
+          imgUrl={gymClass.imgUrl}
+          schedules={gymClass.schedules}
+          onScheduleClick={handleScheduleClick} 
+        />
+      ) : (
+        <p>No hay horarios disponibles para esta clase.</p>
+      )}
     </div>
   );
 }

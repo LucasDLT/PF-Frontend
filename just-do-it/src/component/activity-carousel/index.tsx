@@ -29,11 +29,11 @@ export default function ActivityCarousel() {
                       src={activity.imgUrl}
                       alt={`Imagen de ${activity.name}`}
                       className={styles.image}
-                      width={500} // Ajustar según sea necesario
-                      height={200} // Ajustar altura según la imagen
+                      width={500} 
+                      height={200} 
                     />
                   </div>
-                  {/* Contenido del Card */}
+                 
                   <div className={styles.cardBody}>
                     <h3 className={styles.cardTitle}>{activity.name}</h3>
                     <p className={styles.cardDescription}>{activity.description}</p>
