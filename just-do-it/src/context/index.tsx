@@ -3,19 +3,26 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { Session } from '@/types/users';
 
+export interface Schedule {
+  id: string;
+  day: string; // Ejemplo: "lunes"
+  startTime: string; // Ejemplo: "0800"
+  endTime: string; // Ejemplo: "0900"
+  currentParticipants: number;
+  remainingCapacity: number;
+}
+
 export interface Class {
   id: string;
   name: string;
   description: string;
   location: string;
   capacity: number;
-  current_participants: number;
-  schedule: string;
+  schedule: Schedule[]; // Modificado a un array
   imgUrl: string;
-  trainerName: string;
+  trainerName: string | null;
 }
 
-// Definición del contexto
 interface AuthContextType {
   token: string | null;
   userSession: Session;
@@ -27,7 +34,6 @@ interface AuthContextType {
   logout: () => void;
 }
 
-// Creación del contexto
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const useAuth = () => {
@@ -38,9 +44,7 @@ export const useAuth = () => {
   return context;
 };
 
-const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const [userSession, setSessionState] = useState<Session>({
     id: null,
@@ -52,7 +56,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     country: '',
     roles: '',
     membership_status: '',
-    auth:""
+    auth: '',
   });
   const [token, setTokenState] = useState<string | null>(null);
   const [classes, setClasses] = useState<Class[] | null>(null);
@@ -81,7 +85,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           country: '',
           roles: '',
           membership_status: '',
-          auth:""
+          auth: '',
         });
         setTokenState(null);
       }
@@ -98,8 +102,25 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         method: 'GET',
       });
       if (response.ok) {
-        const data: Class[] = await response.json();
-        setClasses(data);
+        const data = await response.json();
+        const formattedClasses = data.data.map((cls: any) => ({
+          id: cls.id,
+          name: cls.name,
+          description: cls.description,
+          location: cls.location,
+          capacity: cls.capacity,
+          schedule: cls.schedules.map((schedule: any) => ({
+            id: schedule.id,
+            day: schedule.day,
+            startTime: schedule.startTime.replace(':', '').slice(0, 4),
+            endTime: schedule.endTime.replace(':', '').slice(0, 4),
+            currentParticipants: schedule.currentParticipants,
+            remainingCapacity: schedule.remainingCapacity,
+          })),
+          imgUrl: cls.imgUrl,
+          trainerName: cls.trainer?.name || null,
+        }));
+        setClasses(formattedClasses);
       } else {
         console.error('Error fetching classes:', response.statusText);
       }
@@ -121,7 +142,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         country: '',
         roles: '',
         membership_status: '',
-        auth:""
+        auth: '',
       });
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
@@ -161,7 +182,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       country: '',
       roles: '',
       membership_status: '',
-      auth:""
+      auth: '',
     });
 
     setClasses(null);
