@@ -245,7 +245,7 @@ export default function EdicionPerfil() {
                   />
                 </div>
 
-                {userSession?.auth === 'google' && (
+                {userSession?.auth === 'googleIncomplete' && (
                   <>
                     <div>
                       <Label htmlFor="password" className={styles.label}>

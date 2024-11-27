@@ -106,7 +106,7 @@ export default function Register() {
         const result = await response.json();
   
       
-        setSession(result.user);
+        setSession(result.userData);
         setToken(result.token);
   
         toast.success('Usuario registrado con éxito. Bienvenido a Just do it.');
