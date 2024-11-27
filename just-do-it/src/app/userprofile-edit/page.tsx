@@ -23,6 +23,12 @@ export default function EdicionPerfil() {
     phone: userSession?.phone || '',
     country: userSession?.country || '',
     address: userSession?.address || '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [errors, setErrors] = useState({
+    password: '',
+    confirmPassword: ''
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,8 +68,33 @@ export default function EdicionPerfil() {
     }
   };
 
+  const validateForm = () => {
+    let isValid = true;
+    let newErrors = { password: '', confirmPassword: '' };
+
+    
+    if (formData.password && formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Las contraseñas no coinciden';
+      isValid = false;
+    }
+
+    
+    if (formData.password && formData.password.length < 8) {
+      newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
+      isValid = false;
+    } else if (formData.password && !/[A-Z]/.test(formData.password)) {
+      newErrors.password = 'La contraseña debe contener al menos una letra mayúscula';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
 
     const updatedData = { ...formData, imageUrl };
 
@@ -213,6 +244,48 @@ export default function EdicionPerfil() {
                     className={styles.input}
                   />
                 </div>
+
+                {userSession?.auth === 'google' && (
+                  <>
+                    <div>
+                      <Label htmlFor="password" className={styles.label}>
+                        Nueva Contraseña
+                      </Label>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={formData.password}
+                        placeholder="Escribe tu nueva contraseña"
+                        onChange={handleChange}
+                        className={styles.input}
+                      />
+                      {errors.password && (
+                        <p className="text-red-500 text-sm">{errors.password}</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <Label htmlFor="confirmPassword" className={styles.label}>
+                        Confirmar Contraseña
+                      </Label>
+                      <Input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        value={formData.confirmPassword}
+                        placeholder="Confirma tu nueva contraseña"
+                        onChange={handleChange}
+                        className={styles.input}
+                      />
+                      {errors.confirmPassword && (
+                        <p className="text-red-500 text-sm">
+                          {errors.confirmPassword}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </form>
           </CardContent>

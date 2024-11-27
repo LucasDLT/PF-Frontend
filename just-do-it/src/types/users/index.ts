@@ -25,4 +25,5 @@ export interface Session {
   country: string;
   roles: string;
   membership_status: string;
+  auth:string;
 }
