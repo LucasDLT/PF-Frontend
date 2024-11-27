@@ -1,0 +1,66 @@
+/* ScheduledClasses.module.css */
+.card {
+    width: 100%;
+    margin-top: 1.5rem; /* mt-6 */
+  }
+  
+  .cardHeader {
+    padding: 0.75rem 1.25rem; /* Ajusta el padding si es necesario */
+  }
+  
+  .cardTitle {
+    font-size: 1.5rem; /* Título */
+    font-weight: 700; /* Font-bold */
+  }
+  
+  .cardContent {
+    padding: 0.75rem; /* Ajusta el padding si es necesario */
+  }
+  
+  .scrollArea {
+    height: 300px;
+    width: 100%;
+    border-radius: 0.375rem; /* rounded-md */
+    border: 1px solid #e0e0e0; /* Ajusta el color del borde */
+  }
+  
+  .scrollContainer {
+    padding: 1rem; /* p-4 */
+  }
+  
+  .classItem {
+    margin-bottom: 1rem; /* Agrega un margen entre los elementos */
+  }
+  
+  .classHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .classInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .classTitle {
+    font-weight: 600; /* font-semibold */
+  }
+  
+  .classInstructor {
+    font-size: 0.875rem; /* text-sm */
+    color: #6b7280; /* text-muted-foreground */
+  }
+  
+  .badgeContainer {
+    display: flex;
+    align-items: center;
+    space-x: 0.5rem;
+  }
+  
+  .separator {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+  
