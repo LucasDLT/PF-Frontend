@@ -52,6 +52,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     country: '',
     roles: '',
     membership_status: '',
+    auth:""
   });
   const [token, setTokenState] = useState<string | null>(null);
   const [classes, setClasses] = useState<Class[] | null>(null);
@@ -80,6 +81,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           country: '',
           roles: '',
           membership_status: '',
+          auth:""
         });
         setTokenState(null);
       }
@@ -119,6 +121,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         country: '',
         roles: '',
         membership_status: '',
+        auth:""
       });
       if (typeof window !== 'undefined') {
         localStorage.removeItem('token');
@@ -158,6 +161,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       country: '',
       roles: '',
       membership_status: '',
+      auth:""
     });
 
     setClasses(null);
