@@ -16,7 +16,7 @@ export default function LoadingView() {
     const registerUser = async () => {
       if (session && session.user) {
         try {
-          const response = await fetch(`http://localhost:${PORT}/auth/third`, {
+          const response = await fetch(`http://localhost:${PORT}/auth/signup/third/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -30,7 +30,7 @@ export default function LoadingView() {
 
           if (response.ok) {
             const data = await response.json();
-            setSession(data.user);
+            setSession(data.userData);
             setToken(data.token);
             Router.push("/")
           ;

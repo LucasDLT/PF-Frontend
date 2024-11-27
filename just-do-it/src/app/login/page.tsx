@@ -78,7 +78,7 @@ export default function Login() {
         const result = await response.json();
 
         
-        setSession(result.usedData);
+        setSession(result.userData);
         setToken(result.token);       
 
         toast.success(`¡Hola, ${result.usedData.name}! Bienvenido a tu cuenta.`);

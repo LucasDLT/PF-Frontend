@@ -36,9 +36,12 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
 
-  const toggleModal = (schedule: Schedule) => {
-    setSelectedSchedule(schedule);
+  const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
+  };
+
+  const handleScheduleSelect = (schedule: Schedule) => {
+    setSelectedSchedule(schedule);
   };
 
   const handleInscription = () => {
@@ -62,49 +65,52 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
             <p className={styles.capacity}><strong>Capacidad total:</strong> {capacity}</p>
             <p className={styles.trainer}><strong>Entrenador:</strong> {trainerName ?? 'No asignado'}</p>
 
-            <div>
-              <h3>Horarios Disponibles</h3>
-              {schedules.map((schedule) => (
-                <div key={schedule.id}>
-                  <h4>{schedule.day}</h4>
-                  <p>{schedule.startTime} - {schedule.endTime}</p>
-                  <p>Capacidad restante: {schedule.remainingCapacity}</p>
-                  <p>Participantes actuales: {schedule.currentParticipants}</p>
-                  <button
-                    className={styles.button}
-                    onClick={() => toggleModal(schedule)}
-                  >
-                    Agendar Turno
-                  </button>
-                </div>
-              ))}
-            </div>
+            {/* Botón de Agendar Clase con el estilo correcto */}
+            <button
+              className={styles.button}  // Se mantiene el estilo del botón
+              onClick={toggleModal}
+            >
+              Agendar Clase
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Popup para Agendar Turno */}
-      {isModalOpen && selectedSchedule && (
+      {/* Popup para seleccionar turno */}
+      {isModalOpen && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h2 className={styles.modalTitle}>Agendar Turno</h2>
-            <p><strong>Horario:</strong> {selectedSchedule.day}</p>
-            <p>{selectedSchedule.startTime} - {selectedSchedule.endTime}</p>
-            <p><strong>Capacidad restante:</strong> {selectedSchedule.remainingCapacity}</p>
-            <p><strong>Participantes actuales:</strong> {selectedSchedule.currentParticipants}</p>
+            <h2 className={styles.modalTitle}>Selecciona un Horario</h2>
+            {schedules.map((schedule) => (
+              <div key={schedule.id} className={styles.scheduleItem}>
+                <h4>{schedule.day}</h4>
+                <p>{schedule.startTime} - {schedule.endTime}</p>
+                <p>Capacidad restante: {schedule.remainingCapacity}</p>
+                <p>Participantes actuales: {schedule.currentParticipants}</p>
+                <button
+                  className={styles.button}  // Estilo para seleccionar un horario
+                  onClick={() => handleScheduleSelect(schedule)}
+                >
+                  Inscribirme a este horario
+                </button>
+              </div>
+            ))}
+
             <div className={styles.modalButtons}>
               <button
-                className={styles.cancelBtn}
-                onClick={() => setIsModalOpen(false)} // Cierra el modal
+                className={styles.cancelBtn}  // Estilo para cancelar
+                onClick={toggleModal} // Cierra el modal
               >
                 Cancelar
               </button>
-              <button
-                className={styles.confirmBtn}
-                onClick={handleInscription} // Maneja la inscripción
-              >
-                Inscribirme
-              </button>
+              {selectedSchedule && (
+                <button
+                  className={styles.confirmBtn}  // Estilo para confirmar inscripción
+                  onClick={handleInscription} // Maneja la inscripción
+                >
+                  Inscribirme
+                </button>
+              )}
             </div>
           </div>
         </div>
