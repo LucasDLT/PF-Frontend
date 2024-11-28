@@ -106,10 +106,10 @@ export default function ClassDetailPage() {
         onScheduleClick={handleScheduleClick}
       />
       {gymClass.schedules.length === 0 && (
-
+        
         <p>No hay horarios disponibles para esta clase.</p>
       )}
-      <Reviews />
+      <Reviews class_id={gymClass.id}/>
    </div>
   );
 }
