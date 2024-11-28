@@ -109,7 +109,7 @@ export default function ClassDetailPage() {
 
         <p>No hay horarios disponibles para esta clase.</p>
       )}
-      <Reviews />
+      <Reviews class_id={gymClass.id}/>
    </div>
   );
 }
