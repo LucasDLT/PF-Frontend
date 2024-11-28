@@ -17,7 +17,7 @@ interface ActivityDetailProps {
   description: string;
   location: string;
   capacity: number;
-  trainerName: string; // Solo conservamos el nombre del entrenador
+  trainerName: string; // Solo el nombre del entrenador
   imgUrl: string;
   schedules: Schedule[];
   onScheduleClick: (scheduleId: string) => void;
@@ -54,9 +54,9 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
     }
 
     const payload = {
-      userId: userSession.id, 
+      userId: userSession.id,
       classId: id,
-      scheduleId: selectedSchedule.id, 
+      scheduleId: selectedSchedule.id,
     };
 
     try {

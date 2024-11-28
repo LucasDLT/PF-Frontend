@@ -18,9 +18,6 @@ interface Schedule {
 interface Trainer {
   id: string;
   name: string;
-  bio?: string; // Detalles adicionales según tu respuesta del backend
-  specialties?: string;
-  experience_years?: number;
 }
 
 interface GymClass {
@@ -29,13 +26,9 @@ interface GymClass {
   description: string;
   location: string;
   capacity: number;
-  current_participants?: number;
   trainer: Trainer | null;
   imgUrl: string;
   schedules: Schedule[];
-  created_at?: string;
-  update_at?: string;
-  bookedClasses?: any[]; // Según tu backend, si no es relevante, puede omitirse
 }
 
 export default function ClassDetailPage() {
