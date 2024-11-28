@@ -1,6 +1,13 @@
 'use client';
+
 import { useAuth } from '@/context';
 import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { StarIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import styles from './review.module.css';
 
 interface ReviewProps {
   class_id: string;
@@ -17,17 +24,23 @@ const Reviews: React.FC<ReviewProps> = ({ class_id }) => {
 
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
 
-  const handleRatingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setRating(Number(e.target.value));
+  const handleRatingChange = (selectedRating: number) => {
+    setRating(selectedRating);
   };
 
   const handleReviewTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReviewText(e.target.value);
   };
 
+  const handleMouseLeave = () => {
+    if (rating === null) {
+      setRating(0);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (rating === null) {
+    if (rating === null || rating === 0) {
       alert('Por favor, selecciona una calificación');
       return;
     }
@@ -60,7 +73,6 @@ const Reviews: React.FC<ReviewProps> = ({ class_id }) => {
           class_id: classId,
         }),
       });
-      console.log(rating, reviewText, classId, userSession.id);
       
       if (!response.ok) {
         throw new Error('Error al enviar la reseña');
@@ -74,53 +86,84 @@ const Reviews: React.FC<ReviewProps> = ({ class_id }) => {
   };
 
   return (
-    <div className="reviews-container">
-      <h3>Reseñas</h3>
-
-      <ul className="reviews-list">
+    <Card className={styles.card}>
+      <CardHeader>
+        <CardTitle className={styles.cardHeader}>Reseñas</CardTitle>
+      </CardHeader>
+      <CardContent className={styles.cardContent}>
         {reviews.length === 0 ? (
-          <p>No hay reseñas para esta clase.</p>
+          <p className={styles.noReviewsText}>No hay reseñas para esta clase.</p>
         ) : (
-          reviews.map((reviewItem, index) => (
-            <li key={index} className="review-item">
-              <p className="review-text">{reviewItem.comment}</p>
-              <div className="review-rating">
-                {'⭐'.repeat(reviewItem.rating)} ({reviewItem.rating}/5)
-              </div>
-            </li>
-          ))
+          <ul className={styles.reviewsList}>
+            {reviews.map((reviewItem, index) => (
+              <li key={index} className={styles.reviewItem}>
+                <p className={styles.reviewText}>{reviewItem.comment}</p>
+                <div className={styles.starsWrapper}>
+                  {[...Array(5)].map((_, i) => (
+                    <StarIcon
+                      key={i}
+                      className={`${styles.starIcon} ${i < reviewItem.rating ? styles.starIconFilled : ''}`}
+                    />
+                  ))}
+                  <span className={styles.ratingText}>({reviewItem.rating}/5)</span>
+                </div>
+              </li>
+            ))}
+          </ul>
         )}
-      </ul>
 
-      <form onSubmit={handleSubmit} className="review-form">
-        <div className="rating-stars">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <label key={star}>
-              <input
-                type="radio"
-                value={star}
-                checked={rating === star}
-                onChange={handleRatingChange}
-              />
-              {'⭐'.repeat(star)}
-            </label>
-          ))}
-        </div>
+        <form onSubmit={handleSubmit} className={styles.formWrapper}>
+          <div onMouseLeave={handleMouseLeave} className={styles.starButtonWrapper}>
+            <TooltipProvider>
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Tooltip key={star}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className={`${styles.starButton} ${
+                        (rating !== null ? rating >= star : false)
+                          ? styles.starButtonActive
+                          : styles.starButtonInactive
+                      }`}
+                      onMouseEnter={() => setRating(star)}
+                      onClick={() => setRating(star)}
+                    >
+                      <StarIcon className={`h-6 w-6 ${
+                        (rating !== null ? rating >= star : false)
+                          ? styles.starIconActive
+                          : styles.starIconInactive
+                      }`} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{star} {star === 1 ? 'estrella' : 'estrellas'}</p>
+                  </TooltipContent>
+                </Tooltip>
+              ))}
+            </TooltipProvider>
+          </div>
 
-        <textarea
-          placeholder="Deja tu reseña aquí..."
-          value={reviewText}
-          onChange={handleReviewTextChange}
-          rows={4}
-          className="review-textarea"
-        />
+          <Textarea
+            placeholder="Deja tu reseña aquí..."
+            value={reviewText}
+            onChange={handleReviewTextChange}
+            rows={4}
+            className={styles.textarea}
+          />
 
-        <button type="submit" className="submit-review-btn">
-          Enviar Reseña
-        </button>
-      </form>
-    </div>
+          <Button 
+            type="submit" 
+            className={styles.submitButton}
+          >
+            Enviar Reseña
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
   );
 };
 
 export default Reviews;
+
