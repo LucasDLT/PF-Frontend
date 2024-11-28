@@ -1,20 +1,22 @@
 'use client'
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '@/context';
-import { Loader2 } from 'lucide-react'
+import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 export default function LoadingView() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { setToken, setSession} = useAuth();
+  const { setToken, setSession } = useAuth();
   const { data: session } = useSession();
   const Router = useRouter();
 
+  const [isRegistered, setIsRegistered] = useState(false); // Estado para evitar re-registros
+
   useEffect(() => {
     const registerUser = async () => {
-      if (session && session.user) {
+      if (session && session.user && !isRegistered) { // Solo ejecutar si no se ha registrado
         try {
           const response = await fetch(`http://localhost:${PORT}/auth/signup/third/`, {
             method: 'POST',
@@ -32,8 +34,8 @@ export default function LoadingView() {
             const data = await response.json();
             setSession(data.userData);
             setToken(data.token);
-            Router.push("/")
-          ;
+            setIsRegistered(true); // Marcar como registrado para evitar el bucle
+            Router.push("/");
           } else {
             console.error('Error registering user');
           }
@@ -43,8 +45,10 @@ export default function LoadingView() {
       }
     };
 
-    registerUser();
-  }, [session, PORT,  setToken, setSession]);
+    if (session && session.user && !isRegistered) {
+      registerUser();
+    }
+  }, [session, PORT, setToken, setSession, isRegistered, Router]);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -55,4 +59,3 @@ export default function LoadingView() {
     </div>
   );
 }
-

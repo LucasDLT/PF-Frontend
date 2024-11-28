@@ -16,7 +16,7 @@ interface ActivityDetailProps {
   description: string;
   location: string;
   capacity: number;
-  trainerName: string | null;
+  trainerName: string;  // Ya no se necesita trainerId
   imgUrl: string;
   schedules: Schedule[];
   onScheduleClick: (scheduleId: string) => void;
@@ -63,20 +63,15 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
             <p className={styles.description}>{description}</p>
             <p className={styles.location}><strong>Ubicación:</strong> {location}</p>
             <p className={styles.capacity}><strong>Capacidad total:</strong> {capacity}</p>
-            <p className={styles.trainer}><strong>Entrenador:</strong> {trainerName ?? 'No asignado'}</p>
+            <p className={styles.trainer}><strong>Entrenador:</strong> {trainerName}</p>
 
-            {/* Botón de Agendar Clase con el estilo correcto */}
-            <button
-              className={styles.button}  // Se mantiene el estilo del botón
-              onClick={toggleModal}
-            >
+            <button className={styles.button} onClick={toggleModal}>
               Agendar Clase
             </button>
           </div>
         </div>
       </div>
 
-      {/* Popup para seleccionar turno */}
       {isModalOpen && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
@@ -87,27 +82,16 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
                 <p>{schedule.startTime} - {schedule.endTime}</p>
                 <p>Capacidad restante: {schedule.remainingCapacity}</p>
                 <p>Participantes actuales: {schedule.currentParticipants}</p>
-                <button
-                  className={styles.button}  // Estilo para seleccionar un horario
-                  onClick={() => handleScheduleSelect(schedule)}
-                >
+                <button className={styles.button} onClick={() => handleScheduleSelect(schedule)}>
                   Inscribirme a este horario
                 </button>
               </div>
             ))}
 
             <div className={styles.modalButtons}>
-              <button
-                className={styles.cancelBtn}  // Estilo para cancelar
-                onClick={toggleModal} // Cierra el modal
-              >
-                Cancelar
-              </button>
+              <button className={styles.cancelBtn} onClick={toggleModal}>Cancelar</button>
               {selectedSchedule && (
-                <button
-                  className={styles.confirmBtn}  // Estilo para confirmar inscripción
-                  onClick={handleInscription} // Maneja la inscripción
-                >
+                <button className={styles.confirmBtn} onClick={handleInscription}>
                   Inscribirme
                 </button>
               )}

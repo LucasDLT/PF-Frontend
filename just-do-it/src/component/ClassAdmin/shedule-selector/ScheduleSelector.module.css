@@ -1,69 +1,105 @@
 .card {
-    margin-top: 1rem;
-  }
-  
-  .cardContent {
-    padding-top: 1.5rem;
-  }
-  
-  .label {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    display: block;
-  }
-  
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(8, 1fr);
-    gap: 1rem;
-  }
-  
-  .emptyHeader {
-    font-weight: bold;
-    grid-column: span 1;
-  }
-  
-  .dayHeader {
-    font-weight: bold;
-    text-align: center;
-    grid-column: span 1;
-  }
-  
-  .hourRow {
-    font-weight: 600;
-    text-align: right;
-    padding-right: 0.5rem;
-  }
-  
-  .cell {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .checkboxContainer {
-    width: 1.5rem;
-    height: 1.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    cursor: pointer;
-  }
-  
-  .checkbox {
-    width: 1rem;
-    height: 1rem;
-    appearance: none;
-    background-color: transparent;
-    border: none;
-  }
-  
-  .checkbox:checked {
-    background-color: #1d4ed8;
-    border-radius: 50%;
-  }
-  
+  margin-top: 1rem;
+}
+
+.cardContent {
+  padding-top: 1.5rem;
+}
+
+.label {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+.selectors {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.selectorGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.customSelect {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.selectedValue {
+  padding: 0.5rem;
+  color: #000;
+  font-weight: 600;
+  background-color: #fff;
+}
+
+.optionsContainer {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.customSelect:hover .optionsContainer {
+  display: block;
+}
+
+.optionItem {
+  padding: 0.5rem;
+  color: #000;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.optionItem:hover {
+  background-color: #f0f0f0;
+}
+
+.addButtonContainer, .removeButtonContainer {
+  margin-top: 1rem;
+}
+
+.addButton, .removeButton {
+  padding: 0.75rem 1.25rem;
+  background-color: #1d4ed8;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.addButton:disabled, .removeButton:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.scheduleList {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ccc;
+}
+
+.scheduleList ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.scheduleList li {
+  margin-bottom: 0.5rem;
+}

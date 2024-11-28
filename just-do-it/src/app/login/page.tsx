@@ -6,14 +6,13 @@ import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useAuth } from '@/context';
 import { useRouter } from 'next/navigation';
-import { toast } from 'sonner'; 
-
+import { toast } from 'sonner';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { setToken, setSession , userSession } = useAuth(); 
+  const { setToken, setSession, userSession } = useAuth();
   const Router = useRouter();
-  
+
   const initialState = {
     email: '',
     password: '',
@@ -39,66 +38,67 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    
     let valid = true;
-    let newErrors = { email: '', password: '' };
+    const newErrors = { email: '', password: '' };
 
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
       newErrors.email = 'Por favor ingresa un correo electrónico válido.';
       valid = false;
     }
 
-    const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/;
-    if (!passwordRegex.test(formData.password)) {
-      newErrors.password =
-        'La contraseña debe tener al menos 8 caracteres y 1 número.';
+    if (!/^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/.test(formData.password)) {
+      newErrors.password = 'La contraseña debe tener al menos 8 caracteres y 1 número.';
       valid = false;
-      toast.error('Hubo un error al intentar iniciar sesión');
     }
 
     setErrors(newErrors);
 
-    if (valid) {
-      try {
-        const response = await fetch(`http://localhost:${port}/auth/signin`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        });
+    if (!valid) return;
 
-        if (!response.ok) {
-          throw new Error('Credenciales incorrectas');
-        }
+    
+    try {
+      const response = await fetch(`http://localhost:${port}/auth/signin`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-        const result = await response.json();
-
-        
-        setSession(result.userData);
-        setToken(result.token);       
-
-        toast.success(`¡Hola, ${result.usedData.name}! Bienvenido a tu cuenta.`);
-
-
-        console.log('Usuario logueado con éxito:', result);
-        if (userSession?.roles !== "user") {
-          Router.push("/dashBoard-Admin");
-        } else {
-          Router.push("/");
-        }
-        
-      } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        setErrors({
-          ...errors,
-          password: 'Hubo un error al intentar iniciar sesión',
-          
-        });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Credenciales incorrectas');
       }
+
+      const result = await response.json();
+
+   
+      if (!result.token || !result.userData) {
+        throw new Error('Respuesta inesperada del servidor.');
+      }
+
+      
+      setSession(result.userData);
+      setToken(result.token);
+
+      
+      toast.success(`¡Hola, ${result.userData.name}! Bienvenido a tu cuenta.`);
+
+      
+      if (result.userData.roles !== 'user') {
+        Router.push('/dashBoard-Admin');
+      } else {
+        Router.push('/');
+      }
+    } catch (error: any) {
+      console.error('Error al iniciar sesión:', error.message);
+      toast.error(error.message || 'Hubo un error al intentar iniciar sesión.');
+      setErrors({
+        ...newErrors,
+        password: error.message || 'Credenciales incorrectas',
+      });
     }
   };
 
@@ -137,7 +137,7 @@ export default function Login() {
 
             <div>
               <label htmlFor="email" className="sr-only">
-                Correo Electronico
+                Correo Electrónico
               </label>
               <div className="relative">
                 <input
@@ -147,7 +147,7 @@ export default function Login() {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
-                  placeholder="Ingrese su correo electronico"
+                  placeholder="Ingrese su correo electrónico"
                 />
                 {errors.email && (
                   <p className="text-red-500 text-sm">{errors.email}</p>
@@ -202,7 +202,7 @@ export default function Login() {
                 </button>
               </div>
               <p className="mt-6 text-sm text-gray-500 sm:mt-0 mb-6">
-                No tienes una cuenta? Puedes registrarte
+                ¿No tienes una cuenta? Puedes registrarte
                 <Link
                   href={'/register'}
                   className="text-blue-500 font-bold hover:underline hover:text-blue-600 ml-1"
