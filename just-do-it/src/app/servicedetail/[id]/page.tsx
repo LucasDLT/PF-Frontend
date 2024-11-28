@@ -1,4 +1,7 @@
 'use client';
+
+
+
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ActivityDetail from '@/component/classDetail';
@@ -15,16 +18,27 @@ interface Schedule {
   remainingCapacity: number;
 }
 
+interface Trainer {
+  id: string;
+  name: string;
+  bio?: string; // Detalles adicionales según tu respuesta del backend
+  specialties?: string;
+  experience_years?: number;
+}
+
 interface GymClass {
   id: string;
   name: string;
   description: string;
   location: string;
   capacity: number;
-  current_participants: number;
-  trainerName: string | null;
+  current_participants?: number;
+  trainer: Trainer | null;
   imgUrl: string;
   schedules: Schedule[];
+  created_at?: string;
+  update_at?: string;
+  bookedClasses?: any[]; // Según tu backend, si no es relevante, puede omitirse
 }
 
 export default function ClassDetailPage() {
@@ -60,7 +74,6 @@ export default function ClassDetailPage() {
 
   const handleScheduleClick = (scheduleId: string) => {
     console.log(`Horario con ID ${scheduleId} clickeado`);
-    // Aquí puedes manejar la lógica que desees al hacer clic en un horario
   };
 
   if (loading) {
@@ -77,22 +90,23 @@ export default function ClassDetailPage() {
 
   return (
     <div
-      className="flex justify-center items-center min-h-screen min-w-screen"
+      className="flex flex-col justify-center items-center min-h-screen min-w-screen"
       data-aos="fade-right"
     >
-      {gymClass.schedules && gymClass.schedules.length > 0 ? (
-        <ActivityDetail
-          id={gymClass.id}
-          name={gymClass.name}
-          description={gymClass.description}
-          location={gymClass.location}
-          capacity={gymClass.capacity}
-          trainerName={gymClass.trainerName}
-          imgUrl={gymClass.imgUrl}
-          schedules={gymClass.schedules}
-          onScheduleClick={handleScheduleClick}
-        />
-      ) : (
+
+      <ActivityDetail
+        id={gymClass.id}
+        name={gymClass.name}
+        description={gymClass.description}
+        location={gymClass.location}
+        capacity={gymClass.capacity}
+        trainerName={gymClass.trainer?.name || 'No asignado'}
+        imgUrl={gymClass.imgUrl}
+        schedules={gymClass.schedules}
+        onScheduleClick={handleScheduleClick}
+      />
+      {gymClass.schedules.length === 0 && (
+
         <p>No hay horarios disponibles para esta clase.</p>
       )}
       <Reviews />
