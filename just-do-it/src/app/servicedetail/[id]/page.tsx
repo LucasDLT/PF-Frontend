@@ -1,10 +1,13 @@
 'use client';
 
+
+
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ActivityDetail from '@/component/classDetail';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import Reviews from '@/component/reviews';
 
 interface Schedule {
   id: string;
@@ -45,6 +48,7 @@ export default function ClassDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  
   useEffect(() => {
     const fetchClass = async () => {
       try {
@@ -89,6 +93,7 @@ export default function ClassDetailPage() {
       className="flex flex-col justify-center items-center min-h-screen min-w-screen"
       data-aos="fade-right"
     >
+
       <ActivityDetail
         id={gymClass.id}
         name={gymClass.name}
@@ -101,8 +106,11 @@ export default function ClassDetailPage() {
         onScheduleClick={handleScheduleClick}
       />
       {gymClass.schedules.length === 0 && (
+
         <p>No hay horarios disponibles para esta clase.</p>
       )}
-    </div>
+      <Reviews />
+   </div>
   );
 }
+

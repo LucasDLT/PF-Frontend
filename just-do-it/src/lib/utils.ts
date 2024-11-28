@@ -18,7 +18,9 @@ export const gymClasses: Class[] = [
     "schedule": "2024-11-20T19:00:00Z",
     "imgUrl": "/yoga.jpg",
     "trainerName": "Jane Doe",
-    "id": "7b8a1f3e-8be9-4bfe-a8bc-11c77e4b7769"
+    "id": "7b8a1f3e-8be9-4bfe-a8bc-11c77e4b7769",
+    "rating": "4.5",  // Calificación entre 1 y 5
+    "review": "Una experiencia muy relajante, ideal para terminar el día. La vista del atardecer es espectacular."  // Comentario de la reseña
   },
   {
     "name": "Entrenamiento Funcional",
@@ -29,7 +31,9 @@ export const gymClasses: Class[] = [
     "schedule": "2024-11-21T08:00:00Z",
     "imgUrl": "/funcional.jpg",
     "trainerName": "John Smith",
-    "id": "8d456b7e-423a-4a4a-a9b9-d72ea491bcbb"
+    "id": "8d456b7e-423a-4a4a-a9b9-d72ea491bcbb",
+    "rating":" 4.2", 
+    "review": "Es un entrenamiento exigente pero efectivo. Te ayuda a mejorar tu resistencia rápidamente."  
   },
   {
     "name": "Zumba Energizante",
@@ -40,7 +44,9 @@ export const gymClasses: Class[] = [
     "schedule": "2024-11-22T17:30:00Z",
     "imgUrl": "/zumba.jpg",
     "trainerName": "Maria Gonzalez",
-    "id": "5d1b1f3a-967e-46a0-b52a-fcfed1de84a3"
+    "id": "5d1b1f3a-967e-46a0-b52a-fcfed1de84a3",
+    "rating": "4.8", 
+    "review": "¡Increíble! La música es muy motivante y la energía de la clase es contagiante."  
   },
   {
     "name": "CrossFit de Alto Rendimiento",
@@ -51,7 +57,9 @@ export const gymClasses: Class[] = [
     "schedule": "2024-11-23T06:30:00Z",
     "imgUrl": "/crossfit.jpg",
     "trainerName": "Alex Turner",
-    "id": "a32f8d7d-c9f1-47c7-9b9f-47a9d0f65a60"
+    "id": "a32f8d7d-c9f1-47c7-9b9f-47a9d0f65a60",
+    "rating": "4.3", 
+    "review": "Muy desafiante y emocionante. Requiere bastante esfuerzo, pero los resultados valen la pena."  
   },
   {
     "name": "Pilates para Principiantes",
@@ -62,9 +70,12 @@ export const gymClasses: Class[] = [
     "schedule": "2024-11-24T10:00:00Z",
     "imgUrl": "/pilates.jpeg",
     "trainerName": "Sofia Ruiz",
-    "id": "f8d67e89-3b92-4a0c-ae5e-bb8a567c9d34"
+    "id": "f8d67e89-3b92-4a0c-ae5e-bb8a567c9d34",
+    "rating": "4.6", 
+    "review": "Perfecto para quienes recién comienzan. La instructora es muy clara y paciente."  
   }
 ]
+
 /* lista de membresias de practrica */
 
 export const memberships: Membership[] = [
