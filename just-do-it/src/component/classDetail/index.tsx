@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './ActivityDetail.module.css';
+import { useAuth } from '@/context';
 
 interface Schedule {
   id: string;
@@ -16,7 +17,7 @@ interface ActivityDetailProps {
   description: string;
   location: string;
   capacity: number;
-  trainerName: string;  // Ya no se necesita trainerId
+  trainerName: string; // Solo conservamos el nombre del entrenador
   imgUrl: string;
   schedules: Schedule[];
   onScheduleClick: (scheduleId: string) => void;
@@ -35,6 +36,8 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
+  const { userSession } = useAuth();
+  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -44,10 +47,36 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
     setSelectedSchedule(schedule);
   };
 
-  const handleInscription = () => {
-    if (selectedSchedule) {
-      console.log(`Inscripción confirmada para el horario: ${selectedSchedule.id}`);
-      setIsModalOpen(false); // Cerrar el modal después de la inscripción
+  const handleInscription = async () => {
+    if (!selectedSchedule || !userSession) {
+      console.error('No hay horario seleccionado o el usuario no está autenticado.');
+      return;
+    }
+
+    const payload = {
+      userId: userSession.id, 
+      classId: id,
+      scheduleId: selectedSchedule.id, 
+    };
+
+    try {
+      const response = await fetch(`http://localhost:${PORT}/booked-classes/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error en la solicitud: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      window.alert('Inscripción exitosa:');
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Error al realizar la inscripción:', error);
     }
   };
 
@@ -82,14 +111,19 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
                 <p>{schedule.startTime} - {schedule.endTime}</p>
                 <p>Capacidad restante: {schedule.remainingCapacity}</p>
                 <p>Participantes actuales: {schedule.currentParticipants}</p>
-                <button className={styles.button} onClick={() => handleScheduleSelect(schedule)}>
+                <button
+                  className={styles.button}
+                  onClick={() => handleScheduleSelect(schedule)}
+                >
                   Inscribirme a este horario
                 </button>
               </div>
             ))}
 
             <div className={styles.modalButtons}>
-              <button className={styles.cancelBtn} onClick={toggleModal}>Cancelar</button>
+              <button className={styles.cancelBtn} onClick={toggleModal}>
+                Cancelar
+              </button>
               {selectedSchedule && (
                 <button className={styles.confirmBtn} onClick={handleInscription}>
                   Inscribirme

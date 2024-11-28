@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ActivityDetail from '@/component/classDetail';
@@ -17,6 +18,9 @@ interface Schedule {
 interface Trainer {
   id: string;
   name: string;
+  bio?: string; // Detalles adicionales según tu respuesta del backend
+  specialties?: string;
+  experience_years?: number;
 }
 
 interface GymClass {
@@ -25,10 +29,13 @@ interface GymClass {
   description: string;
   location: string;
   capacity: number;
-  current_participants: number;
-  trainer: Trainer | null;  // Cambiado a un objeto con id y name
+  current_participants?: number;
+  trainer: Trainer | null;
   imgUrl: string;
   schedules: Schedule[];
+  created_at?: string;
+  update_at?: string;
+  bookedClasses?: any[]; // Según tu backend, si no es relevante, puede omitirse
 }
 
 export default function ClassDetailPage() {
@@ -78,20 +85,22 @@ export default function ClassDetailPage() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen min-w-screen" data-aos="fade-right">
-      {gymClass.schedules && gymClass.schedules.length > 0 ? (
-        <ActivityDetail
-          id={gymClass.id}
-          name={gymClass.name}
-          description={gymClass.description}
-          location={gymClass.location}
-          capacity={gymClass.capacity}
-          trainerName={gymClass.trainer?.name || 'No asignado'}
-          imgUrl={gymClass.imgUrl}
-          schedules={gymClass.schedules}
-          onScheduleClick={handleScheduleClick}
-        />
-      ) : (
+    <div
+      className="flex flex-col justify-center items-center min-h-screen min-w-screen"
+      data-aos="fade-right"
+    >
+      <ActivityDetail
+        id={gymClass.id}
+        name={gymClass.name}
+        description={gymClass.description}
+        location={gymClass.location}
+        capacity={gymClass.capacity}
+        trainerName={gymClass.trainer?.name || 'No asignado'}
+        imgUrl={gymClass.imgUrl}
+        schedules={gymClass.schedules}
+        onScheduleClick={handleScheduleClick}
+      />
+      {gymClass.schedules.length === 0 && (
         <p>No hay horarios disponibles para esta clase.</p>
       )}
     </div>

@@ -61,7 +61,7 @@ export default function MembershipsPage() {
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error en la solicitud POST:', errorText);
+        console.error('Error en la solicitud POST Para crear Comprador:', errorText);
         
         throw new Error(`Error al crear la membresía: ${response.statusText}`);
       }
