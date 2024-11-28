@@ -5,9 +5,9 @@ import { Session } from '@/types/users';
 
 export interface Schedule {
   id: string;
-  day: string; // Ejemplo: "lunes"
-  startTime: string; // Ejemplo: "0800"
-  endTime: string; // Ejemplo: "0900"
+  day: string;
+  startTime: string;
+  endTime: string;
   currentParticipants: number;
   remainingCapacity: number;
 }
@@ -18,9 +18,9 @@ export interface Class {
   description: string;
   location: string;
   capacity: number;
-  schedule: Schedule[]; // Modificado a un array
+  schedule: Schedule[];
   imgUrl: string;
-  trainerName: string | null;
+  trainer: string | null;
 }
 
 interface AuthContextType {
@@ -102,8 +102,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         method: 'GET',
       });
       if (response.ok) {
-        const data = await response.json();
-        const formattedClasses = data.data.map((cls: any) => ({
+        const [data] = await response.json();
+        const formattedClasses = data.map((cls: any) => ({
           id: cls.id,
           name: cls.name,
           description: cls.description,
@@ -112,13 +112,13 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           schedule: cls.schedules.map((schedule: any) => ({
             id: schedule.id,
             day: schedule.day,
-            startTime: schedule.startTime.replace(':', '').slice(0, 4),
-            endTime: schedule.endTime.replace(':', '').slice(0, 4),
+            startTime: schedule.startTime,
+            endTime: schedule.endTime,
             currentParticipants: schedule.currentParticipants,
             remainingCapacity: schedule.remainingCapacity,
           })),
           imgUrl: cls.imgUrl,
-          trainerName: cls.trainer?.name || null,
+          trainer: cls.trainer?.name || null,
         }));
         setClasses(formattedClasses);
       } else {
