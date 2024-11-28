@@ -9,6 +9,8 @@ export interface Class {
   schedule: string;
   imgUrl: string;
   trainerName: string;
+  rating:string;
+  review:string;
 
 }
 
