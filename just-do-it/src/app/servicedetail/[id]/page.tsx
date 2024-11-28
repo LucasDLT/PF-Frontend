@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ActivityDetail from '@/component/classDetail';
@@ -14,6 +14,11 @@ interface Schedule {
   remainingCapacity: number;
 }
 
+interface Trainer {
+  id: string;
+  name: string;
+}
+
 interface GymClass {
   id: string;
   name: string;
@@ -21,7 +26,7 @@ interface GymClass {
   location: string;
   capacity: number;
   current_participants: number;
-  trainerName: string | null;
+  trainer: Trainer | null;  // Cambiado a un objeto con id y name
   imgUrl: string;
   schedules: Schedule[];
 }
@@ -58,7 +63,6 @@ export default function ClassDetailPage() {
 
   const handleScheduleClick = (scheduleId: string) => {
     console.log(`Horario con ID ${scheduleId} clickeado`);
-    // Aquí puedes manejar la lógica que desees al hacer clic en un horario
   };
 
   if (loading) {
@@ -74,10 +78,7 @@ export default function ClassDetailPage() {
   }
 
   return (
-    <div
-      className="flex justify-center items-center min-h-screen min-w-screen"
-      data-aos="fade-right"
-    >
+    <div className="flex justify-center items-center min-h-screen min-w-screen" data-aos="fade-right">
       {gymClass.schedules && gymClass.schedules.length > 0 ? (
         <ActivityDetail
           id={gymClass.id}
@@ -85,10 +86,10 @@ export default function ClassDetailPage() {
           description={gymClass.description}
           location={gymClass.location}
           capacity={gymClass.capacity}
-          trainerName={gymClass.trainerName}
+          trainerName={gymClass.trainer?.name || 'No asignado'}
           imgUrl={gymClass.imgUrl}
           schedules={gymClass.schedules}
-          onScheduleClick={handleScheduleClick} 
+          onScheduleClick={handleScheduleClick}
         />
       ) : (
         <p>No hay horarios disponibles para esta clase.</p>
