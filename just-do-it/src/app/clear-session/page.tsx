@@ -9,11 +9,11 @@ import { useEffect } from 'react';
 function ClearSession() {
   const { logout } = useAuth();
 
-  useEffect(() => {
+useEffect(() => {
     logout();
     signOut({ callbackUrl: '/' });
-  }),
-    [];
+  }, []);
+    
 
   return <div></div>;
 }
