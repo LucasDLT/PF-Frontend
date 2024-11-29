@@ -2,7 +2,7 @@
 import AOS from 'aos';
 import styles from './about.module.css';  
 import 'aos/dist/aos.css';
-import { use, useEffect } from 'react';
+import { useEffect } from 'react';
 export default function About() {
 
   useEffect(() => {

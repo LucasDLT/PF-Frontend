@@ -1,4 +1,3 @@
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, User, Calendar } from 'lucide-react';
 import styles from './ClassPreview.module.css';  // Importa el CSS Module
 

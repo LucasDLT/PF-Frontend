@@ -38,8 +38,7 @@ interface GymClass {
   schedules: Schedule[];
   created_at?: string;
   update_at?: string;
-  bookedClasses?: any[]; // Según tu backend, si no es relevante, puede omitirse
-}
+  }
 
 export default function ClassDetailPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -58,7 +57,7 @@ export default function ClassDetailPage() {
         }
         const data: GymClass = await response.json();
         setGymClass(data);
-      } catch (err) {
+      } catch (error) {
         setError('Hubo un problema al cargar la clase');
       } finally {
         setLoading(false);

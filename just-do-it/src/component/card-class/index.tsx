@@ -1,4 +1,3 @@
-import { gymClasses } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./cardclass.module.css"; 

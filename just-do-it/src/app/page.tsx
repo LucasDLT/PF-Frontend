@@ -1,7 +1,6 @@
 'use client';
 import ActivityCarousel from '@/component/activity-carousel';
 import { Navbar } from '@/component/navbar-landing';
-import Footer from '@/component/footer';
 import Link from 'next/link';
 import styles from './page.module.css';
 import HoursAttention from '@/component/hours-attention';

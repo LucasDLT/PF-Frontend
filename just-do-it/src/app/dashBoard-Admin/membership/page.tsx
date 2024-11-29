@@ -15,13 +15,9 @@ type AdminDonation = {
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 
 export default function AdminDonaciones() {
-  const [donations, setDonations] = useState<AdminDonation[]>([]);
 
-  const [statusFilter] = useState<
-    'todas' | 'active' | 'pending'
-  >('todas');
-  const [nameFilter] = useState('');
-  const { userSession, token, logout } = useAuth();
+
+  const { userSession, token,  } = useAuth();
 
   const fetchDonations = async (): Promise<void> => {
     if (!userSession) return;
@@ -35,8 +31,7 @@ export default function AdminDonaciones() {
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setDonations(data);
+        
       } else {
         console.error('Error fetching donations:', response.statusText);
       }

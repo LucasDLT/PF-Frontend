@@ -32,7 +32,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   trainerName,
   imgUrl,
   schedules,
-  onScheduleClick,
+  
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
@@ -72,7 +72,6 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
         throw new Error(`Error en la solicitud: ${response.statusText}`);
       }
 
-      const data = await response.json();
       window.alert('Inscripción exitosa:');
       setIsModalOpen(false);
     } catch (error) {

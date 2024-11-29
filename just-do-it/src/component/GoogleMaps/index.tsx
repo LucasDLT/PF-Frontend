@@ -33,7 +33,7 @@ export interface MyMapProps {
   mapUrl?: string
 }
 
-export default function MyMap({ eventLocation, eventAddress, setEventAddress, setEventLocation, mapUrl }: MyMapProps) {
+export default function MyMap({  eventAddress, setEventAddress, setEventLocation, mapUrl }: MyMapProps) {
   const [markerPosition, setMarkerPosition] = useState(center)
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null)
   const mapRef = useRef<google.maps.Map | null>(null)

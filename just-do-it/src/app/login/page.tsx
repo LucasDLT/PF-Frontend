@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const { setToken, setSession, userSession } = useAuth();
+  const { setToken, setSession } = useAuth();
   const Router = useRouter();
 
   const initialState = {
@@ -92,14 +92,22 @@ export default function Login() {
       } else {
         Router.push('/');
       }
-    } catch (error: any) {
-      console.error('Error al iniciar sesión:', error.message);
-      toast.error(error.message || 'Hubo un error al intentar iniciar sesión.');
-      setErrors({
-        ...newErrors,
-        password: error.message || 'Credenciales incorrectas',
-      });
-    }
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error('Error al iniciar sesión:', error.message);
+        toast.error(error.message || 'Hubo un error al intentar iniciar sesión.');
+        setErrors({
+          ...newErrors,
+          password: error.message || 'Credenciales incorrectas',
+        });
+      } else {
+        console.error('Error desconocido', error);
+        toast.error('Hubo un error al intentar iniciar sesión.');
+        setErrors({
+          ...newErrors,
+          password: 'Credenciales incorrectas',
+        });
+      }}
   };
 
   const handleClickGoogle = async () => {

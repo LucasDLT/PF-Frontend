@@ -70,7 +70,7 @@ export default function EdicionPerfil() {
 
   const validateForm = () => {
     let isValid = true;
-    let newErrors = { password: '', confirmPassword: '' };
+    const newErrors = { password: '', confirmPassword: '' };
 
     
     if (formData.password && formData.password !== formData.confirmPassword) {

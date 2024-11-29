@@ -9,10 +9,9 @@ import {
 import styles from './succes.module.css';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context';
-import { log } from 'console';
 
 export default function SubscriptionSuccess() {
-  const { setSession, userSession } = useAuth();
+  const { setSession } = useAuth();
   const [paymentStatus, setPaymentStatus] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;

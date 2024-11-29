@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context'
 import Link from 'next/link' 
 import { ScheduledClasses } from "@/component/sheduleClass"
-import { cn } from "@/lib/utils"
 import styles from './perfilusuario.module.css'
 
 export default function PerfilUsuario() {
