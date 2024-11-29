@@ -8,7 +8,7 @@ import About from '@/component/about';
 import About2 from '@/component/about2';
 
 
-export const Home: React.FC = () => {
+ const Home: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.hero}>
