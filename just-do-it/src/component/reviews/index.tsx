@@ -24,9 +24,7 @@ const Reviews: React.FC<ReviewProps> = ({ class_id }) => {
 
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
 
-  const handleRatingChange = (selectedRating: number) => {
-    setRating(selectedRating);
-  };
+ 
 
   const handleReviewTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setReviewText(e.target.value);

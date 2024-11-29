@@ -14,7 +14,7 @@ export interface Class {
 
 }
 
-interface CardClassProps {
+export interface CardClassProps {
   gymClass: {
     id: string;
     name: string;
