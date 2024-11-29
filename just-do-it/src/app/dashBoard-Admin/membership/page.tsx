@@ -1,16 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import {  useEffect } from 'react';
 import { useAuth } from '@/context';
 
-type AdminDonation = {
-  id: string;
-  email: string;
-  amount: number;
-  date: string;
-  status: 'active' | 'pending';
-  createdAt: string;
-};
 
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 

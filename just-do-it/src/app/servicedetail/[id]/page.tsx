@@ -58,7 +58,7 @@ export default function ClassDetailPage() {
         const data: GymClass = await response.json();
         setGymClass(data);
       } catch (error) {
-        setError('Hubo un problema al cargar la clase');
+        setError(error as string);
       } finally {
         setLoading(false);
       }

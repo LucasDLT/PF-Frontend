@@ -1,7 +1,6 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { RiLoginBoxLine } from 'react-icons/ri';
 import { Avatar } from '@nextui-org/react'; // Para mostrar el avatar
 import { signOut } from 'next-auth/react';
 import {
@@ -15,7 +14,6 @@ import styles from './navlanding.module.css'; // Importar el archivo CSS Module
 import { useAuth } from '@/context';
 
 export const Navbar: React.FC = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const { userSession, token, logout } = useAuth();
   const avatarUrl =
     userSession?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
