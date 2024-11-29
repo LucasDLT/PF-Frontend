@@ -24,7 +24,7 @@ const Reviews: React.FC<ReviewProps> = ({ class_id }) => {
 
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
-
+  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
  
 
@@ -61,7 +61,7 @@ const Reviews: React.FC<ReviewProps> = ({ class_id }) => {
     }
 
     try {
-      const response = await fetch(`${DOMAIN}${PORT}/reviews`, {
+      const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

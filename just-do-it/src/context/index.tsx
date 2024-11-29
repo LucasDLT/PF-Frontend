@@ -47,6 +47,7 @@ export const useAuth = () => {
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const [userSession, setSessionState] = useState<Session>({
     id: null,
@@ -100,7 +101,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   const fetchClasses = async () => {
     try {
-      const response = await fetch(`${DOMAIN}${PORT}/classes`, {
+      const response = await fetch(`${API_URL}/classes`, {
         method: 'GET',
       });
       if (response.ok) {

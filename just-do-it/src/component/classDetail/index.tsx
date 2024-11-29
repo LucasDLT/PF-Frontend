@@ -39,7 +39,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   const { userSession } = useAuth();
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
-
+  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -62,7 +62,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
     };
 
     try {
-      const response = await fetch(`${DOMAIN}${PORT}/booked-classes/`, {
+      const response = await fetch(`${API_URL}/booked-classes/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

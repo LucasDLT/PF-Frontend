@@ -1,0 +1,61 @@
+/* PaymentHistory.module.css */
+
+.card {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cardHeader {
+    padding: 16px;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .cardTitle {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #343a40;
+  }
+  
+  .cardDescription {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+  
+  .cardContent {
+    padding: 16px;
+  }
+  
+  .filterContainer {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+  }
+  
+  .selectTrigger {
+    width: 180px;
+  }
+  
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tableHeader {
+    background-color: #e9ecef;
+  }
+  
+  .tableRow:nth-child(even) {
+    background-color: #f1f3f5;
+  }
+  
+  .tableCell {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+  }
+  
+  .tableCellAmount {
+    font-weight: bold;
+    color: #495057;
+  }
+  
