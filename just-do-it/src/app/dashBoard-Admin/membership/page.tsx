@@ -2,17 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 
-import { ScrollArea } from '@/components/ui/scroll-area';
+{/*import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from '@/components/ui/select';*/}
 
 import { signOut } from 'next-auth/react';
 
