@@ -8,6 +8,7 @@ import { Fade } from 'react-awesome-reveal';
 export default function MembershipsPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const [memberships, setMemberships] = useState<Membership[]>([]);
   const { userSession } = useAuth();
@@ -15,7 +16,7 @@ export default function MembershipsPage() {
   useEffect(() => {
     const fetchMemberships = async () => {
       try {
-        const response = await fetch(`${DOMAIN}${PORT}/memberships`, {
+        const response = await fetch(`${API_URL}/memberships`, {
           method: 'GET',
         });
         if (!response.ok) {

@@ -41,6 +41,7 @@ interface GymClass {
 export default function ClassDetailPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const { id } = useParams();
   const [gymClass, setGymClass] = useState<GymClass | null>(null);
@@ -50,7 +51,7 @@ export default function ClassDetailPage() {
   useEffect(() => {
     const fetchClass = async () => {
       try {
-        const response = await fetch(`${DOMAIN}${PORT}/classes/${id}`);
+        const response = await fetch(`${API_URL}/classes/${id}`);
         if (!response.ok) {
           throw new Error('Clase no encontrada');
         }

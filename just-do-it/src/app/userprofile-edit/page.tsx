@@ -14,6 +14,7 @@ import { toast } from 'sonner';
 export default function EdicionPerfil() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const route = useRouter();
   const { token, userSession, setSession } = useAuth();
@@ -95,31 +96,35 @@ export default function EdicionPerfil() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     if (!validateForm()) return;
-
+  
     const updatedData = { ...formData, imageUrl };
-
+  
     try {
-      const response = await fetch(
-        `${DOMAIN}${PORT}/users/${userSession.id}`,
-        {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updatedData),
+      const response = await fetch(`${API_URL}/users/${userSession.id}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-      );
-
+        body: JSON.stringify(updatedData),
+      });
+  
       if (response.ok) {
-        const updatedUser = await response.json();
-        setSession(updatedUser);
-        toast.success('Perfil actualizado correctamente!');
-        route.push('/userprofile');
+        const data = await response.json();
+  
+       
+        if (data.userData) {
+          setSession(data.userData);
+          toast.success('Perfil actualizado correctamente!');
+          route.push('/userprofile');
+        } else {
+          throw new Error('Datos de usuario no encontrados en la respuesta del servidor.');
+        }
       } else {
-        toast.error('Hubo un error al actualizar el perfil.');
+        const errorData = await response.json();
+        toast.error(`Error del servidor: ${errorData.message || 'Error desconocido'}`);
       }
     } catch (error) {
       console.error('Error:', error);
