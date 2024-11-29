@@ -19,7 +19,7 @@ export interface Session {
   id: string | null;
   name: string | null;
   email: string;
-  image: string | null;
+  image: string | undefined;
   phone: string;
   address: string;
   country: string;
