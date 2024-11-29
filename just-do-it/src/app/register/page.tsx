@@ -9,6 +9,8 @@ import { toast } from 'sonner';
 
 export default function Register() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+
   const { token, setToken, setSession } = useAuth();
   const router = useRouter();
 
@@ -89,7 +91,7 @@ export default function Register() {
         setIsLoading(true); 
   
     
-        const response = await fetch(`http://localhost:${PORT}/auth/signup`, {
+        const response = await fetch(`${DOMAIN}${PORT}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -112,12 +112,12 @@ export default function NavbarApp() {
             {/* Mostrar opciones de admin si el rol no es 'user' */}
             {isAdmin && (
               <DropdownMenuItem className={styles.menuItem} asChild>
-                <a href="#">
+                <Link href="dashBoard-Admin">
                   <div className="flex items-center">
                     <UserCog className="mr-2 h-4 w-4" />
                     <span>Perfil Admin</span>
                   </div>
-                </a>
+                </Link>
               </DropdownMenuItem>
             )}
 

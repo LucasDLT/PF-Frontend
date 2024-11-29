@@ -23,6 +23,8 @@ const Reviews: React.FC<ReviewProps> = ({ class_id }) => {
   ]);
 
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+
 
  
 
@@ -59,7 +61,7 @@ const Reviews: React.FC<ReviewProps> = ({ class_id }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:${PORT}/reviews`, {
+      const response = await fetch(`${DOMAIN}${PORT}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

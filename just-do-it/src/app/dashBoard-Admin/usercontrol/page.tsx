@@ -23,9 +23,11 @@ interface ApiResponse {
 }
 
 const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+
 
 const fetchUsersFromAPI = async (page: number, limit: number): Promise<ApiResponse> => {
-  const response = await fetch(`http://localhost:${port}/users?page=${page}&limit=${limit}`);
+  const response = await fetch(`${DOMAIN}${port}/users?page=${page}&limit=${limit}`);
   if (!response.ok) {
     throw new Error('Failed to fetch users');
   }

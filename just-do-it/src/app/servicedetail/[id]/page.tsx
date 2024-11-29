@@ -1,7 +1,5 @@
 'use client';
 
-
-
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ActivityDetail from '@/component/classDetail';
@@ -38,20 +36,21 @@ interface GymClass {
   schedules: Schedule[];
   created_at?: string;
   update_at?: string;
-  }
+}
 
 export default function ClassDetailPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+
   const { id } = useParams();
   const [gymClass, setGymClass] = useState<GymClass | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  
   useEffect(() => {
     const fetchClass = async () => {
       try {
-        const response = await fetch(`http://localhost:${PORT}/classes/${id}`);
+        const response = await fetch(`${DOMAIN}${PORT}/classes/${id}`);
         if (!response.ok) {
           throw new Error('Clase no encontrada');
         }
@@ -92,7 +91,6 @@ export default function ClassDetailPage() {
       className="flex flex-col justify-center items-center min-h-screen min-w-screen"
       data-aos="fade-right"
     >
-
       <ActivityDetail
         id={gymClass.id}
         name={gymClass.name}
@@ -105,11 +103,9 @@ export default function ClassDetailPage() {
         onScheduleClick={handleScheduleClick}
       />
       {gymClass.schedules.length === 0 && (
-        
         <p>No hay horarios disponibles para esta clase.</p>
       )}
-      <Reviews class_id={gymClass.id}/>
-   </div>
+      <Reviews class_id={gymClass.id} />
+    </div>
   );
 }
-

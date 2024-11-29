@@ -15,11 +15,13 @@ export default function SubscriptionSuccess() {
   const [paymentStatus, setPaymentStatus] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+
 
   const checkPaymentStatus = async (sessionId: string) => {
     try {
       const response = await fetch(
-        `http://localhost:${PORT}/payment/success?session_id=${sessionId}`,
+        `${DOMAIN}${PORT}/payment/success?session_id=${sessionId}`,
         {
           method: 'GET',
           headers: {

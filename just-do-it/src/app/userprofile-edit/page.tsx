@@ -13,6 +13,8 @@ import { toast } from 'sonner';
 
 export default function EdicionPerfil() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+
   const route = useRouter();
   const { token, userSession, setSession } = useAuth();
   const [file, setFile] = useState<File | undefined>(undefined);
@@ -100,7 +102,7 @@ export default function EdicionPerfil() {
 
     try {
       const response = await fetch(
-        `http://localhost:${PORT}/users/${userSession.id}`,
+        `${DOMAIN}${PORT}/users/${userSession.id}`,
         {
           method: 'PUT',
           headers: {

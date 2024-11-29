@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+
   const { setToken, setSession } = useAuth();
   const Router = useRouter();
 
@@ -58,7 +60,7 @@ export default function Login() {
 
     
     try {
-      const response = await fetch(`http://localhost:${port}/auth/signin`, {
+      const response = await fetch(`${DOMAIN}${port}/auth/signin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

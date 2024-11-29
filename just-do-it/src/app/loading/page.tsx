@@ -8,6 +8,8 @@ import { useRouter } from 'next/navigation';
 
 export default function LoadingView() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+
   const { setToken, setSession } = useAuth();
   const { data: session } = useSession();
   const Router = useRouter();
@@ -18,7 +20,7 @@ export default function LoadingView() {
     const registerUser = async () => {
       if (session && session.user && !isRegistered) { // Solo ejecutar si no se ha registrado
         try {
-          const response = await fetch(`http://localhost:${PORT}/auth/signup/third/`, {
+          const response = await fetch(`${DOMAIN}${PORT}/auth/signup/third/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

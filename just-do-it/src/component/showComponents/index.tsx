@@ -12,7 +12,8 @@ const ShowComponent = ({ children }: { children: React.ReactNode }) => {
     pathname.includes('dashBoard-Admin') || // Otras rutas específicas
     pathname.includes('login') ||
     pathname.includes('register') ||
-    pathname.includes('formpage')
+    pathname.includes('loading') ||
+    pathname.includes('ApuremosNelson')
   ) {
     return null; // Oculta el componente en las rutas especificadas
   }

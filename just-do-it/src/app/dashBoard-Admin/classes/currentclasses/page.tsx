@@ -12,6 +12,7 @@ import styles from './AdminClassCreator.module.css';
 import { ClassPreview } from '@/component/ClassAdmin/CardPreview';
 
 export default function AdminClassCreator() {
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const [classData, setClassData] = useState({
     name: '',
@@ -30,7 +31,7 @@ export default function AdminClassCreator() {
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
-        const response = await fetch(`http://localhost:${PORT}/trainers`);
+        const response = await fetch(`${DOMAIN}${PORT}/trainers`);
         const data = await response.json();
         setTrainers(data.data);
       } catch (error) {
@@ -89,7 +90,7 @@ export default function AdminClassCreator() {
     };
 
     try {
-      const response = await fetch(`http://localhost:${PORT}/classes`, {
+      const response = await fetch(`${DOMAIN}${PORT}/classes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
