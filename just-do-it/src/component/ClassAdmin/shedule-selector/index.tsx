@@ -13,19 +13,24 @@ interface ScheduleItem {
 
 interface ScheduleSelectorProps {
   onScheduleChange: (schedule: ScheduleItem[]) => void;
+  initialSchedule?: ScheduleItem[];
 }
 
-export default function ScheduleSelector({ onScheduleChange }: ScheduleSelectorProps) {
+export default function ScheduleSelector({ onScheduleChange, initialSchedule = [] }: ScheduleSelectorProps) {
   const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
   const hours = Array.from({ length: 14 }, (_, i) => `${(i + 8)}:00`) // Desde las 08:00 hasta las 21:00
 
   const [selectedDay, setSelectedDay] = useState<string>('')
   const [selectedStartTime, setSelectedStartTime] = useState<string>('')
   const [selectedEndTime, setSelectedEndTime] = useState<string>('')
-  const [scheduleList, setScheduleList] = useState<ScheduleItem[]>([])
+  const [scheduleList, setScheduleList] = useState<ScheduleItem[]>(initialSchedule)
   const [isDayOpen, setIsDayOpen] = useState(false)
   const [isStartTimeOpen, setIsStartTimeOpen] = useState(false)
   const [isEndTimeOpen, setIsEndTimeOpen] = useState(false)
+
+  useEffect(() => {
+    setScheduleList(initialSchedule);
+  }, [initialSchedule]);
 
   // Función para obtener las opciones de hora de fin basadas en la hora de inicio
   const getEndTimes = (startTime: string) => {
@@ -182,3 +187,4 @@ export default function ScheduleSelector({ onScheduleChange }: ScheduleSelectorP
     </Card>
   )
 }
+

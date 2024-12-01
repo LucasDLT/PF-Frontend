@@ -1,5 +1,5 @@
 import { MapPin, User, Calendar } from 'lucide-react';
-import styles from './ClassPreview.module.css';  // Importa el CSS Module
+import styles from './ClassPreview.module.css';
 
 interface ClassPreviewProps {
   classData: {
@@ -7,8 +7,8 @@ interface ClassPreviewProps {
     description: string;
     image: string;
     location: string;
-    trainerId: string;
-    schedule: { day: string; startTime: string; endTime: string }[]; // Correcto aquí
+    trainerId: string | null;
+    schedule: { day: string; startTime: string; endTime: string }[];
     capacity: number;
   };
 }
@@ -26,7 +26,6 @@ export function ClassPreview({ classData }: ClassPreviewProps) {
         )}
         <div className={styles.flexRow}>
           <MapPin className={styles.icon} />
-          {/* Enlace a Google Maps */}
           <a
             href={`https://www.google.com/maps/search/?q=${encodeURIComponent(classData.location)}`}
             target="_blank"
@@ -42,7 +41,6 @@ export function ClassPreview({ classData }: ClassPreviewProps) {
         </div>
         <div className={styles.flexRow}>
           <Calendar className={styles.icon} />
-          {/* Aquí mapeamos schedule para mostrar el día y los horarios */}
           <span>
             {classData.schedule.length > 0
               ? classData.schedule.map((slot, index) => (
@@ -60,3 +58,4 @@ export function ClassPreview({ classData }: ClassPreviewProps) {
     </div>
   );
 }
+

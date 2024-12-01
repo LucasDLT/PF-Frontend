@@ -1,0 +1,86 @@
+.container {
+    padding: 2rem;
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .title {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .card {
+    margin-bottom: 2rem;
+  }
+  
+  .selectTrigger {
+    width: 100%;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .formGroup {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .label {
+    margin-bottom: 0.5rem;
+  }
+  
+  .input, .textarea {
+    margin-bottom: 1rem;
+  }
+  
+  .submitButton {
+    align-self: center;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 1rem;
+  }
+  
+  .success {
+    color: green;
+    margin-top: 1rem;
+  }
+  
+  .dropdown {
+    position: relative;
+  }
+  
+  .selectTrigger {
+    width: 100%;
+    padding: 8px;
+    background-color: #f9fafb;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .dropdownMenu {
+    position: absolute;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    z-index: 10;
+  }
+  
+  .dropdownItem {
+    padding: 8px;
+    text-align: left;
+    width: 100%;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .dropdownItem:hover {
+    background-color: #f3f4f6;
+  }
