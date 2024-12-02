@@ -41,7 +41,7 @@ export default function RootLayout({
             <Toaster position="top-center"
             toastOptions={{
               style: {
-                background: '#04ff6899',
+                background: '#04ff68',
                 color: '#000000',
                 fontWeight: 'bold',
                 fontSize: '15px',

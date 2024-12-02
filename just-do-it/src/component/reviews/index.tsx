@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/tooltip';
 import styles from './review.module.css';
 import { ReviewProps } from '@/app/servicedetail/[id]/page';
+import Link from 'next/link';
 
 interface ReviewsComponentProps {
   reviews: ReviewProps[];
@@ -140,7 +141,7 @@ const Reviews: React.FC<ReviewsComponentProps> = ({
           </form>
         ) : (
           <p className={styles.noMembershipText}>
-            Debes tener una suscripcion activa para dejar una reseñas.
+            Debes tener una suscripcion activa para dejar una reseñas. {<Link href="/memberships" style={{ color: 'blue' }} >Ver suscripciones</Link>}
           </p>
         )}
       </CardContent>
