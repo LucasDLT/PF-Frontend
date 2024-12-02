@@ -70,7 +70,17 @@ export default function EdicionPerfil() {
       setImageUrl(data.secure_url);
     } catch (error) {
       console.error('Error uploading image:', error);
-      toast.error('Hubo un error al cargar la imagen.');
+      toast.error('Hubo un error al cargar la imagen.',
+        {
+          style: {
+            background: 'red',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '15px',
+            borderRadius: '8px',
+          },
+        }
+      );
     }
   };
 
@@ -127,11 +137,27 @@ export default function EdicionPerfil() {
         }
       } else {
         const errorData = await response.json();
-        toast.error(`Error del servidor: ${errorData.message || 'Error desconocido'}`);
+        toast.error(`Error al actualizar  los datos:}`,{
+          style: {
+            background: 'red',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '15px',
+            borderRadius: '8px',
+          },
+        });
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('Error al conectar con el servidor.');
+      toast.error('Error al actualizar  los datos.', {
+        style: {
+          background: 'red',
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '15px',
+          borderRadius: '8px',
+        },
+      });
     }
   };
 
