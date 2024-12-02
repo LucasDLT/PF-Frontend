@@ -60,6 +60,9 @@ export default function EdicionPerfil() {
         {
           method: 'POST',
           body: form,
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
 

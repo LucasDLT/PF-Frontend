@@ -10,11 +10,13 @@ import MyMap from '@/component/GoogleMaps/index';
 import ScheduleSelector from '@/component/ClassAdmin/shedule-selector';
 import styles from './AdminClassCreator.module.css';
 import { ClassPreview } from '@/component/ClassAdmin/CardPreview';
+import { useAuth } from '@/context';
 
 export default function AdminClassCreator() {
   const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+  const {userSession, token} = useAuth();
   const [classData, setClassData] = useState({
     name: '',
     description: '',
@@ -32,17 +34,28 @@ export default function AdminClassCreator() {
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
-        const response = await fetch(`${API_URL}/trainers`);
+        const response = await fetch(`${API_URL}/trainers`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, 
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error('Error al obtener los entrenadores');
+        }
+  
         const data = await response.json();
         setTrainers(data.data);
       } catch (error) {
         console.error('Error al obtener los entrenadores:', error);
+        setError('No se pudo cargar la lista de entrenadores.');
       }
     };
-
+  
     fetchTrainers();
-  }, []);
-
+  }, [ token]);
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -84,7 +97,7 @@ export default function AdminClassCreator() {
       name: classData.name,
       description: classData.description,
       location: classData.location,
-      capacity: parsedCapacity, // Asegurarse de enviar un número entero
+      capacity: parsedCapacity, 
       schedule: classData.schedule,
       imgUrl: classData.image,
       trainerId: classData.trainerId,
@@ -95,6 +108,7 @@ export default function AdminClassCreator() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,  
         },
         body: JSON.stringify(payload),
       });
