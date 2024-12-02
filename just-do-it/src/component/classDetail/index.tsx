@@ -62,7 +62,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
     };
 
     try {
-      const response = await fetch(`${API_URL}/booked-classes/`, {
+      const response = await fetch(`${API_URL}/booked-classes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

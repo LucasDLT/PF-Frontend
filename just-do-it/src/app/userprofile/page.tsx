@@ -1,30 +1,80 @@
-'use client'
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Mail, MapPin, Phone, Edit, Globe ,CheckCircle, XCircle } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/context'
-import Link from 'next/link' 
-import { ScheduledClasses } from "@/component/sheduleClass"
-import styles from './perfilusuario.module.css'
+'use client';
+import { useEffect, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Mail,
+  MapPin,
+  Phone,
+  Edit,
+  Globe,
+  CheckCircle,
+  XCircle,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context';
+import Link from 'next/link';
+import { ScheduledClasses } from '@/component/sheduleClass';
+import styles from './perfilusuario.module.css';
 
 export default function PerfilUsuario() {
-  const router = useRouter()
-  const { userSession } = useAuth()
+  const router = useRouter();
+  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
+  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+  const { userSession, token } = useAuth();
 
-  const handleEditProfile = () => {
-    router.push('/userprofile-edit')
-  }
+  const [scheduledClasses, setScheduledClasses] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchScheduledClasses = async () => {
+      try {
+        const response = await fetch(
+          `http://${API_URL}booked-classes/user/${userSession.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error('Error al obtener los datos de clases programadas');
+        }
+
+        const data = await response.json();
+
+        const formattedClasses = data
+          .map((item: any) => {
+            return item.schedule.map((scheduleItem: any) => ({
+              id: scheduleItem.id,
+              title: item.className,
+              date: scheduleItem.date,
+              time: `${scheduleItem.startTime} - ${scheduleItem.endTime}`,
+              instructor: item.trainerName,
+            }));
+          })
+          .flat();
+
+        setScheduledClasses(formattedClasses);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (userSession?.id) {
+      fetchScheduledClasses();
+    }
+  }, [userSession?.id, token]);
 
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <h1 className={styles.title}>Perfil de Usuario</h1>
-          <Button 
-            onClick={handleEditProfile}
+          <Button
+            onClick={() => router.push('/userprofile-edit')}
             className={styles.editButton}
           >
             <Edit className="mr-2 h-4 w-4" /> Editar Perfil
@@ -40,8 +90,13 @@ export default function PerfilUsuario() {
           <CardContent>
             <div className={styles.avatarContainer}>
               <Avatar className={styles.avatar}>
-                <AvatarImage alt="Foto de perfil" src={userSession?.image || '/default-avatar.png'} />
-                <AvatarFallback>{userSession.name?.charAt(0) || 'U'}</AvatarFallback>
+                <AvatarImage
+                  alt="Foto de perfil"
+                  src={userSession?.image || '/default-avatar.png'}
+                />
+                <AvatarFallback>
+                  {userSession.name?.charAt(0) || 'U'}
+                </AvatarFallback>
               </Avatar>
               <div>
                 <h2 className="text-2xl font-bold">{userSession.name}</h2>
@@ -50,10 +105,26 @@ export default function PerfilUsuario() {
             </div>
             <div className={styles.infoContainer}>
               {[
-                { icon: Mail, label: 'Email', value: userSession.email },
-                { icon: Phone, label: 'Teléfono', value: userSession.phone },
-                { icon: Globe, label: 'País', value: userSession.country },
-                { icon: MapPin, label: 'Dirección', value: userSession.address },
+                {
+                  icon: Mail,
+                  label: 'Email',
+                  value: userSession.email,
+                },
+                {
+                  icon: Phone,
+                  label: 'Teléfono',
+                  value: userSession.phone,
+                },
+                {
+                  icon: Globe,
+                  label: 'País',
+                  value: userSession.country,
+                },
+                {
+                  icon: MapPin,
+                  label: 'Dirección',
+                  value: userSession.address,
+                },
               ].map(({ icon: Icon, label, value }) => (
                 <div key={label} className={styles.infoItem}>
                   <Icon className={styles.icon} aria-hidden="true" />
@@ -65,16 +136,22 @@ export default function PerfilUsuario() {
                 {userSession.membership_status === 'active' ? (
                   <>
                     <CheckCircle className={styles.icon} aria-hidden="true" />
-                    <span className={styles.membershipStatusActive}>Tienes una membresía activa</span>
+                    <span className={styles.membershipStatusActive}>
+                      Tienes una membresía activa
+                    </span>
                   </>
                 ) : (
                   <>
                     <XCircle className={styles.icon} aria-hidden="true" />
                     <span className={styles.membershipStatusInactive}>
                       Aún no tienes una membresía. Te invitamos a inscribirte{' '}
-                      <Link href="/memberships" className={styles.membershipLink}>
+                      <Link
+                        href="/memberships"
+                        className={styles.membershipLink}
+                      >
                         Aquí
-                      </Link>.
+                      </Link>
+                      .
                     </span>
                   </>
                 )}
@@ -85,20 +162,15 @@ export default function PerfilUsuario() {
 
         <Card className={styles.card}>
           <CardHeader>
-            <CardTitle className={styles.scheduledClassesTitle}>Mis Clases </CardTitle>
+            <CardTitle className={styles.scheduledClassesTitle}>
+              Mis Clases Programadas
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <ScheduledClasses 
-              classes={[
-                { id: '1', title: 'Yoga para principiantes', date: 'Viernes', time: '10:00 AM', instructor: 'Ana García' },
-                { id: '2', title: 'Pilates intermedio', date: 'Jueves', time: '2:00 PM', instructor: 'Carlos Rodríguez' },
-                { id: '3', title: 'Zumba avanzado', date: 'Lunes', time: '6:00 PM', instructor: 'María López' },
-              ]}
-            />
+            <ScheduledClasses classes={scheduledClasses} />
           </CardContent>
         </Card>
       </main>
     </div>
-  )
+  );
 }
-

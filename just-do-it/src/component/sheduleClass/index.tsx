@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { CalendarIcon, ClockIcon } from 'lucide-react'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import styles from './ScheduledClasses.module.css' // Importa el archivo CSS modular
+import styles from './ScheduledClasses.module.css' 
 
 interface ScheduledClass {
   id: string
@@ -14,13 +14,12 @@ interface ScheduledClass {
 }
 
 interface ScheduledClassesProps {
-  classes: ScheduledClass[]
+  classes: ScheduledClass[] // Recibimos las clases formateadas como prop
 }
 
 export function ScheduledClasses({ classes }: ScheduledClassesProps) {
   return (
     <Card className={styles.card}>
-     
       <CardContent className={styles.cardContent}>
         {classes.length === 0 ? (
           <p className="text-center text-muted-foreground">No tienes clases agendadas por el momento.</p>
