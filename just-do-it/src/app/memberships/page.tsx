@@ -54,11 +54,12 @@ export default function MembershipsPage() {
 
     try {
       const response = await fetch(
-        `${DOMAIN}${PORT}/payment/create-customer`,
+        `${API_URL}/payment/create-customer`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(userData),
         },
