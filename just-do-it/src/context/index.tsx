@@ -101,7 +101,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   const fetchClasses = async () => {
     try {
-      const response = await fetch(`${API_URL}/classes`, {
+      const response = await fetch(`${DOMAIN}/classes`, {
         method: 'GET',
       });
       if (response.ok) {

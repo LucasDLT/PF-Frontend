@@ -42,7 +42,7 @@ export default function UserList() {
   const ITEMS_PER_PAGE = 5;
 
   const fetchUsersFromAPI = async (page: number, limit: number): Promise<ApiResponse> => {
-    const response = await fetch(`${API_URL}/users?page=${page}&limit=${limit}`, {
+    const response = await fetch(`${DOMAIN}/users?page=${page}&limit=${limit}`, {
       method: 'GET',
       headers: {
         'Authorization': `Bearer ${token}`,  // Usar token aquí

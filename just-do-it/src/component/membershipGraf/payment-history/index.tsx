@@ -46,10 +46,9 @@ export function PaymentHistory() {
   useEffect(() => {
     const loadPayments = async () => {
       try {
-        const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
-
+        const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN
         const response = await fetch(
-          `${API_URL}/payment?page=${currentPage}&limit=10`,
+          `${DOMAIN}/payment?page=${currentPage}&limit=10`,
           {
             method: 'GET',
             headers: {

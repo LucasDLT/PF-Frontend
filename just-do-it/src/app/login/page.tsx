@@ -61,7 +61,7 @@ export default function Login() {
 
     
     try {
-      const response = await fetch(`${API_URL}/auth/signin`, {
+      const response = await fetch(`${DOMAIN}/auth/signin`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

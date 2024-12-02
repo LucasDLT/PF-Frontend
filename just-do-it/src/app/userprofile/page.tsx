@@ -31,7 +31,7 @@ export default function PerfilUsuario() {
     const fetchScheduledClasses = async () => {
       try {
         const response = await fetch(
-          `http://${API_URL}booked-classes/user/${userSession.id}`,
+          `http://${DOMAIN}booked-classes/user/${userSession.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,

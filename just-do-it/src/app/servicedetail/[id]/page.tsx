@@ -74,7 +74,7 @@ export default function ClassDetailPage() {
     console.log('Class ID:', id);
 
     try {
-      const response = await fetch(`${API_URL}/reviews`, {
+      const response = await fetch(`${DOMAIN}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -121,7 +121,7 @@ export default function ClassDetailPage() {
   useEffect(() => {
     const fetchClass = async () => {
       try {
-        const response = await fetch(`${API_URL}/classes/${id}`);
+        const response = await fetch(`${DOMAIN}/classes/${id}`);
         
         if (!response.ok) {
           throw new Error('Clase no encontrada');

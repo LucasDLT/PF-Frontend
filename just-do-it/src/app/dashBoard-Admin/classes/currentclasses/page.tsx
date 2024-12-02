@@ -34,7 +34,7 @@ export default function AdminClassCreator() {
   useEffect(() => {
     const fetchTrainers = async () => {
       try {
-        const response = await fetch(`${API_URL}/trainers`, {
+        const response = await fetch(`${DOMAIN}/trainers`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ export default function AdminClassCreator() {
     };
 
     try {
-      const response = await fetch(`${API_URL}/classes`, {
+      const response = await fetch(`${DOMAIN}/classes`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

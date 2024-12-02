@@ -22,7 +22,7 @@ export default function SubscriptionSuccess() {
   const checkPaymentStatus = async (sessionId: string) => {
     try {
       const response = await fetch(
-        `${API_URL}/payment/success?session_id=${sessionId}`,
+        `${DOMAIN}/payment/success?session_id=${sessionId}`,
         {
           method: 'GET',
           headers: {

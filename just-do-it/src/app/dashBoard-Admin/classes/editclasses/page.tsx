@@ -32,6 +32,7 @@ interface Class {
 
 export default function AdminClassManager() {
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
   const {token , userSession}=useAuth();
   const [classes, setClasses] = useState<Class[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string>('');
@@ -58,7 +59,7 @@ export default function AdminClassManager() {
 
   const fetchClasses = async () => {
     try {
-      const response = await fetch(`${API_URL}/classes`, {
+      const response = await fetch(`${DOMAIN}/classes`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +95,7 @@ export default function AdminClassManager() {
 
   const fetchTrainers = async () => {
     try {
-      const response = await fetch(`${API_URL}/trainers`);
+      const response = await fetch(`${DOMAIN}/trainers`);
       const data = await response.json();
       setTrainers(data.data);
     } catch (error) {

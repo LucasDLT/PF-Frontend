@@ -95,7 +95,7 @@ export default function Register() {
       try {
         setIsLoading(true);
 
-        const response = await fetch(`${API_URL}/auth/signup`, {
+        const response = await fetch(`${DOMAIN}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

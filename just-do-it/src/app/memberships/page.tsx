@@ -16,7 +16,7 @@ export default function MembershipsPage() {
   useEffect(() => {
     const fetchMemberships = async () => {
       try {
-        const response = await fetch(`${API_URL}/memberships`, {
+        const response = await fetch(`${DOMAIN}/memberships`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ export default function MembershipsPage() {
 
     try {
       const response = await fetch(
-        `${API_URL}/payment/create-customer`,
+        `${DOMAIN}/payment/create-customer`,
         {
           method: 'POST',
           headers: {
@@ -64,11 +64,12 @@ export default function MembershipsPage() {
           body: JSON.stringify(userData),
         },
       );
-
+      console.log(token);
+      
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Error en la solicitud POST Para crear Comprador:', errorText);
+        console.error('Error en la solicitud POST Para crear Comprador:!!!!!', errorText);
         
         throw new Error(`Error al crear la membresía: ${response.statusText}`);
       }

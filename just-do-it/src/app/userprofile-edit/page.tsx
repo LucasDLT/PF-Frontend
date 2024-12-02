@@ -115,7 +115,7 @@ export default function EdicionPerfil() {
     const updatedData = { ...formData, imageUrl };
   
     try {
-      const response = await fetch(`${API_URL}/users/${userSession.id}`, {
+      const response = await fetch(`${DOMAIN}/users/${userSession.id}`, {
         method: 'PATCH',
         headers: {
           Authorization: `Bearer ${token}`,
