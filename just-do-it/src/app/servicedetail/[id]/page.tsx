@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/context';
 import ActivityDetail from '@/component/classDetail';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -36,17 +37,85 @@ interface GymClass {
   schedules: Schedule[];
   created_at?: string;
   update_at?: string;
+  bookedClasses?: any[];
+  reviews: ReviewProps[];
+}
+export interface ReviewProps {
+  user_id: string;
+  comment: string | undefined;
+  rating: number | undefined;
+  class_id: string | undefined;
+  onSubmitRating: (rating: number, reviewText: string) => void;
 }
 
 export default function ClassDetailPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const { id } = useParams();
   const [gymClass, setGymClass] = useState<GymClass | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { userSession } = useAuth();
+
+  const membershipStatus = userSession?.membership_status;
+
+  const onSubmitRating = async (rating: number, reviewText: string) => {
+    if (!userSession?.id) {
+      alert('No estás autenticado');
+      return;
+    }
+
+    console.log('Datos a enviar:');
+    console.log('Rating:', rating);
+    console.log('Review Text:', reviewText);
+    console.log('User ID:', userSession.id);
+    console.log('Class ID:', id);
+
+    try {
+      const response = await fetch(`http://localhost:${PORT}/reviews`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          rating,
+          comment: reviewText,
+          user_id: userSession.id,
+          class_id: id,
+        }),
+      });
+
+      console.log('Respuesta de la API:', response);
+
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        console.error('Error al enviar la reseña:', errorDetails);
+        throw new Error('Error al enviar la reseña');
+      }
+
+      console.log('Reseña enviada exitosamente');
+
+      setGymClass(prev => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          reviews: [
+            ...(prev.reviews ?? []),
+            {
+              rating,
+              comment: reviewText,
+              user_id: userSession.id ?? '',
+              class_id: id,
+            },
+          ] as ReviewProps[],
+        };
+      });
+    } catch (error) {
+      console.error('Error al enviar la reseña:', error);
+    }
+  };
 
   useEffect(() => {
     const fetchClass = async () => {
@@ -106,7 +175,11 @@ export default function ClassDetailPage() {
       {gymClass.schedules.length === 0 && (
         <p>No hay horarios disponibles para esta clase.</p>
       )}
-      <Reviews class_id={gymClass.id} />
+      <Reviews
+        reviews={gymClass.reviews}
+        onSubmitRating={onSubmitRating}
+        membershipStatus={membershipStatus}
+      />
     </div>
   );
 }
