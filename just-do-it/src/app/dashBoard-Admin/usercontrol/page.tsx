@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui/pagination";
 import { Button } from "@/components/ui/button";
 import styles from './UserList.module.css';
+import { useAuth } from '@/context';
 
 interface User {
   id: string;
@@ -26,15 +27,9 @@ const port = process.env.NEXT_PUBLIC_APP_API_PORT;
 const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
 const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
-const fetchUsersFromAPI = async (page: number, limit: number): Promise<ApiResponse> => {
-  const response = await fetch(`${API_URL}/users?page=${page}&limit=${limit}`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch users');
-  }
-  return await response.json();
-};
-
 export default function UserList() {
+  const { userSession, token } = useAuth();  // Mover useAuth aquí dentro del componente
+
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
@@ -46,11 +41,26 @@ export default function UserList() {
   const [isLoading, setIsLoading] = useState(false);
   const ITEMS_PER_PAGE = 5;
 
+  const fetchUsersFromAPI = async (page: number, limit: number): Promise<ApiResponse> => {
+    const response = await fetch(`${API_URL}/users?page=${page}&limit=${limit}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,  // Usar token aquí
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch users');
+    }
+
+    return await response.json();
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        const data = await fetchUsersFromAPI(1, 1000); 
+        const data = await fetchUsersFromAPI(1, 1000);
         setAllUsers(data.users);
         setTotalPages(Math.ceil(data.users.length / ITEMS_PER_PAGE));
       } catch (error) {
@@ -61,7 +71,7 @@ export default function UserList() {
     };
 
     fetchData();
-  }, []);
+  }, [token]);  // Asegúrate de que el token esté disponible cuando se haga la solicitud
 
   const filteredUsers = useMemo(() => {
     return allUsers.filter(user => {
@@ -208,4 +218,3 @@ export default function UserList() {
     </div>
   );
 }
-
