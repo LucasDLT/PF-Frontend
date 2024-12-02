@@ -98,14 +98,30 @@ export default function Login() {
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error('Error al iniciar sesión:', error.message);
-        toast.error(error.message || 'Hubo un error al intentar iniciar sesión.');
+        toast.error('Hubo un error al intentar iniciar sesión.',{
+          style: {
+            background: 'red',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '15px',
+            borderRadius: '8px',
+          },
+        });
         setErrors({
           ...newErrors,
           password: error.message || 'Credenciales incorrectas',
         });
       } else {
         console.error('Error desconocido', error);
-        toast.error('Hubo un error al intentar iniciar sesión.');
+        toast.error('Hubo un error al intentar iniciar sesión.', {
+          style: {
+            background: 'red',
+            color: 'white',
+            fontWeight: 'bold',
+            fontSize: '15px',
+            borderRadius: '8px',
+          },
+        });
         setErrors({
           ...newErrors,
           password: 'Credenciales incorrectas',
