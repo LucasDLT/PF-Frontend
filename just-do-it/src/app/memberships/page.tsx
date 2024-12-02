@@ -11,13 +11,16 @@ export default function MembershipsPage() {
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const [memberships, setMemberships] = useState<Membership[]>([]);
-  const { userSession } = useAuth();
+  const { userSession , token } = useAuth();
 
   useEffect(() => {
     const fetchMemberships = async () => {
       try {
         const response = await fetch(`${API_URL}/memberships`, {
           method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         });
         if (!response.ok) {
           throw new Error(`Error fetching memberships: ${response.statusText}`);

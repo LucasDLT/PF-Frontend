@@ -3,8 +3,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement } from 'chart.js';
 import { ChartData, TooltipItem, ChartOptions } from 'chart.js';
+import { useAuth } from '@/context';
 
-// Registrar todos los elementos necesarios
+
 ChartJS.register(CategoryScale, LinearScale, Title, Tooltip, Legend, LineElement, PointElement);
 
 interface Payment {
@@ -21,18 +22,27 @@ export function PaymentChart() {
   const [chartData, setChartData] = useState<ChartDataFormatted[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const{userSession , token} = useAuth();
 
   useEffect(() => {
     const fetchPayments = async (page = 1, limit = 100) => {
       const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
       try {
-        const response = await fetch(`${API_URL}/payment?page=${page}&limit=${limit}`);
+        const response = await fetch(`${API_URL}/payment?page=${page}&limit=${limit}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`, // Token agregado en los headers
+          },
+        });
+  
         if (!response.ok) {
           throw new Error('Failed to fetch payments');
         }
+  
         const data = await response.json();
         const payments = data.payments;
-
+  
         const processedData = payments.reduce(
           (acc: ChartDataFormatted[], payment: Payment) => {
             const date = new Date(payment.payment_date).toLocaleDateString();
@@ -46,13 +56,13 @@ export function PaymentChart() {
           },
           []
         );
-
+  
         processedData.sort(
           (a: ChartDataFormatted, b: ChartDataFormatted) =>
             new Date(a.date.split('/').reverse().join('-')).getTime() -
             new Date(b.date.split('/').reverse().join('-')).getTime()
         );
-
+  
         setChartData(processedData);
         setLoading(false);
       } catch (error) {
@@ -61,9 +71,10 @@ export function PaymentChart() {
         setLoading(false);
       }
     };
-
+  
     fetchPayments();
-  }, []);
+  }, [token]); 
+  
 
   const data: ChartData<'line'> = {
     labels: chartData.map(item => item.date),

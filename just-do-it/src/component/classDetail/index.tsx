@@ -36,7 +36,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-  const { userSession } = useAuth();
+  const { userSession , token } = useAuth();
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
@@ -66,6 +66,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });

@@ -11,6 +11,7 @@ import ScheduleSelector from '@/component/ClassAdmin/shedule-selector';
 import { ClassPreview } from '@/component/ClassAdmin/CardPreview';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import styles from './editclasses.module.css';
+import { useAuth } from '@/context';
 
 interface Schedule {
   day: string;
@@ -31,6 +32,7 @@ interface Class {
 
 export default function AdminClassManager() {
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+  const {token , userSession}=useAuth();
   const [classes, setClasses] = useState<Class[]>([]);
   const [selectedClassId, setSelectedClassId] = useState<string>('');
   const [classData, setClassData] = useState<Class>({
@@ -56,7 +58,14 @@ export default function AdminClassManager() {
 
   const fetchClasses = async () => {
     try {
-      const response = await fetch(`${API_URL}/classes`);
+      const response = await fetch(`${API_URL}/classes`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, 
+        },
+      });
+  
       if (response.ok) {
         const [data] = await response.json();
         const formattedClasses = data.map((cls: any) => ({
@@ -81,6 +90,7 @@ export default function AdminClassManager() {
       console.error('Error fetching classes:', error);
     }
   };
+  
 
   const fetchTrainers = async () => {
     try {

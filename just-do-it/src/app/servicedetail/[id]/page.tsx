@@ -20,7 +20,7 @@ interface Schedule {
 interface Trainer {
   id: string;
   name: string;
-  bio?: string; // Detalles adicionales según tu respuesta del backend
+  bio?: string; 
   specialties?: string;
   experience_years?: number;
 }
@@ -57,7 +57,7 @@ export default function ClassDetailPage() {
   const [gymClass, setGymClass] = useState<GymClass | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { userSession } = useAuth();
+  const { userSession , token } = useAuth();
 
   const membershipStatus = userSession?.membership_status;
 
@@ -74,10 +74,11 @@ export default function ClassDetailPage() {
     console.log('Class ID:', id);
 
     try {
-      const response = await fetch(`http://localhost:${PORT}/reviews`, {
+      const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           rating,
@@ -121,6 +122,7 @@ export default function ClassDetailPage() {
     const fetchClass = async () => {
       try {
         const response = await fetch(`${API_URL}/classes/${id}`);
+        
         if (!response.ok) {
           throw new Error('Clase no encontrada');
         }
