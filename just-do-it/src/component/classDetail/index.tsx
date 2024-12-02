@@ -17,7 +17,7 @@ interface ActivityDetailProps {
   description: string;
   location: string;
   capacity: number;
-  trainerName: string; // Solo conservamos el nombre del entrenador
+  trainerName: string; 
   imgUrl: string;
   schedules: Schedule[];
   onScheduleClick: (scheduleId: string) => void;
