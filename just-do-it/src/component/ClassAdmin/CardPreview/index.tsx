@@ -8,7 +8,7 @@ interface ClassPreviewProps {
     image: string;
     location: string;
     trainerId: string | null;
-    schedule: { day: string; startTime: string; endTime: string }[];
+    schedules: { day: string; startTime: string; endTime: string }[];
     capacity: number;
   };
 }
@@ -42,8 +42,8 @@ export function ClassPreview({ classData }: ClassPreviewProps) {
         <div className={styles.flexRow}>
           <Calendar className={styles.icon} />
           <span>
-            {classData.schedule.length > 0
-              ? classData.schedule.map((slot, index) => (
+            {classData.schedules.length > 0
+              ? classData.schedules.map((slot, index) => (
                   <div key={index}>
                     {slot.day}, {slot.startTime} - {slot.endTime}
                   </div>
@@ -58,4 +58,3 @@ export function ClassPreview({ classData }: ClassPreviewProps) {
     </div>
   );
 }
-

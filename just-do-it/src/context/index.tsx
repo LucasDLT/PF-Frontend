@@ -18,7 +18,7 @@ export interface Class {
   description: string;
   location: string;
   capacity: number;
-  schedule: Schedule[];
+  schedules: Schedule[];
   imgUrl: string;
   trainer: string | null;
 }

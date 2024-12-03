@@ -1,0 +1,97 @@
+.card {
+  margin-bottom: 1rem;
+}
+
+.cardContent {
+  padding: 1rem;
+}
+
+.label {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.selectors {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.selectorGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.customSelect {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.selectedValue {
+  padding: 0.5rem;
+}
+
+.optionsContainer {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  max-height: 200px;
+  overflow-y: auto;
+  margin-top: 0.5rem;
+}
+
+.optionItem {
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.optionItem:hover {
+  background-color: #f0f0f0;
+}
+
+.addButtonContainer {
+  grid-column: span 3;
+  text-align: center;
+}
+
+.addButton {
+  padding: 0.5rem 1rem;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.addButton:disabled {
+  background-color: #ccc;
+}
+
+.scheduleList {
+  margin-top: 1rem;
+}
+
+.scheduleItem {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+}
+
+.removeButton {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.2rem 0.5rem;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.removeButton:hover {
+  background-color: #f44336;
+}

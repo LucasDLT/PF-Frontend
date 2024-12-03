@@ -3,34 +3,35 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
-import styles from './ScheduleSelector.module.css'
+import styles from './shedule-selector-edit.module.css'
 
-interface ScheduleItem {
+interface Schedule {
+  id: string;
   day: string;
   startTime: string;
   endTime: string;
 }
 
 interface ScheduleSelectorProps {
-  onScheduleChange: (schedule: ScheduleItem[]) => void;
-  initialSchedule: ScheduleItem[];
+  schedules: Schedule[];
+  onScheduleChange: (updatedSchedule: Schedule[]) => void;
 }
 
-export default function ScheduleSelector({ onScheduleChange, initialSchedule }: ScheduleSelectorProps) {
+export default function ScheduleSelector({ onScheduleChange, schedules }: ScheduleSelectorProps) {
   const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes']
   const hours = Array.from({ length: 14 }, (_, i) => `${(i + 8).toString().padStart(2, '0')}:00`)
 
   const [selectedDay, setSelectedDay] = useState<string>('')
   const [selectedStartTime, setSelectedStartTime] = useState<string>('')
   const [selectedEndTime, setSelectedEndTime] = useState<string>('')
-  const [scheduleList, setScheduleList] = useState<ScheduleItem[]>(initialSchedule)
+  const [scheduleList, setScheduleList] = useState<Schedule[]>(schedules)
   const [isDayOpen, setIsDayOpen] = useState(false)
   const [isStartTimeOpen, setIsStartTimeOpen] = useState(false)
   const [isEndTimeOpen, setIsEndTimeOpen] = useState(false)
 
   useEffect(() => {
-    setScheduleList(initialSchedule);
-  }, [initialSchedule]);
+    setScheduleList(schedules);
+  }, [schedules]);
 
   const getEndTimes = useCallback((startTime: string) => {
     const startHour = parseInt(startTime.split(':')[0], 10)
@@ -39,7 +40,8 @@ export default function ScheduleSelector({ onScheduleChange, initialSchedule }: 
 
   const handleAddSchedule = useCallback(() => {
     if (selectedDay && selectedStartTime && selectedEndTime) {
-      const newScheduleItem = {
+      const newScheduleItem: Schedule = {
+        id: `${selectedDay}-${selectedStartTime}-${selectedEndTime}`,
         day: selectedDay,
         startTime: selectedStartTime,
         endTime: selectedEndTime,
@@ -153,7 +155,7 @@ export default function ScheduleSelector({ onScheduleChange, initialSchedule }: 
           {scheduleList.length > 0 ? (
             <ul>
               {scheduleList.map((schedule, index) => (
-                <li key={index}>
+                <li key={schedule.id} className={styles.scheduleItem}>
                   {schedule.day} {schedule.startTime} - {schedule.endTime}
                   <button 
                     type="button" 
@@ -173,4 +175,3 @@ export default function ScheduleSelector({ onScheduleChange, initialSchedule }: 
     </Card>
   )
 }
-

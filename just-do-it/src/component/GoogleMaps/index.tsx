@@ -33,7 +33,7 @@ export interface MyMapProps {
   mapUrl?: string
 }
 
-export default function MyMap({  eventAddress, setEventAddress, setEventLocation, mapUrl }: MyMapProps) {
+export default function MyMap({ eventAddress, setEventAddress, setEventLocation, mapUrl }: MyMapProps) {
   const [markerPosition, setMarkerPosition] = useState(center)
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete | null>(null)
   const mapRef = useRef<google.maps.Map | null>(null)
@@ -67,11 +67,11 @@ export default function MyMap({  eventAddress, setEventAddress, setEventLocation
     }
   }, [setEventLocation, setEventAddress])
 
-  const onLoadAutocomplete = (autocompleteInstance: google.maps.places.Autocomplete) => {
+  const onLoadAutocomplete = useCallback((autocompleteInstance: google.maps.places.Autocomplete) => {
     setAutocomplete(autocompleteInstance)
-  }
+  }, [])
 
-  const onPlaceChanged = () => {
+  const onPlaceChanged = useCallback(() => {
     if (autocomplete !== null) {
       const place = autocomplete.getPlace()
 
@@ -89,11 +89,11 @@ export default function MyMap({  eventAddress, setEventAddress, setEventLocation
         }
       }
     }
-  }
+  }, [autocomplete, setEventLocation, setEventAddress])
 
-  const onLoadMap = (map: google.maps.Map) => {
+  const onLoadMap = useCallback((map: google.maps.Map) => {
     mapRef.current = map
-  }
+  }, [])
 
   return (
     <Card className={styles.card}>
