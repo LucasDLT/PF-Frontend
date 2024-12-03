@@ -152,8 +152,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         Historial de pago
                       </Link>
                     </li>
+                    <li>
+                      <Link href="/dashBoard-Admin/membership/create-membership">
+                        Crear nueva membresia
+                      </Link>
+                    </li>
                    
                   </ul>
+                  
                 )}
               </div>
             </li>
