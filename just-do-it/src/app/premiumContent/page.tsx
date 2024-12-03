@@ -2,14 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import { useAuth } from '@/context'
-import { ContentCard } from '@/component/card-content'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from 'lucide-react'
+import Image from 'next/image'
 
 interface ContentItem {
   id: string
-  url: string
-  type: 'image' | 'pdf' | 'video'
+  routine: string
+  title: string
 }
 
 export default function PremiumContent() {
@@ -55,13 +57,89 @@ export default function PremiumContent() {
     fetchData();
   }, [DOMAIN, token, shouldFetch]);
 
+  const getContentType = (url: string) => {
+    if (url.match(/\.(jpeg|jpg|gif|png)$/)) {
+      return 'image';
+    }
+    if (url.match(/\.pdf$/)) {
+      return 'pdf';
+    }
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+      return 'video';
+    }
+    return 'unknown';
+  }
+
+  const scrollContent = (elementId: string, direction: 'left' | 'right') => {
+    const element = document.getElementById(elementId);
+    if (element) {
+      const scrollAmount = direction === 'left' ? -300 : 300;
+      element.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   const renderContent = (type: 'image' | 'pdf' | 'video') => {
-    const filteredContent = data.filter(item => item.type === type)
+    const filteredContent = data.filter(item => getContentType(item.routine) === type)
+    const sectionId = `content-${type}`;
+
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredContent.map(item => (
-          <ContentCard key={item.id} {...item} />
-        ))}
+      <div className="relative">
+        <div id={sectionId} className="flex overflow-x-auto space-x-4 pb-4 scrollbar-hide">
+          {filteredContent.map(item => (
+            <div key={item.id} className="flex-none w-64 h-64 bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-lg overflow-hidden shadow-[0_0_1px_rgba(255,255,0,0.3)] border-[1px] border-yellow-300 border-opacity-30">
+              {type === 'image' && (
+                <div className="w-full h-full relative">
+                  <Image 
+                    src={item.routine} 
+                    alt={item.title} 
+                    layout="fill" 
+                    objectFit="cover"
+                  />
+                </div>
+              )}
+
+              {type === 'pdf' && (
+                <div className="w-full h-full flex flex-col items-center justify-center p-4">
+                  <h3 className="text-yellow-300 text-center mb-4">{item.title}</h3>
+                  <a 
+                    href={item.routine} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-yellow-300 hover:text-yellow-100 transition-colors duration-200"
+                  >
+                    Ver PDF
+                  </a>
+                </div>
+              )}
+
+              {type === 'video' && (
+                <div className="w-full h-full">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    src={item.routine.replace("watch?v=", "embed/")}
+                    title={item.title}
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+        <Button
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75"
+          onClick={() => scrollContent(sectionId, 'left')}
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </Button>
+        <Button
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75"
+          onClick={() => scrollContent(sectionId, 'right')}
+        >
+          <ChevronRight className="h-6 w-6" />
+        </Button>
       </div>
     )
   }
@@ -73,9 +151,9 @@ export default function PremiumContent() {
         {[...Array(3)].map((_, i) => (
           <div key={i} className="space-y-2">
             <Skeleton className="h-6 w-[150px]" />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex space-x-4 overflow-x-auto pb-4">
               {[...Array(3)].map((_, j) => (
-                <Skeleton key={j} className="h-[200px] w-full" />
+                <Skeleton key={j} className="flex-none w-64 h-64" />
               ))}
             </div>
           </div>
@@ -103,8 +181,8 @@ export default function PremiumContent() {
   }
 
   return (
-    <div className="space-y-8">
-      <h1 className="text-3xl font-bold">Contenido Premium</h1>
+    <div className="min-h-screen bg-gradient-to-b from-black via-gray-800 to-black text-white p-8 space-y-8">
+      <h1 className="text-3xl font-bold text-center">Contenido Premium</h1>
       <section>
         <h2 className="text-2xl font-semibold mb-4">Imágenes</h2>
         {renderContent('image')}
