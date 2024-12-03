@@ -26,7 +26,7 @@ export const Navbar: React.FC = () => {
 
   const menuItems = [
     { label: 'INICIO', href: '/' },
-    { label: 'SEDES', href: '/location' },
+    { label: 'PREMIUM', href: '/premiumContent' },
     { label: 'SERVICIOS', href: '/services' },
     { label: 'PLANES', href: '/memberships' },
     { label: 'CONTÁCTANOS', href: '/contacto' },

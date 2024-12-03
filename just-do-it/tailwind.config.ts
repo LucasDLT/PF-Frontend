@@ -19,6 +19,8 @@ const config: Config = {
       },
     },
     extend: {
+      backdropFilter: ['blur'],
+
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -60,6 +62,7 @@ const config: Config = {
           4: "hsl(var(--chart-4))",
           5: "hsl(var(--chart-5))",
         },
+        
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -84,8 +87,9 @@ const config: Config = {
   },
   plugins: [
     require("tailwindcss-animate"),
-    nextui()
+    nextui(),
   ],
 };
+
 
 export default config;

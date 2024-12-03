@@ -15,3 +15,12 @@
     font-size: '1.25rem';
     font-family:'Colotus Personal Use, sans-serif';
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
