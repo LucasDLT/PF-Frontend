@@ -13,38 +13,47 @@ interface ContentItem {
 }
 
 export default function PremiumContent() {
-  const { userSession } = useAuth()
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN
-
   const [data, setData] = useState<ContentItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { token } = useAuth()
+  const [shouldFetch, setShouldFetch] = useState(false)
 
   useEffect(() => {
+    if (token) {
+      setShouldFetch(true)
+    }
+  }, [token])
+
+  useEffect(() => {
+    if (!shouldFetch) return
+
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://${DOMAIN}/routines`, {
+        const response = await fetch(`https://${DOMAIN}/routines`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-        })
+        });
 
         if (!response.ok) {
-          throw new Error('Error fetching data')
+          throw new Error('Error fetching data');
         }
 
-        const result = await response.json()
-        setData(result)
+        const result = await response.json();
+        setData(result);
       } catch (error) {
-        setError(error instanceof Error ? error.message : 'Error desconocido')
+        setError(error instanceof Error ? error.message : 'Error desconocido');
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchData()
-  }, [DOMAIN])
+    fetchData();
+  }, [DOMAIN, token, shouldFetch]);
 
   const renderContent = (type: 'image' | 'pdf' | 'video') => {
     const filteredContent = data.filter(item => item.type === type)
@@ -80,6 +89,15 @@ export default function PremiumContent() {
       <Alert variant="destructive">
         <AlertTitle>Error</AlertTitle>
         <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    )
+  }
+
+  if (!token) {
+    return (
+      <Alert>
+        <AlertTitle>No autorizado</AlertTitle>
+        <AlertDescription>Por favor, inicia sesión para ver el contenido premium.</AlertDescription>
       </Alert>
     )
   }
