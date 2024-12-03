@@ -6,15 +6,18 @@ import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context';
 import styles from './Layout.module.css';
-
+import { useRouter } from 'next/navigation';
+;
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const Router = useRouter()
+  const {userSession , token , logout} = useAuth()
 
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const toggleMenu = (menuName: string) => {
     setActiveMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
   };
 
-  const { logout } = useAuth();
+  
 
   const handleLogOut = () => {
     signOut({ callbackUrl: '/' });
@@ -24,9 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        <Button variant={'default'}>
-          <Link href="/">Volver a inicio</Link>
-        </Button>
+        
 
         <div className="flex-1 px-4 py-6">
           <ul className="mt-6 space-y-1">
@@ -34,7 +35,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               <li className={styles.menuItem}>PERFIL DEL ADMINISTRADOR</li>
             </Link>
 
-            {/* Sección Clases */}
+            
             <li>
               <div>
                 <button
@@ -78,7 +79,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </li>
 
-            {/* Sección Usuarios */}
+           
             <li>
               <div>
                 <button
@@ -159,7 +160,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </ul>
         </div>
 
-        {/* Botón de cerrar sesión */}
+       
         <div className={styles.logout}>
           <Button variant={'destructive'} onClick={handleLogOut}>
             Cerrar sesión
@@ -167,7 +168,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-      {/* Contenido principal */}
+    
       <div className={styles.main}>{children}</div>
     </div>
   );
