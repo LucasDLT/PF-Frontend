@@ -129,13 +129,13 @@ export default function PremiumContent() {
           ))}
         </div>
         <Button
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-yellow-500 hover:text-black transition-colors duration-200"
           onClick={() => scrollContent(sectionId, 'left')}
         >
           <ChevronLeft className="h-6 w-6" />
         </Button>
         <Button
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-opacity-75"
+          className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 hover:bg-yellow-500 hover:text-black transition-colors duration-200"
           onClick={() => scrollContent(sectionId, 'right')}
         >
           <ChevronRight className="h-6 w-6" />
