@@ -15,6 +15,7 @@ interface Schedule {
 interface ScheduleSelectorProps {
   schedules: Schedule[];
   onScheduleChange: (updatedSchedule: Schedule[]) => void;
+  updateSchedule: (classId: string, scheduleId: string, updatedSchedule: Schedule) => Promise<void>; // Nueva propiedad
 }
 
 export default function ScheduleSelector({ onScheduleChange, schedules }: ScheduleSelectorProps) {
@@ -28,6 +29,7 @@ export default function ScheduleSelector({ onScheduleChange, schedules }: Schedu
   const [isDayOpen, setIsDayOpen] = useState(false)
   const [isStartTimeOpen, setIsStartTimeOpen] = useState(false)
   const [isEndTimeOpen, setIsEndTimeOpen] = useState(false)
+  const [editScheduleId, setEditScheduleId] = useState<string | null>(null) // Para identificar el horario que se va a editar
 
   useEffect(() => {
     setScheduleList(schedules);
@@ -41,25 +43,37 @@ export default function ScheduleSelector({ onScheduleChange, schedules }: Schedu
   const handleAddSchedule = useCallback(() => {
     if (selectedDay && selectedStartTime && selectedEndTime) {
       const newScheduleItem: Schedule = {
-        id: `${selectedDay}-${selectedStartTime}-${selectedEndTime}`,
+        id: editScheduleId || `${selectedDay}-${selectedStartTime}-${selectedEndTime}`,
         day: selectedDay,
         startTime: selectedStartTime,
         endTime: selectedEndTime,
       }
-      const updatedSchedule = [...scheduleList, newScheduleItem];
+      const updatedSchedule = editScheduleId
+        ? scheduleList.map(schedule => schedule.id === editScheduleId ? newScheduleItem : schedule)
+        : [...scheduleList, newScheduleItem];
+
       setScheduleList(updatedSchedule);
       onScheduleChange(updatedSchedule);
+
       setSelectedDay('');
       setSelectedStartTime('');
       setSelectedEndTime('');
+      setEditScheduleId(null); // Resetear el ID de edición
     }
-  }, [selectedDay, selectedStartTime, selectedEndTime, scheduleList, onScheduleChange])
+  }, [selectedDay, selectedStartTime, selectedEndTime, scheduleList, onScheduleChange, editScheduleId])
 
   const handleRemoveSchedule = useCallback((index: number) => {
     const updatedSchedule = scheduleList.filter((_, i) => i !== index);
     setScheduleList(updatedSchedule);
     onScheduleChange(updatedSchedule);
   }, [scheduleList, onScheduleChange])
+
+  const handleEditSchedule = useCallback((schedule: Schedule) => {
+    setSelectedDay(schedule.day);
+    setSelectedStartTime(schedule.startTime);
+    setSelectedEndTime(schedule.endTime);
+    setEditScheduleId(schedule.id); // Establecer el ID del horario que se va a editar
+  }, [])
 
   return (
     <Card className={styles.card}>
@@ -145,7 +159,7 @@ export default function ScheduleSelector({ onScheduleChange, schedules }: Schedu
               onClick={handleAddSchedule} 
               className={styles.addButton}
               disabled={!selectedDay || !selectedStartTime || !selectedEndTime}>
-              Agregar Horario
+              {editScheduleId ? 'Actualizar Horario' : 'Agregar Horario'}
             </button>
           </div>
         </div>
@@ -163,6 +177,13 @@ export default function ScheduleSelector({ onScheduleChange, schedules }: Schedu
                     className={styles.removeButton}
                   >
                     Eliminar
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => handleEditSchedule(schedule)}
+                    className={styles.editButton}
+                  >
+                    Editar
                   </button>
                 </li>
               ))}

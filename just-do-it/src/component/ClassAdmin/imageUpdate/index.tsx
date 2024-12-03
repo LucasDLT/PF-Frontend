@@ -9,6 +9,7 @@ import styles from './ImageUploader.module.css';
 
 interface ImageUploaderProps {
   onImageUpload: (imageUrl: string) => void;
+ 
   initialImage?: string;
 }
 

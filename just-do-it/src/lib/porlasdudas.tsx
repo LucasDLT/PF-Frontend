@@ -1,17 +1,17 @@
 'use client';
+
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { ImageUploader } from '@/component/ClassAdmin/imageUpdate';
-import EditScheduleDisplay from '@/component/ClassAdmin/shedule-selector-edit';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import EditScheduleDisplay from '@/component/ClassAdmin/shedule-selector-edit'; // Asegúrate de que este import esté correcto
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from 'lucide-react';
 import styles from './editclasses.module.css';
 import { useAuth } from '@/context';
-import MyMaps from '@/component/GoogleMaps';
 
 interface Schedule {
   id: string;
@@ -32,7 +32,7 @@ interface Class {
 }
 
 export default function AdminClassEditor() {
-  const { token, classes, fetchClasses } = useAuth();
+  const { token, classes, fetchClasses } = useAuth(); 
   const [selectedClassId, setSelectedClassId] = useState<string>('');
   const [classData, setClassData] = useState<Class>({
     id: '',
@@ -52,14 +52,11 @@ export default function AdminClassEditor() {
 
   const fetchTrainers = useCallback(async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}/trainers`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+      const response = await fetch(`${process.env.NEXT_PUBLIC_APP_API_DOMAIN}/trainers`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
       const data = await response.json();
       setTrainers(data.data);
     } catch (error) {
@@ -69,7 +66,7 @@ export default function AdminClassEditor() {
 
   useEffect(() => {
     if (classes?.length === 0) {
-      fetchClasses();
+      fetchClasses(); 
     }
     fetchTrainers();
   }, [classes, fetchClasses, fetchTrainers]);
@@ -84,7 +81,7 @@ export default function AdminClassEditor() {
           trainerId: selectedClass.trainer || null,
         });
       }
-      setClassDropdownOpen(false);
+      setClassDropdownOpen(false); 
     }
   }, [selectedClassId, classes]);
 
@@ -92,16 +89,13 @@ export default function AdminClassEditor() {
     setSelectedClassId(value);
   }, []);
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-      const { name, value } = e.target;
-      setClassData(prev => ({
-        ...prev,
-        [name]: name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
-      }));
-    },
-    [],
-  );
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setClassData(prev => ({
+      ...prev,
+      [name]: name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
+    }));
+  }, []);
 
   const handleImageUpload = useCallback((uploadedImageUrl: string) => {
     setClassData(prev => ({ ...prev, imgUrl: uploadedImageUrl }));
@@ -112,106 +106,60 @@ export default function AdminClassEditor() {
     setTrainerDropdownOpen(false);
   }, []);
 
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent) => {
-      e.preventDefault();
-      setError(null);
-      setSuccess(null);
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setSuccess(null);
 
-      if (!selectedClassId) {
-        setError('Por favor, selecciona una clase para editar.');
-        return;
+    if (!selectedClassId) {
+      setError('Por favor, selecciona una clase para editar.');
+      return;
+    }
+
+    const parsedCapacity = Number(classData.capacity);
+    if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
+      setError('La capacidad debe ser un número entero positivo');
+      return;
+    }
+
+    if (!window.confirm('¿Estás seguro de editar esta clase?')) {
+      return;
+    }
+
+    const classPayload = {
+      name: classData.name,
+      description: classData.description,
+      location: classData.location,
+      capacity: parsedCapacity,
+      imgUrl: classData.imgUrl,
+      trainerId: classData.trainerId,
+      schedules: classData.schedules,
+    };
+
+    try {
+      const classResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_API_DOMAIN}/classes/${selectedClassId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(classPayload),
+      });
+
+      if (!classResponse.ok) {
+        throw new Error('Error al actualizar la clase');
       }
 
-      const parsedCapacity = Number(classData.capacity);
-      if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
-        setError('La capacidad debe ser un número entero positivo');
-        return;
-      }
-
-      if (!window.confirm('¿Estás seguro de editar esta clase?')) {
-        return;
-      }
-
-      const classPayload = {
-        name: classData.name,
-        description: classData.description,
-        location: classData.location,
-        capacity: parsedCapacity,
-        imgUrl: classData.imgUrl,
-        trainerId: classData.trainerId,
-        schedules: classData.schedules,
-      };
-
-      try {
-        const classResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}/classes/${selectedClassId}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(classPayload),
-          },
-        );
-
-        if (!classResponse.ok) {
-          throw new Error('Error al actualizar la clase');
-        }
-
-        setSuccess('Clase actualizada exitosamente.');
-        fetchClasses(); // Refrescar las clases después de actualizar
-      } catch (error) {
-        console.error('Error al enviar los datos:', error);
-        setError('No se pudo actualizar la clase. Intenta nuevamente.');
-      }
-    },
-    [token, selectedClassId, classData, fetchClasses],
-  );
+      setSuccess('Clase actualizada exitosamente.');
+      fetchClasses();  // Refrescar las clases después de actualizar
+    } catch (error) {
+      console.error('Error al enviar los datos:', error);
+      setError('No se pudo actualizar la clase. Intenta nuevamente.');
+    }
+  }, [token, selectedClassId, classData, fetchClasses]);
 
   const handleScheduleChange = (updatedSchedule: Schedule[]) => {
     setClassData(prev => ({ ...prev, schedules: updatedSchedule }));
-  };
-
-  // Función que se ejecuta cuando el mapa cambia la ubicación
-  const handleLocationChange = (newLocation: string) => {
-    setClassData(prev => ({ ...prev, location: newLocation }));
-  };
-
-  const updateSchedule = async (
-    classId: string,
-    scheduleId: string,
-    updatedSchedule: Schedule,
-  ) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}/schedule/${classId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            scheduleId, // ID del horario que se va a actualizar
-            day: updatedSchedule.day,
-            startTime: updatedSchedule.startTime,
-            endTime: updatedSchedule.endTime,
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error('Error al actualizar el horario');
-      }
-
-      const data = await response.json();
-      setSuccess('Horario actualizado exitosamente.');
-    } catch (error) {
-      console.error('Error al actualizar el horario:', error);
-      setError('No se pudo actualizar el horario. Intenta nuevamente.');
-    }
   };
 
   return (
@@ -244,9 +192,7 @@ export default function AdminClassEditor() {
               onClick={() => setClassDropdownOpen(!classDropdownOpen)}
               className={styles.selectTrigger}
             >
-              {selectedClassId
-                ? classes?.find(cls => cls.id === selectedClassId)?.name
-                : 'Seleccionar clase'}
+              {selectedClassId ? classes?.find(cls => cls.id === selectedClassId)?.name : 'Seleccionar clase'}
             </button>
 
             {classDropdownOpen && (
@@ -294,12 +240,6 @@ export default function AdminClassEditor() {
           onChange={handleInputChange}
         />
 
-        <MyMaps
-
-          defaultLocation={classData.location}
-          onLocationChange={handleLocationChange}
-        />
-
         <Label htmlFor="capacity">Capacidad</Label>
         <Input
           id="capacity"
@@ -311,15 +251,40 @@ export default function AdminClassEditor() {
 
         <ImageUploader onImageUpload={handleImageUpload} />
 
-        <div className={styles.scheduleEditor}>
-          <EditScheduleDisplay
-            schedules={classData.schedules}
-            onScheduleChange={handleScheduleChange}
-            updateSchedule={updateSchedule} 
-          />
+        <EditScheduleDisplay
+          schedules={classData.schedules}
+          onScheduleChange={handleScheduleChange}
+        />
+
+        <Label htmlFor="trainer">Entrenador</Label>
+        <div className={styles.dropdown}>
+          <button
+            type="button"
+            onClick={() => setTrainerDropdownOpen(!trainerDropdownOpen)}
+            className={styles.selectTrigger}
+          >
+            {classData.trainerId ? trainers?.find(t => t.id === classData.trainerId)?.name : 'Seleccionar entrenador'}
+          </button>
+
+          {trainerDropdownOpen && (
+            <div className={styles.dropdownMenu}>
+              {trainers.map(trainer => (
+                <button
+                  key={trainer.id}
+                  type="button"
+                  onClick={() => handleTrainerSelect(trainer.id)}
+                  className={styles.dropdownItem}
+                >
+                  {trainer.name}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
-        <Button type="submit">Guardar Cambios</Button>
+        <Button type="submit" onClick={handleSubmit} className="mt-4">
+          Actualizar Clase
+        </Button>
       </form>
     </div>
   );
