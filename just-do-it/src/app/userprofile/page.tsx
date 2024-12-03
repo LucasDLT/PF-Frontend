@@ -15,51 +15,62 @@ import {
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context';
 import Link from 'next/link';
-import { ScheduledClasses } from '@/component/sheduleClass';
+import { ScheduledClasses } from '@/component/sheduleClass'; // Asegúrate de que este componente reciba las props adecuadas
 import styles from './perfilusuario.module.css';
+
+interface Schedule {
+  day: string;
+  startTime: string;
+  endTime: string;
+}
+
+interface Class {
+  name: string;
+  schedule: Schedule;
+}
+
+interface ScheduledClassApiResponse {
+  id: string;
+  class: Class;
+  schedule: Schedule;
+}
 
 export default function PerfilUsuario() {
   const router = useRouter();
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
-  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+  const API_URL = `${DOMAIN}:${PORT}`;
   const { userSession, token } = useAuth();
 
-  const [scheduledClasses, setScheduledClasses] = useState<any[]>([]);
+  // Usar la interfaz en el estado para las clases programadas
+  const [scheduledClasses, setScheduledClasses] = useState<ScheduledClassApiResponse[]>([]);
 
   useEffect(() => {
     const fetchScheduledClasses = async () => {
       try {
+        console.log("Fetching scheduled classes...");
         const response = await fetch(
-          `http://${DOMAIN}booked-classes/user/${userSession.id}`,
+          `${DOMAIN}/booked-classes/user/${userSession.id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         );
 
+        console.log("Response status:", response.status);
+        
         if (!response.ok) {
           throw new Error('Error al obtener los datos de clases programadas');
         }
 
-        const data = await response.json();
+        const data: ScheduledClassApiResponse[] = await response.json();
+        console.log("Scheduled classes data:", data);
 
-        const formattedClasses = data
-          .map((item: any) => {
-            return item.schedule.map((scheduleItem: any) => ({
-              id: scheduleItem.id,
-              title: item.className,
-              date: scheduleItem.date,
-              time: `${scheduleItem.startTime} - ${scheduleItem.endTime}`,
-              instructor: item.trainerName,
-            }));
-          })
-          .flat();
-
-        setScheduledClasses(formattedClasses);
+        // Guardar los datos en el estado
+        setScheduledClasses(data);
       } catch (error) {
-        console.error(error);
+        console.error("Error fetching scheduled classes:", error);
       }
     };
 
@@ -104,28 +115,7 @@ export default function PerfilUsuario() {
               </div>
             </div>
             <div className={styles.infoContainer}>
-              {[
-                {
-                  icon: Mail,
-                  label: 'Email',
-                  value: userSession.email,
-                },
-                {
-                  icon: Phone,
-                  label: 'Teléfono',
-                  value: userSession.phone,
-                },
-                {
-                  icon: Globe,
-                  label: 'País',
-                  value: userSession.country,
-                },
-                {
-                  icon: MapPin,
-                  label: 'Dirección',
-                  value: userSession.address,
-                },
-              ].map(({ icon: Icon, label, value }) => (
+              {[{ icon: Mail, label: 'Email', value: userSession.email }, { icon: Phone, label: 'Teléfono', value: userSession.phone }, { icon: Globe, label: 'País', value: userSession.country }, { icon: MapPin, label: 'Dirección', value: userSession.address }].map(({ icon: Icon, label, value }) => (
                 <div key={label} className={styles.infoItem}>
                   <Icon className={styles.icon} aria-hidden="true" />
                   <span className="sr-only">{label}:</span>
@@ -145,10 +135,7 @@ export default function PerfilUsuario() {
                     <XCircle className={styles.icon} aria-hidden="true" />
                     <span className={styles.membershipStatusInactive}>
                       Aún no tienes una membresía. Te invitamos a inscribirte{' '}
-                      <Link
-                        href="/memberships"
-                        className={styles.membershipLink}
-                      >
+                      <Link href="/memberships" className={styles.membershipLink}>
                         Aquí
                       </Link>
                       .
@@ -167,7 +154,16 @@ export default function PerfilUsuario() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ScheduledClasses classes={scheduledClasses} />
+            
+            <ScheduledClasses
+              classes={scheduledClasses.map((item) => ({
+                id: item.id,
+                name: item.class.name, 
+                day: item.schedule.day,
+                startTime: item.schedule.startTime,
+                endTime: item.schedule.endTime,
+              }))}
+            />
           </CardContent>
         </Card>
       </main>

@@ -18,7 +18,7 @@ export interface Class {
   description: string;
   location: string;
   capacity: number;
-  schedule: Schedule[];
+  schedules: Schedule[];
   imgUrl: string;
   trainer: string | null;
 }
@@ -46,7 +46,7 @@ export const useAuth = () => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const [userSession, setSessionState] = useState<Session>({
@@ -112,7 +112,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           description: cls.description,
           location: cls.location,
           capacity: cls.capacity,
-          schedule: cls.schedules.map((schedule: any) => ({
+          schedules: cls.schedules.map((schedule: any) => ({
             id: schedule.id,
             day: schedule.day,
             startTime: schedule.startTime,

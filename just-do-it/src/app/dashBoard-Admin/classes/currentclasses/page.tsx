@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,19 +11,22 @@ import ScheduleSelector from '@/component/ClassAdmin/shedule-selector';
 import styles from './AdminClassCreator.module.css';
 import { ClassPreview } from '@/component/ClassAdmin/CardPreview';
 import { useAuth } from '@/context';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { AlertCircle } from 'lucide-react'
 
 export default function AdminClassCreator() {
-  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
-  const {userSession, token} = useAuth();
+  const API_URL = `${DOMAIN}:${PORT}`;
+  const { userSession, token } = useAuth();
+
   const [classData, setClassData] = useState({
     name: '',
     description: '',
     image: '',
     location: '',
     capacity: 0,
-    schedule: [] as { day: string; startTime: string; endTime: string }[],
+    schedules: [] as { day: string; startTime: string; endTime: string }[],
     trainerId: '',
   });
 
@@ -31,62 +34,95 @@ export default function AdminClassCreator() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
+  const [eventAddress, setEventAddress] = useState<string>('');
+  const [eventLocation, setEventLocation] = useState<string>('');
+
   useEffect(() => {
+    let isMounted = true;
     const fetchTrainers = async () => {
       try {
         const response = await fetch(`${DOMAIN}/trainers`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, 
+            Authorization: `Bearer ${token}`,
           },
         });
-  
+
         if (!response.ok) {
           throw new Error('Error al obtener los entrenadores');
         }
-  
+
         const data = await response.json();
-        setTrainers(data.data);
+        if (isMounted) {
+          setTrainers(data.data);
+        }
       } catch (error) {
         console.error('Error al obtener los entrenadores:', error);
-        setError('No se pudo cargar la lista de entrenadores.');
+        if (isMounted) {
+          setError('No se pudo cargar la lista de entrenadores.');
+        }
       }
     };
-  
+
     fetchTrainers();
-  }, [ token]);
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+
+    return () => {
+      isMounted = false;
+    };
+  }, [DOMAIN, token]);
+
+  const handleInputChange = useCallback((
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    if (name === 'capacity') {
-      // Convertir capacity a número entero antes de actualizar el estado
-      setClassData({
-        ...classData,
-        [name]: value ? parseInt(value, 10) : 0, // Convertir el valor a número
-      });
-    } else {
-      setClassData({ ...classData, [name]: value });
+    setClassData(prevData => ({
+      ...prevData,
+      [name]: name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
+    }));
+  }, []);
+
+  const handleImageUpload = useCallback((uploadedImageUrl: string) => {
+    setClassData(prevData => ({ ...prevData, image: uploadedImageUrl }));
+  }, []);
+
+  const handleScheduleChange = useCallback((schedules: { day: string; startTime: string; endTime: string }[]) => {
+    setClassData(prevData => ({ ...prevData, schedules }));
+  }, []);
+
+  const handleSetEventAddress = useCallback((address: string) => {
+    setEventAddress(address);
+  }, []);
+
+  const handleSetEventLocation = useCallback((location: string) => {
+    setEventLocation(location);
+    setClassData(prevData => ({ ...prevData, location }));
+  }, []);
+
+  const validateForm = () => {
+    if (!classData.name || !classData.description || !classData.image || 
+        !classData.location || classData.capacity <= 0 || 
+        classData.schedules.length === 0 || !classData.trainerId) {
+      setError('Todos los campos son obligatorios');
+      return false;
     }
+    return true;
   };
 
-  const handleImageUpload = (uploadedImageUrl: string) => {
-    setClassData({ ...classData, image: uploadedImageUrl });
-  };
-
-  const handleScheduleChange = (
-    schedule: { day: string; startTime: string; endTime: string }[],
-  ) => {
-    setClassData({ ...classData, schedule });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccess(null);
 
-    // Asegurarse de que capacity es un número entero positivo
+    if (!validateForm()) {
+      return;
+    }
+
+    const confirmCreate = window.confirm('¿Estás seguro de crear esta clase?');
+    if (!confirmCreate) {
+      return;
+    }
+
     const parsedCapacity = Number(classData.capacity);
     if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
       setError('La capacidad debe ser un número entero positivo');
@@ -97,8 +133,8 @@ export default function AdminClassCreator() {
       name: classData.name,
       description: classData.description,
       location: classData.location,
-      capacity: parsedCapacity, 
-      schedule: classData.schedule,
+      capacity: parsedCapacity,
+      schedules: classData.schedules,
       imgUrl: classData.image,
       trainerId: classData.trainerId,
     };
@@ -108,7 +144,7 @@ export default function AdminClassCreator() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,  
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(payload),
       });
@@ -121,7 +157,7 @@ export default function AdminClassCreator() {
           image: '',
           location: '',
           capacity: 0,
-          schedule: [],
+          schedules: [],
           trainerId: '',
         });
       } else {
@@ -132,11 +168,26 @@ export default function AdminClassCreator() {
       console.error('Error al enviar los datos:', error);
       setError('No se pudo enviar la solicitud. Intenta nuevamente.');
     }
-  };
+  }, [DOMAIN, token, classData]);
 
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Crear Nueva Clase</h1>
+
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
+      {success && (
+        <Alert>
+          <AlertTitle>Éxito</AlertTitle>
+          <AlertDescription>{success}</AlertDescription>
+        </Alert>
+      )}
 
       <form onSubmit={handleSubmit} className={styles.form}>
         <div className={styles.formGroup}>
@@ -163,28 +214,30 @@ export default function AdminClassCreator() {
             required
           />
         </div>
-        <ImageUploader onImageUpload={handleImageUpload} />
         <div className={styles.formGroup}>
-          <Label htmlFor="location" className={styles.label}>
-            Ubicación
+          <Label htmlFor="capacity" className={styles.label}>
+            Capacidad
           </Label>
           <Input
-            id="location"
-            name="location"
-            value={classData.location}
+            id="capacity"
+            name="capacity"
+            type="number"
+            value={classData.capacity}
             onChange={handleInputChange}
             required
+            min="1"
           />
         </div>
+        <ImageUploader onImageUpload={handleImageUpload} />
         <MyMap
-          eventLocation={classData.location}
-          eventAddress={classData.location}
-          setEventAddress={(address) =>
-            setClassData({ ...classData, location: address })
-          }
-          setEventLocation={(location) =>
-            setClassData({ ...classData, location })
-          }
+          eventLocation={eventLocation}
+          eventAddress={eventAddress}
+          setEventAddress={handleSetEventAddress}
+          setEventLocation={handleSetEventLocation}
+        />
+        <ScheduleSelector 
+          onScheduleChange={handleScheduleChange}
+          initialSchedule={classData.schedules}
         />
         <div className={styles.formGroup}>
           <Label htmlFor="trainerId" className={styles.label}>
@@ -195,7 +248,7 @@ export default function AdminClassCreator() {
             name="trainerId"
             value={classData.trainerId}
             onChange={(e) =>
-              setClassData({ ...classData, trainerId: e.target.value })
+              setClassData(prevData => ({ ...prevData, trainerId: e.target.value }))
             }
             className={styles.select}
             required
@@ -210,33 +263,12 @@ export default function AdminClassCreator() {
             ))}
           </select>
         </div>
-        <div className={styles.formGroup}>
-          <ScheduleSelector onScheduleChange={handleScheduleChange} />
-        </div>
-        <div className={styles.formGroup}>
-          <Label htmlFor="capacity" className={styles.label}>
-            Capacidad Máxima
-          </Label>
-          <Input
-            id="capacity"
-            name="capacity"
-            type="number"
-            min="1"
-            value={classData.capacity}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        {error && <p className={styles.error}>{error}</p>}
-        {success && <p className={styles.success}>{success}</p>}
         <Button type="submit" className={styles.submitButton}>
           Crear Clase
         </Button>
       </form>
-
-      <div className={styles.preview}>
-        <ClassPreview classData={classData} />
-      </div>
+      <ClassPreview classData={classData} />
     </div>
   );
 }
+
