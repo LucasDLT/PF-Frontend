@@ -12,12 +12,11 @@ import { useAuth } from '@/context';
 
 export default function SubscriptionSuccess() {
   const { setSession } = useAuth();
-  const [paymentStatus, setPaymentStatus] = useState('');
+  const [paymentStatus, setPaymentStatus] = useState('processing'); // Inicialmente en 'processing'
   const [errorMessage, setErrorMessage] = useState('');
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN;
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
-
 
   const checkPaymentStatus = async (sessionId: string) => {
     try {
@@ -28,10 +27,9 @@ export default function SubscriptionSuccess() {
           headers: {
             'Content-Type': 'application/json',
           },
-        },
+        }
       );
       const data = await response.json();
-      
 
       if (response.ok) {
         setSession(data.userData);
@@ -39,7 +37,7 @@ export default function SubscriptionSuccess() {
       } else {
         setPaymentStatus('error');
         setErrorMessage(
-          'Hubo un problema al registrar tu suscripción. Intenta nuevamente.',
+          'Hubo un problema al registrar tu suscripción. Intenta nuevamente.'
         );
       }
     } catch (error) {
@@ -66,14 +64,18 @@ export default function SubscriptionSuccess() {
       <div className={styles.card}>
         <CardHeader>
           <CardTitle className={styles.cardTitle}>
-            {paymentStatus === 'success'
+            {paymentStatus === 'processing'
+              ? 'Procesando Pago...'
+              : paymentStatus === 'success'
               ? '¡Suscripción Exitosa!'
               : 'Error en la Suscripción'}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className={styles.cardContent}>
-            {paymentStatus === 'success'
+            {paymentStatus === 'processing'
+              ? 'Estamos procesando tu pago, por favor espera.'
+              : paymentStatus === 'success'
               ? 'Gracias por suscribirte. Ahora formas parte de nuestra comunidad.'
               : errorMessage}
           </p>
