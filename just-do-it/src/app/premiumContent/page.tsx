@@ -31,7 +31,7 @@ export default function PremiumContent() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://${DOMAIN}/routines`, {
+        const response = await fetch(`${DOMAIN}/routines`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
