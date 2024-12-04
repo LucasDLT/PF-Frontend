@@ -16,14 +16,14 @@ export default function ActivityCarousel() {
 
   return (
     <Carousel>
-      {/* Contenido del carrusel */}
+     
       <CarouselContent className={styles.carouselContent}>
         {classes.map((activity) => (
           <CarouselItem key={activity.id} className={styles.carouselItem}>
             <Card className={styles.cardContent}>
               <Link href={`/servicedetail/${activity.id}`}>
                 <CardContent className={styles.cardContent}>
-                  {/* Imagen */}
+                 
                   <div className={styles.imageContainer}>
                     <Image
                       src={activity.imgUrl}
