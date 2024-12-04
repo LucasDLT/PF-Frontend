@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useAuth } from '@/context';
 import { Eye, EyeOff } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -138,20 +139,19 @@ export default function Register() {
   };
 
   return (
-    <div className="relative w-full h-full bg-slate-400">
+    <div className="relative w-full h-full bg-gradient-to-b from-yellow-500 via-gray-500 to-black">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-lg p-4 bg-yellow-300 shadow-lg rounded-lg">
-          <h1 className="text-center text-3xl font-bold text-black">
-            Just do it
-          </h1>
+        <div className="mx-auto max-w-lg p-4 bg-gradient-to-r from-black via-gray-500 to-yellow-500bg-gradient-to-r from-black via-gray to-black shadow-lg rounded-xl ">
+        <Image src="/justDoItGym-logo.png" alt="Logo" width={170} height={170} className=' flex justify-center justify-self-center'></Image>
+
           <form
-            className="space-y-4 p-4 shadow-lg sm:p-6 lg:p-8 bg-yellow-400"
+            className="space-y-4 p-4 shadow-lg sm:p-6 lg:p-8 bg-yellow-400  rounded-xl"
             onSubmit={handleSubmit}
           >
             <div>
               <label
                 htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
+                className="block text-sm font-medium text-gray-700 "
               >
                 Nombre
               </label>
@@ -161,7 +161,7 @@ export default function Register() {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm"
+                className="w-full  rounded-xl border-gray-200 p-4 text-sm shadow-sm"
                 placeholder="Ingresa tu nombre"
               />
               {errors.name && (
@@ -182,7 +182,7 @@ export default function Register() {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm"
+                className="w-full  rounded-xl border-gray-200 p-4 text-sm shadow-sm"
                 placeholder="Ingresa tu correo"
               />
               {errors.email && (
@@ -203,7 +203,7 @@ export default function Register() {
                 name="phone"
                 value={formData.phone}
                 onChange={handleChange}
-                className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm"
+                className="w-full  rounded-xl border-gray-200 p-4 text-sm shadow-sm"
                 placeholder="Ingresa tu número de teléfono"
               />
               {errors.phone && (
@@ -224,7 +224,7 @@ export default function Register() {
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
-                className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm"
+                className="w-full  rounded-xl border-gray-200 p-4 text-sm shadow-sm"
                 placeholder="Ingresa tu país"
               />
               {errors.country && (
@@ -245,7 +245,7 @@ export default function Register() {
                 name="address"
                 value={formData.address}
                 onChange={handleChange}
-                className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm"
+                className="w-full  rounded-xl border-gray-200 p-4 text-sm shadow-sm"
                 placeholder="Ingresa tu dirección"
               />
               {errors.address && (
@@ -267,7 +267,7 @@ export default function Register() {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm pr-10"
+                  className="w-full  rounded-xl border-gray-200 p-4 text-sm shadow-sm pr-10"
                   placeholder="Ingresa tu contraseña"
                 />
                 <button
@@ -276,9 +276,9 @@ export default function Register() {
                   onClick={togglePasswordVisibility}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
                     <Eye className="h-5 w-5" />
+                  ) : (
+                    <EyeOff className="h-5 w-5" />
                   )}
                 </button>
               </div>
@@ -301,18 +301,18 @@ export default function Register() {
                   name="confirmPassword"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full rounded-lg border-gray-200 p-4 text-sm shadow-sm pr-10"
+                  className="w-full  rounded-xl border-gray-200 p-4 text-sm shadow-sm pr-10"
                   placeholder="Confirma tu contraseña"
                 />
                 <button
                   type="button"
-                  className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600"
+                  className="absolute inset-y-0 right-0 flex items-center px-4 text-gray-600 "
                   onClick={toggleConfirmPasswordVisibility}
                 >
                   {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5" />
-                  ) : (
                     <Eye className="h-5 w-5" />
+                  ) : (
+                    <EyeOff className="h-5 w-5" />
                   )}
                 </button>
               </div>
@@ -325,7 +325,7 @@ export default function Register() {
               <button
                 type="submit"
                 disabled={isLoading} // Deshabilitar botón mientras se carga
-                className="w-full rounded-md bg-blue-500 text-white px-4 py-2"
+                className="w-full  rounded-xl bg-blue-500 text-white px-4 py-2"
               >
                 {isLoading ? 'Registrando...' : 'Registrarme'}
               </button>

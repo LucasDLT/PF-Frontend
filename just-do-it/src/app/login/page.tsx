@@ -144,20 +144,20 @@ export default function Login() {
 
   return (
     <div
-      className="relative w-full h-full bg-slate-400 "
+      className="relative w-full h-full bg-gradient-to-b from-yellow-500 via-gray-500 to-black "
       style={{
         background: 'slate',
         clipPath: 'polygon(0% 0%, 100% 0%, 100% 90%, 0% 100%)',
       }}
     >
-      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 ">
-        <div className="mx-auto max-w-lg p-4 shadow-lg rounded-lg bg-black">
+      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8  ">
+        <div className="mx-auto max-w-lg p-4 shadow-lg  rounded-xl bg-gradient-to-r from-black via-gray-500 to-yellow-500bg-gradient-to-r from-black via-gray to-black">
           <Image src="/justDoItGym-logo.png" alt="Logo" width={170} height={170} className=' flex justify-center justify-self-center'></Image>
 
 
           <form
             action="#"
-            className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8 bg-yellow-400"
+            className="mb-0 mt-6 space-y-4  rounded-xl p-4 shadow-lg sm:p-6 lg:p-8 bg-yellow-400"
             onSubmit={handleSubmit}
           >
             <p className="text-center text-lg font-medium">Bienvenido</p>
@@ -173,7 +173,7 @@ export default function Login() {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                  className="w-full  rounded-xl border-gray-200 p-4 pe-12 text-sm shadow-sm"
                   placeholder="Ingrese su correo electrónico"
                 />
                 {errors.email && (
@@ -195,7 +195,7 @@ export default function Login() {
                   onChange={handleChange}
                   onFocus={() => setPasswordFocused(true)}
                   onBlur={() => setPasswordFocused(false)}
-                  className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                  className="w-full  rounded-xl border-gray-200 p-4 pe-12 text-sm shadow-sm"
                   placeholder="Ingrese su contraseña"
                 />
                 {!errors.password && passwordFocused && (
@@ -224,13 +224,13 @@ export default function Login() {
               <div className="flex flex-row items-center gap-4 justify-center w-full mt-10">
                 <button
                   type="submit"
-                  className="flex items-center justify-center w-full max-w-xs px-2 py-3 border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-100 focus:border-blue-600 transition duration-300 ease-in-out"
+                  className="flex items-center  rounded-xl justify-center w-full max-w-xs px-2 py-3 border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-100 focus:border-blue-600 transition duration-300 ease-in-out"
                 >
                   Ingresar
                 </button>
                 <button
                   type="button"
-                  className="flex items-center justify-center w-full max-w-xs px-2 py-3 border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-100 focus:border-blue-600 transition duration-300 ease-in-out"
+                  className="flex items-center  rounded-xl justify-center w-full max-w-xs px-2 py-3 border border-gray-300 rounded-md shadow-sm bg-white hover:bg-gray-100 focus:border-blue-600 transition duration-300 ease-in-out"
                   onClick={handleClickGoogle}
                 >
                   <FcGoogle className="w-6 h-6" />
@@ -239,7 +239,7 @@ export default function Login() {
                   </span>
                 </button>
               </div>
-              <p className="mt-6 text-sm text-gray-500 sm:mt-0 mb-6">
+              <p className="mt-6 text-sm font-bold text-gray-700 sm:mt-0 mb-6">
                 ¿No tienes una cuenta? Puedes registrarte
                 <Link
                   href={'/register'}
