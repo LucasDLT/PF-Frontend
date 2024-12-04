@@ -20,7 +20,7 @@ interface Schedule {
 interface Trainer {
   id: string;
   name: string;
-  bio?: string; 
+  bio?: string;
   specialties?: string;
   experience_years?: number;
 }
@@ -40,6 +40,7 @@ interface GymClass {
   bookedClasses?: any[];
   reviews: ReviewProps[];
 }
+
 export interface ReviewProps {
   user_id: string;
   comment: string | undefined;
@@ -51,27 +52,43 @@ export interface ReviewProps {
 export default function ClassDetailPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
-  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+  const API_URL = `${DOMAIN}:${PORT}`;
 
   const { id } = useParams();
   const [gymClass, setGymClass] = useState<GymClass | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const { userSession , token } = useAuth();
+  const { userSession, token } = useAuth();
 
+  const [placeName, setPlaceName] = useState<string>(''); // Nombre del lugar
   const membershipStatus = userSession?.membership_status;
+
+  const fetchPlaceName = async (coordinates: string) => {
+    const [lat, lng] = coordinates.split(',');
+    const API_KEY = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+    try {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${API_KEY}`
+      );
+      const data = await response.json();
+
+      if (data.results && data.results.length > 0) {
+        setPlaceName(data.results[0].formatted_address);
+      } else {
+        setPlaceName('Ubicación desconocida');
+      }
+    } catch (err) {
+      console.error('Error al obtener el nombre del lugar:', err);
+      setPlaceName('Error al cargar la ubicación');
+    }
+  };
 
   const onSubmitRating = async (rating: number, reviewText: string) => {
     if (!userSession?.id) {
       alert('No estás autenticado');
       return;
     }
-
-    console.log('Datos a enviar:');
-    console.log('Rating:', rating);
-    console.log('Review Text:', reviewText);
-    console.log('User ID:', userSession.id);
-    console.log('Class ID:', id);
 
     try {
       const response = await fetch(`${DOMAIN}/reviews`, {
@@ -88,17 +105,12 @@ export default function ClassDetailPage() {
         }),
       });
 
-      console.log('Respuesta de la API:', response);
-
       if (!response.ok) {
         const errorDetails = await response.text();
-        console.error('Error al enviar la reseña:', errorDetails);
-        throw new Error('Error al enviar la reseña');
+        throw new Error(errorDetails);
       }
 
-      console.log('Reseña enviada exitosamente');
-
-      setGymClass(prev => {
+      setGymClass((prev) => {
         if (!prev) return prev;
         return {
           ...prev,
@@ -111,6 +123,7 @@ export default function ClassDetailPage() {
               class_id: id,
             },
           ] as ReviewProps[],
+
         };
       });
     } catch (error) {
@@ -122,14 +135,18 @@ export default function ClassDetailPage() {
     const fetchClass = async () => {
       try {
         const response = await fetch(`${DOMAIN}/classes/${id}`);
-        
         if (!response.ok) {
           throw new Error('Clase no encontrada');
         }
         const data: GymClass = await response.json();
         setGymClass(data);
+
+        // Convierte las coordenadas a un nombre de lugar
+        if (data.location) {
+          await fetchPlaceName(data.location);
+        }
       } catch (error) {
-        setError(error as string);
+        setError((error as Error).message);
       } finally {
         setLoading(false);
       }
@@ -158,6 +175,8 @@ export default function ClassDetailPage() {
     return <p>Clase no encontrada</p>;
   }
 
+  const googleMapsUrl = `https://www.google.com/maps?q=${gymClass.location}`;
+
   return (
     <div
       className="flex flex-col justify-center items-center min-h-screen min-w-screen"
@@ -167,7 +186,7 @@ export default function ClassDetailPage() {
         id={gymClass.id}
         name={gymClass.name}
         description={gymClass.description}
-        location={gymClass.location}
+        location={placeName ? placeName : 'Ubicación no disponible'}
         capacity={gymClass.capacity}
         trainerName={gymClass.trainer?.name || 'No asignado'}
         imgUrl={gymClass.imgUrl}

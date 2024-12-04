@@ -15,7 +15,7 @@ interface ActivityDetailProps {
   id: string;
   name: string;
   description: string;
-  location: string;
+  location: string; // Ahora location es un string
   capacity: number;
   trainerName: string; 
   imgUrl: string;
@@ -32,14 +32,11 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   trainerName,
   imgUrl,
   schedules,
-  
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-  const { userSession , token } = useAuth();
-  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
-  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+  const { userSession, token } = useAuth();
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -92,7 +89,13 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
           <div className={styles.rightSection}>
             <h1 className={styles.title}>{name}</h1>
             <p className={styles.description}>{description}</p>
-            <p className={styles.location}><strong>Ubicación:</strong> {location}</p>
+            <p className={styles.location}>
+              <strong>Ubicación: </strong>
+              {/* Aquí envolvemos la ubicación en un enlace */}
+              <a className={styles.locationLink} href={`https://www.google.com/maps?q=${location}`} target="_blank" rel="noopener noreferrer">
+                {location}
+              </a>
+            </p>
             <p className={styles.capacity}><strong>Capacidad total:</strong> {capacity}</p>
             <p className={styles.trainer}><strong>Entrenador:</strong> {trainerName}</p>
 

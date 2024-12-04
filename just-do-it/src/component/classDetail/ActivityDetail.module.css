@@ -151,3 +151,13 @@
 .confirmBtn:hover {
   background-color: #218838;
 }
+.locationLink {
+  color: #007bff; 
+  text-decoration: none; 
+  font-weight: bold; 
+}
+
+.locationLink:hover {
+  color: #0056b3; 
+  text-decoration: underline; 
+}
