@@ -16,14 +16,16 @@ import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context';
 
 import { Avatar } from '@nextui-org/react';
+import { toast } from 'sonner';
 
 export default function NavbarApp() {
   const [isOpen, setIsOpen] = useState(false);
   const { userSession, token, logout } = useAuth();
 
   const handleLogOut = () => {
-    logout();
-    signOut({ callbackUrl: '/' });
+toast.success(`Cerrando sesión, hasta pronto ${userSession?.name}`)
+      logout();
+      signOut({ callbackUrl: '/' });
   };
 
   const menuItems = [
@@ -117,13 +119,13 @@ export default function NavbarApp() {
       <div className={styles.navContainer}>
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-          <Image
-        src="/justDoItGym-logo.png"
-        alt="Logo"
-        width={120}
-        height={120}
-        className={styles.logo}
-      ></Image>
+            <Image
+              src="/justDoItGym-logo.png"
+              alt="Logo"
+              width={120}
+              height={120}
+              className={styles.logo}
+            ></Image>
           </div>
           <div className="hidden md:block">
             <NavMenu />
@@ -132,7 +134,6 @@ export default function NavbarApp() {
             <NavMenu isMobile={true} />
           </div>
         </div>
-        
       </div>
     </nav>
   );

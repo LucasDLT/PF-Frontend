@@ -13,6 +13,7 @@ import {
 import { LogOut, User } from 'lucide-react';
 import styles from './navlanding.module.css';
 import { useAuth } from '@/context';
+import { toast } from 'sonner';
 
 export const Navbar: React.FC = () => {
   const { userSession, token, logout } = useAuth();
@@ -28,6 +29,7 @@ export const Navbar: React.FC = () => {
     : 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
 
   const handleLogOut = () => {
+    toast.success(`Cerrando sesión, hasta pronto ${userSession?.name}`);
     signOut({ callbackUrl: '/' });
     logout();
   };
