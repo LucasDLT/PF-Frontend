@@ -1,4 +1,4 @@
-'use client';
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,17 +12,16 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function EdicionPerfil() {
-  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
+
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
-  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+
 
   const route = useRouter();
   const { token, userSession, setSession } = useAuth();
-  const [file, setFile] = useState<File | undefined>(undefined);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(userSession?.image || null);
   const [formData, setFormData] = useState({
     name: userSession?.name || '',
-    email: userSession?.email || '',
+    email: userSession?.email || '', 
     phone: userSession?.phone || '',
     country: userSession?.country || '',
     address: userSession?.address || '',
@@ -46,15 +45,6 @@ export default function EdicionPerfil() {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
-    // Verificar que el archivo sea una imagen
-    if (!selectedFile.type.startsWith('image/')) {
-      toast.error('Por favor selecciona un archivo de imagen.');
-      return;
-    }
-
-    setFile(selectedFile);
-    const objetoUrl = URL.createObjectURL(selectedFile);
-    setImageUrl(objetoUrl);
 
     const form = new FormData();
     form.append('file', selectedFile);
@@ -66,7 +56,9 @@ export default function EdicionPerfil() {
         {
           method: 'POST',
           body: form,
-        }
+
+        },
+
       );
 
       const data = await response.json();
@@ -77,9 +69,11 @@ export default function EdicionPerfil() {
         throw new Error(data.message || 'Error al cargar la imagen');
       }
     } catch (error) {
-      if (error instanceof Error) {
-        console.error('Error uploading image:', error);
-        toast.error(`Hubo un error al cargar la imagen: ${error.message}`, {
+
+      console.error('Error al cargar la imagen:', error);
+      toast.error('Hubo un error al cargar la imagen.',
+        {
+
           style: {
             background: 'red',
             color: 'white',
@@ -120,7 +114,10 @@ export default function EdicionPerfil() {
 
     if (!validateForm()) return;
 
-    const updatedData = { ...formData, imageUrl };
+  
+ 
+    const { email, ...updatedData } = { ...formData, image: imageUrl };
+
 
     try {
       const response = await fetch(`${DOMAIN}/users/${userSession.id}`, {
@@ -134,6 +131,8 @@ export default function EdicionPerfil() {
 
       if (response.ok) {
         const data = await response.json();
+
+  
 
         if (data.userData) {
           setSession(data.userData);
@@ -230,6 +229,7 @@ export default function EdicionPerfil() {
                   />
                 </div>
 
+                {/* Mantener el campo de correo visible pero sin enviarlo */}
                 <div>
                   <Label htmlFor="email" className={styles.label}>
                     Correo electrónico
@@ -242,6 +242,7 @@ export default function EdicionPerfil() {
                     placeholder={userSession?.email || 'Escribe tu correo'}
                     onChange={handleChange}
                     className={styles.input}
+                    disabled
                   />
                 </div>
 
@@ -297,12 +298,18 @@ export default function EdicionPerfil() {
                     name="password"
                     type="password"
                     value={formData.password}
+
+
                     placeholder="Escribe una nueva contraseña"
-                    onChange={handleChange}
+nChange={handleChange}
                     className={styles.input}
                   />
                   {errors.password && (
-                    <p className="text-red-500 text-sm">{errors.password}</p>
+
+                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+
+                 
+
                   )}
                 </div>
 
@@ -315,12 +322,17 @@ export default function EdicionPerfil() {
                     name="confirmPassword"
                     type="password"
                     value={formData.confirmPassword}
-                    placeholder="Confirma tu nueva contraseña"
+
+
                     onChange={handleChange}
                     className={styles.input}
                   />
                   {errors.confirmPassword && (
-                    <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
+
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.confirmPassword}
+                    </p>
+
                   )}
                 </div>
               </div>

@@ -15,7 +15,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context';
 import Link from 'next/link';
-import { ScheduledClasses } from '@/component/sheduleClass'; // Asegúrate de que este componente reciba las props adecuadas
+import { ScheduledClasses } from '@/component/sheduleClass'; 
 import styles from './perfilusuario.module.css';
 
 interface Schedule {
@@ -101,12 +101,16 @@ export default function PerfilUsuario() {
           <CardContent>
             <div className={styles.avatarContainer}>
               <Avatar className={styles.avatar}>
+                {/* Si hay una imagen de usuario, la mostramos */}
                 <AvatarImage
                   alt="Foto de perfil"
-                  src={userSession?.image || '/default-avatar.png'}
+                  src={userSession?.image || ''}
+                  className={!userSession?.image ? 'hidden' : ''}
                 />
-                <AvatarFallback>
-                  {userSession.name?.charAt(0) || 'U'}
+                
+                {/* Si no hay imagen, mostramos las iniciales del nombre */}
+                <AvatarFallback className={userSession?.image ? 'hidden' : ''}>
+                  {userSession.name?.charAt(0)}{userSession.name?.split(' ')[1]?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div>
@@ -154,7 +158,6 @@ export default function PerfilUsuario() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            
             <ScheduledClasses
               classes={scheduledClasses.map((item) => ({
                 id: item.id,

@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
-import { Avatar } from '@nextui-org/react'; // Para mostrar el avatar
+import { Avatar } from '@nextui-org/react';
 import { signOut } from 'next-auth/react';
 import {
   DropdownMenu,
@@ -9,16 +9,23 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User, UserCog } from 'lucide-react'; // Iconos para las opciones de menú
-import styles from './navlanding.module.css'; // Importar el archivo CSS Module
+import { LogOut, User } from 'lucide-react';
+import styles from './navlanding.module.css';
 import { useAuth } from '@/context';
 
 export const Navbar: React.FC = () => {
   const { userSession, token, logout } = useAuth();
-  const avatarUrl =
-    userSession?.image || 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
+  const [isSessionLoaded, setIsSessionLoaded] = useState(false);
 
-  // Lógica para cerrar sesión
+  // Verificar si el userSession está cargado
+  if (!isSessionLoaded && userSession) {
+    setIsSessionLoaded(true);
+  }
+
+  const avatarUrl = userSession?.image
+    ? userSession.image
+    : 'https://i.pravatar.cc/150?u=a042581f4e29026704d';
+
   const handleLogOut = () => {
     signOut({ callbackUrl: '/' });
     logout();
@@ -26,14 +33,12 @@ export const Navbar: React.FC = () => {
 
   const menuItems = [
     { label: 'INICIO', href: '/' },
-    { label: 'PREMIUM', href: '/premiumContent' },
+    ...(userSession?.membership_status === 'active'
+      ? [{ label: 'PREMIUM', href: '/premiumContent' }]
+      : []),
     { label: 'SERVICIOS', href: '/services' },
     { label: 'PLANES', href: '/memberships' },
-    { label: 'CONTÁCTANOS', href: '/contacto' },
   ];
-
-  // Verificación de rol: Si el rol no es 'user', entonces es un admin
-  const isAdmin = userSession?.roles !== 'user'; // Cambiar 'user' por el rol adecuado
 
   return (
     <nav className={styles.navbar}>
@@ -45,48 +50,33 @@ export const Navbar: React.FC = () => {
         ))}
       </ul>
 
-      {/* Aquí empieza el Dropdown del avatar o login */}
       <div className={styles.iconLink}>
         {token ? (
-          // Si hay sesión, mostramos el avatar y el dropdown
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className={styles.menuButton}>
-                <Avatar src={avatarUrl} size="md" />
+                {isSessionLoaded ? (
+                  <Avatar src={avatarUrl} size="md" />
+                ) : (
+                  <Avatar size="md" className="bg-gray-300" />
+                )}
               </button>
             </DropdownMenuTrigger>
 
             <DropdownMenuContent>
-              {/* Mostrar solo el perfil de usuario si el rol es 'user' */}
-              {userSession?.roles === 'user' && (
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/userprofile"
-                    className={`${styles.menuItem} flex items-center`}
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Perfil Usuario</span>
-                  </Link>
-                </DropdownMenuItem>
-              )}
+              <DropdownMenuItem asChild>
+                <Link
+                  href="/userprofile"
+                  className={`${styles.menuItem} flex items-center`}
+                >
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Perfil Usuario</span>
+                </Link>
+              </DropdownMenuItem>
 
-              {/* Mostrar solo el perfil de admin si el rol no es 'user' */}
-              {isAdmin && (
-                <DropdownMenuItem asChild>
-                  <Link
-                    href="/dashBoard-Admin"
-                    className={`${styles.menuItem} flex items-center`}
-                  >
-                    <UserCog className="mr-2 h-4 w-4" />
-                    <span>Perfil Admin</span>
-                  </Link>
-                </DropdownMenuItem>
-              )}
-
-              {/* Opción para cerrar sesión */}
               <DropdownMenuItem asChild>
                 <div
-                  className={`${styles.menuItem} flex items-center cursor-pointer`} // Aplica el mismo estilo
+                  className={`${styles.menuItem} flex items-center cursor-pointer`}
                   onClick={handleLogOut}
                 >
                   <LogOut className="mr-2 h-4 w-4" />
@@ -97,9 +87,7 @@ export const Navbar: React.FC = () => {
           </DropdownMenu>
         ) : (
           <Link href="/login">
-            <button className={styles.botonLed}>
-              INICIAR SESIÓN
-            </button>
+            <button className={styles.botonLed}>INICIAR SESIÓN</button>
           </Link>
         )}
       </div>
