@@ -29,7 +29,7 @@ export default function About() {
 
 Nuestra misión es inspirarte a superar tus límites, ofreciendo un ambiente acogedor, equipamiento de última generación y un equipo de profesionales comprometidos con tu éxito. Ya sea que estés comenzando tu viaje fitness o buscando alcanzar nuevas metas, estamos aquí para acompañarte en cada etapa.
 
-En Just Do It, tu meta es nuestra inspiración. 💪
+En Just Do It, tu meta es nuestra inspiración y prioridad. 💪
           </div>
         </div>
         
