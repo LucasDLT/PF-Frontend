@@ -1,3 +1,4 @@
+{/*
 "use client";
 import { useState, useEffect, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
@@ -324,3 +325,6 @@ export default function AdminClassEditor() {
     </div>
   );
 }
+
+*/}
+
