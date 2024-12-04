@@ -1,4 +1,4 @@
-"use client"
+'use client';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,16 +12,14 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function EdicionPerfil() {
-
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
-
 
   const route = useRouter();
   const { token, userSession, setSession } = useAuth();
   const [imageUrl, setImageUrl] = useState<string | null>(userSession?.image || null);
   const [formData, setFormData] = useState({
     name: userSession?.name || '',
-    email: userSession?.email || '', 
+    email: userSession?.email || '',
     phone: userSession?.phone || '',
     country: userSession?.country || '',
     address: userSession?.address || '',
@@ -44,36 +42,25 @@ export default function EdicionPerfil() {
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
-
-
+  
     const form = new FormData();
     form.append('file', selectedFile);
     form.append('upload_preset', 'just-do-it');
-    
     try {
       const response = await fetch(
         'https://api.cloudinary.com/v1_1/lucasebas/image/upload',
         {
           method: 'POST',
           body: form,
-
         },
-
       );
-
+  
       const data = await response.json();
-
-      if (response.ok && data.secure_url) {
-        setImageUrl(data.secure_url);
-      } else {
-        throw new Error(data.message || 'Error al cargar la imagen');
-      }
+      setImageUrl(data.secure_url);
     } catch (error) {
-
       console.error('Error al cargar la imagen:', error);
       toast.error('Hubo un error al cargar la imagen.',
         {
-
           style: {
             background: 'red',
             color: 'white',
@@ -81,10 +68,8 @@ export default function EdicionPerfil() {
             fontSize: '15px',
             borderRadius: '8px',
           },
-        });
-      } else {
-        console.error('Unknown error:', error);
-      }
+        }
+      );
     }
   };
 
@@ -111,29 +96,24 @@ export default function EdicionPerfil() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
-
   
- 
-    const { email, ...updatedData } = { ...formData, image: imageUrl };
-
-
+    if (!validateForm()) return;
+  
+    const updatedData = { ...formData, image: imageUrl };
+  
     try {
       const response = await fetch(`${DOMAIN}/users/${userSession.id}`, {
         method: 'PATCH',
         headers: {
-          Authorization: `Bearer ${token}`,  // Reemplazar token aquí si es necesario
+          Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedData),
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-
   
-
         if (data.userData) {
           setSession(data.userData);
           toast.success('Perfil actualizado correctamente!');
@@ -229,7 +209,6 @@ export default function EdicionPerfil() {
                   />
                 </div>
 
-                {/* Mantener el campo de correo visible pero sin enviarlo */}
                 <div>
                   <Label htmlFor="email" className={styles.label}>
                     Correo electrónico
@@ -242,7 +221,6 @@ export default function EdicionPerfil() {
                     placeholder={userSession?.email || 'Escribe tu correo'}
                     onChange={handleChange}
                     className={styles.input}
-                    disabled
                   />
                 </div>
 
@@ -288,53 +266,48 @@ export default function EdicionPerfil() {
                     className={styles.input}
                   />
                 </div>
+     
+                {userSession?.auth === 'googleIncomplete' && (
+                  <>
+                    <div>
+                      <Label htmlFor="password" className={styles.label}>
+                        Nueva Contraseña
+                      </Label>
+                      <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={formData.password}
+                        placeholder="Escribe tu nueva contraseña"
+                        onChange={handleChange}
+                        className={styles.input}
+                      />
+                      {errors.password && (
+                        <p className="text-red-500 text-sm">{errors.password}</p>
+                      )}
+                    </div>
 
-                <div>
-                  <Label htmlFor="password" className={styles.label}>
-                    Nueva contraseña
-                  </Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-
-
-                    placeholder="Escribe una nueva contraseña"
-nChange={handleChange}
-                    className={styles.input}
-                  />
-                  {errors.password && (
-
-                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
-
-                 
-
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="confirmPassword" className={styles.label}>
-                    Confirmar nueva contraseña
-                  </Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-
-
-                    onChange={handleChange}
-                    className={styles.input}
-                  />
-                  {errors.confirmPassword && (
-
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.confirmPassword}
-                    </p>
-
-                  )}
-                </div>
+                    <div>
+                      <Label htmlFor="confirmPassword" className={styles.label}>
+                        Confirmar Contraseña
+                      </Label>
+                      <Input
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        type="password"
+                        value={formData.confirmPassword}
+                        placeholder="Confirma tu nueva contraseña"
+                        onChange={handleChange}
+                        className={styles.input}
+                      />
+                      {errors.confirmPassword && (
+                        <p className="text-red-500 text-sm">
+                          {errors.confirmPassword}
+                        </p>
+                      )}
+                    </div>
+                  </>
+                )}
               </div>
             </form>
           </CardContent>
@@ -343,3 +316,4 @@ nChange={handleChange}
     </div>
   );
 }
+
