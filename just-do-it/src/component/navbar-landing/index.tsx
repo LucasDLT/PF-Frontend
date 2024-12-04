@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Avatar } from '@nextui-org/react';
 import { signOut } from 'next-auth/react';
 import {
@@ -42,8 +43,15 @@ export const Navbar: React.FC = () => {
 
   return (
     <nav className={styles.navbar}>
+      <Image
+        src="/justDoItGym-logo.png"
+        alt="Logo"
+        width={120}
+        height={120}
+        className={styles.logo}
+      ></Image>
       <ul className={styles.navList}>
-        {menuItems.map((item) => (
+        {menuItems.map(item => (
           <li key={item.label} className={styles.navItem}>
             <Link href={item.href}>{item.label}</Link>
           </li>
