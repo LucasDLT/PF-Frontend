@@ -141,8 +141,8 @@ export default function Register() {
   return (
     <div className="relative w-full h-full bg-gradient-to-b from-yellow-500 via-gray-500 to-black">
       <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-lg p-4 bg-gradient-to-r from-black via-gray-500 to-yellow-500bg-gradient-to-r from-black via-gray to-black shadow-lg rounded-xl ">
-        <Image src="/justDoItGym-logo.png" alt="Logo" width={170} height={170} className=' flex justify-center justify-self-center'></Image>
+        <div className="mx-auto max-w-lg p-4 bg-gradient-to-r from-black via-gray-800 to-yellow-500bg-gradient-to-r from-black via-gray to-black shadow-lg rounded-xl ">
+        <Image src="/justDoItGym-logo.png" alt="Logo" width={170} height={170} className=' flex justify-center justify-self-center '></Image>
 
           <form
             className="space-y-4 p-4 shadow-lg sm:p-6 lg:p-8 bg-yellow-400  rounded-xl"

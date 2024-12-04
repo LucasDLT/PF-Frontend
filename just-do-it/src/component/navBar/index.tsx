@@ -119,6 +119,8 @@ toast.success(`Cerrando sesión, hasta pronto ${userSession?.name}`)
       <div className={styles.navContainer}>
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
+
+            <Link href={'/'}>
             <Image
               src="/justDoItGym-logo.png"
               alt="Logo"
@@ -126,6 +128,7 @@ toast.success(`Cerrando sesión, hasta pronto ${userSession?.name}`)
               height={120}
               className={styles.logo}
             ></Image>
+            </Link>
           </div>
           <div className="hidden md:block">
             <NavMenu />
