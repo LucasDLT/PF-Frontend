@@ -2,6 +2,13 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { Session } from '@/types/users';
+export interface Trainer {
+  id: string;
+  bio: string;
+  name: string;
+  specialties: string;
+  experience_years: number;
+}
 
 export interface Schedule {
   id: string;
@@ -12,6 +19,13 @@ export interface Schedule {
   remainingCapacity: number;
 }
 
+export interface Review {
+  id: string;
+  rating: number;
+  comment: string;
+  created_at: string;
+}
+
 export interface Class {
   id: string;
   name: string;
@@ -20,7 +34,8 @@ export interface Class {
   capacity: number;
   schedules: Schedule[];
   imgUrl: string;
-  trainer: string | null;
+  trainer: Trainer;
+  reviews: Review[];
 }
 
 interface AuthContextType {
@@ -45,9 +60,7 @@ export const useAuth = () => {
 };
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
-  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const [userSession, setSessionState] = useState<Session>({
     id: null,
@@ -121,7 +134,8 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
             remainingCapacity: schedule.remainingCapacity,
           })),
           imgUrl: cls.imgUrl,
-          trainer: cls.trainer?.name || null,
+          trainer: cls.trainer,
+          reviews: cls.reviews,
         }));
         setClasses(formattedClasses);
       } else {
@@ -216,3 +230,4 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 };
 
 export default AuthProvider;
+
