@@ -24,25 +24,7 @@ export default function SearchBar() {
     <div className={styles.searchBarContainer}>
       <h1 className={styles.titleSearchBar}>Buscar Clases de Gimnasio</h1>
 
-      <div className="mb-4">
-        <label htmlFor="filter" className="mr-2 text-white">
-          Filtrar por:
-        </label>
-        <select
-          id="filter"
-          value={filterMethod}
-          onChange={(e) => setFilterMethod(e.target.value)}
-          className={styles.select}
-        >
-          <option value="name" className="bg-black text-white">
-            Nombre de la clase
-          </option>
-          <option value="location" className="bg-black text-white">
-            Sala
-          </option>
-        </select>
-      </div>
-
+      
       <Input
         type="text"
         placeholder={`Buscar por ${filterMethod === 'name' ? 'nombre de clase' : 'sala'}...`}
