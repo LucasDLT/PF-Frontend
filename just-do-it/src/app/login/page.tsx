@@ -2,7 +2,9 @@
 
 import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import Link from 'next/link';
+import Image from 'next/image';
 import { signIn } from 'next-auth/react';
 import { useAuth } from '@/context';
 import { useRouter } from 'next/navigation';
@@ -10,7 +12,7 @@ import { toast } from 'sonner';
 
 export default function Login() {
   const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN;
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
 
   const { setToken, setSession } = useAuth();
@@ -29,6 +31,7 @@ export default function Login() {
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState(initialErrors);
   const [passwordFocused, setPasswordFocused] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -41,17 +44,19 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    
     let valid = true;
     const newErrors = { email: '', password: '' };
 
-    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+    if (
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)
+    ) {
       newErrors.email = 'Por favor ingresa un correo electrónico válido.';
       valid = false;
     }
 
     if (!/^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/.test(formData.password)) {
-      newErrors.password = 'La contraseña debe tener al menos 8 caracteres y 1 número.';
+      newErrors.password =
+        'La contraseña debe tener al menos 8 caracteres y 1 número.';
       valid = false;
     }
 
@@ -59,7 +64,6 @@ export default function Login() {
 
     if (!valid) return;
 
-    
     try {
       const response = await fetch(`${DOMAIN}/auth/signin`, {
         method: 'POST',
@@ -77,28 +81,24 @@ export default function Login() {
 
       const result = await response.json();
 
-   
       if (!result.token || !result.userData) {
         throw new Error('Respuesta inesperada del servidor.');
       }
 
-      
       setSession(result.userData);
       setToken(result.token);
 
-      
       toast.success(`¡Hola, ${result.userData.name}! Bienvenido a tu cuenta.`);
 
-      
       if (result.userData.roles !== 'user') {
         Router.push('/dashBoard-Admin');
       } else {
         Router.push('/');
       }
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
         console.error('Error al iniciar sesión:', error.message);
-        toast.error('Hubo un error al intentar iniciar sesión.',{
+        toast.error('Hubo un error al intentar iniciar sesión.', {
           style: {
             background: 'red',
             color: 'white',
@@ -126,7 +126,8 @@ export default function Login() {
           ...newErrors,
           password: 'Credenciales incorrectas',
         });
-      }}
+      }
+    }
   };
 
   const handleClickGoogle = async () => {
@@ -137,23 +138,22 @@ export default function Login() {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(prevState => !prevState);
+  };
+
   return (
     <div
-      className="relative w-full h-full bg-slate-400"
+      className="relative w-full h-full bg-slate-400 "
       style={{
         background: 'slate',
         clipPath: 'polygon(0% 0%, 100% 0%, 100% 90%, 0% 100%)',
       }}
     >
-      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-lg p-4 bg-yellow-300 shadow-lg rounded-lg">
-          <h1 className="text-center text-3xl font-outerSans text-black">
-            Just do it
-          </h1>
-          <p className="mx-auto mt-4 max-w-md text-center text-gray-700">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Obcaecati
-            sunt dolores deleniti inventore quaerat mollitia?
-          </p>
+      <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8 ">
+        <div className="mx-auto max-w-lg p-4 shadow-lg rounded-lg bg-black">
+          <Image src="/justDoItGym-logo.png" alt="Logo" width={170} height={170} className=' flex justify-center justify-self-center'></Image>
+
 
           <form
             action="#"
@@ -188,7 +188,7 @@ export default function Login() {
               </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={passwordVisible ? 'text' : 'password'}
                   id="password"
                   name="password"
                   value={formData.password}
@@ -206,6 +206,17 @@ export default function Login() {
                 {errors.password && (
                   <p className="text-red-500 text-sm">{errors.password}</p>
                 )}
+                <button
+                  type="button"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-4 top-4"
+                >
+                  {passwordVisible ? (
+                    <AiFillEye className="text-gray-500 w-6 h-6" />
+                  ) : (
+                    <AiFillEyeInvisible className="text-black-500 w-6 h-6" />
+                  )}
+                </button>
               </div>
             </div>
 
