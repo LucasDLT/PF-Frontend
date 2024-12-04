@@ -27,10 +27,11 @@ export default function NavbarApp() {
 
   const menuItems = [
     { label: 'INICIO', href: '/' },
-    { label: 'PREMIUM', href: '/premiumContent' },
+    ...(userSession?.membership_status === 'active'
+      ? [{ label: 'PREMIUM', href: '/premiumContent' }]
+      : []),
     { label: 'SERVICIOS', href: '/services' },
     { label: 'PLANES', href: '/memberships' },
-   
   ];
 
   const isUserLoggedIn = userSession && token;
@@ -38,21 +39,8 @@ export default function NavbarApp() {
   useEffect(() => {
     console.log('--- Verificando estado de sesión ---');
     console.log('User Session:', userSession);
-    console.log('id de usuario:', userSession?.id);
-    console.log('Token:', token);
-
-    const storedToken = localStorage.getItem('token');
-    const storedUserSession = localStorage.getItem('userSession');
-
-    console.log('Token almacenado:', storedToken);
-    console.log('User Session almacenada:', JSON.parse(storedUserSession || 'null'));
-
-    if (token) {
-      console.log('Sesión activa detectada.');
-    } else {
-      console.log('No hay sesión activa.');
-    }
-  }, [userSession, token]);
+    console.log('Imagen del usuario:', userSession?.image);
+  }, [userSession]);
 
   const NavMenu = ({ isMobile = false }) => {
     const showAvatar = userSession?.image && isUserLoggedIn;
@@ -78,7 +66,7 @@ export default function NavbarApp() {
           align={isMobile ? 'end' : 'start'}
           className={styles.menuContent}
         >
-          {menuItems.map((item) => (
+          {menuItems.map(item => (
             <DropdownMenuItem
               key={item.label}
               className={styles.menuItem}
@@ -90,16 +78,14 @@ export default function NavbarApp() {
           <DropdownMenuSeparator className={styles.menuSeparator} />
           {isUserLoggedIn ? (
             <>
-             
-                <DropdownMenuItem className={styles.menuItem} asChild>
-                  <Link href="/userprofile">
-                    <div className="flex items-center">
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Perfil Usuario</span>
-                    </div>
-                  </Link>
-                </DropdownMenuItem>
-              
+              <DropdownMenuItem className={styles.menuItem} asChild>
+                <Link href="/userprofile">
+                  <div className="flex items-center">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Perfil Usuario</span>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuItem className={styles.menuItem} asChild>
                 <div
                   className="flex items-center cursor-pointer"
@@ -129,21 +115,17 @@ export default function NavbarApp() {
     <nav className={styles.navbarWrapper}>
       <div className={styles.navContainer}>
         <div className="flex items-center justify-between h-16">
-       
           <div className="flex-shrink-0">
             <span className={styles.logo}>Logo</span>
           </div>
-
-        
           <div className="hidden md:block">
             <NavMenu />
           </div>
-
-        
           <div className="md:hidden">
             <NavMenu isMobile={true} />
           </div>
         </div>
+        
       </div>
     </nav>
   );

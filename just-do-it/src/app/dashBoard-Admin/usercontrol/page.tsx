@@ -1,9 +1,6 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink } from "@/components/ui/pagination";
-import { Button } from "@/components/ui/button";
 import styles from './UserList.module.css';
 import { useAuth } from '@/context';
 
@@ -13,6 +10,7 @@ interface User {
   email: string;
   roles: string;
   membership_status: string;
+  banned: boolean;
 }
 
 interface ApiResponse {
@@ -23,12 +21,10 @@ interface ApiResponse {
   totalPages: number;
 }
 
-const port = process.env.NEXT_PUBLIC_APP_API_PORT;
-const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
-const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
 
 export default function UserList() {
-  const { userSession, token } = useAuth();  // Mover useAuth aquí dentro del componente
+  const { userSession, token } = useAuth();
 
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [page, setPage] = useState(1);
@@ -45,7 +41,7 @@ export default function UserList() {
     const response = await fetch(`${DOMAIN}/users?page=${page}&limit=${limit}`, {
       method: 'GET',
       headers: {
-        'Authorization': `Bearer ${token}`,  // Usar token aquí
+        'Authorization': `Bearer ${token}`,
       },
     });
 
@@ -54,6 +50,52 @@ export default function UserList() {
     }
 
     return await response.json();
+  };
+
+  const banUser = async (userId: string) => {
+    try {
+      const response = await fetch(`${DOMAIN}/users/ban/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to ban user');
+      }
+
+      setAllUsers(prevUsers =>
+        prevUsers.map(user =>
+          user.id === userId ? { ...user, banned: true } : user
+        )
+      );
+    } catch (error) {
+      console.error('Error banning user:', error);
+    }
+  };
+
+  const unbanUser = async (userId: string) => {
+    try {
+      const response = await fetch(`${DOMAIN}/users/unban/${userId}`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to unban user');
+      }
+
+      setAllUsers(prevUsers =>
+        prevUsers.map(user =>
+          user.id === userId ? { ...user, banned: false } : user
+        )
+      );
+    } catch (error) {
+      console.error('Error unbanning user:', error);
+    }
   };
 
   useEffect(() => {
@@ -71,7 +113,7 @@ export default function UserList() {
     };
 
     fetchData();
-  }, [token]);  // Asegúrate de que el token esté disponible cuando se haga la solicitud
+  }, [token]);
 
   const filteredUsers = useMemo(() => {
     return allUsers.filter(user => {
@@ -152,69 +194,78 @@ export default function UserList() {
         <div className={styles.loading} aria-live="polite">Cargando...</div>
       ) : (
         <>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Nombre</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Roles</TableHead>
-                <TableHead>Estado</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th className={styles.tableHeader}>Nombre</th>
+                <th className={styles.tableHeader}>Email</th>
+                <th className={styles.tableHeader}>Roles</th>
+                <th className={styles.tableHeader}>Estado</th>
+                <th className={styles.tableHeader}>Baneado</th>
+                <th className={styles.tableHeader}>Acciones</th>
+              </tr>
+            </thead>
+            <tbody className={styles.tableBody}>
               {paginatedUsers.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.roles}</TableCell>
-                  <TableCell>{user.membership_status}</TableCell>
-                </TableRow>
+                <tr key={user.id} className={styles.tableRow}>
+                  <td className={styles.tableCell}>{user.name}</td>
+                  <td className={styles.tableCell}>{user.email}</td>
+                  <td className={styles.tableCell}>{user.roles}</td>
+                  <td className={styles.tableCell}>{user.membership_status}</td>
+                  <td className={styles.tableCell}>{user.banned ? 'Sí' : 'No'}</td>
+                  <td className={styles.tableCell}>
+                    {!['admin', 'super', 'trainer'].includes(user.roles) && (
+                      <button
+                        onClick={() => user.banned ? unbanUser(user.id) : banUser(user.id)}
+                        className={`${styles.button} ${styles.buttonOutline}`}
+                      >
+                        {user.banned ? 'Desbanear' : 'Banear'}
+                      </button>
+                    )}
+                  </td>
+                </tr>
               ))}
-            </TableBody>
-          </Table>
+            </tbody>
+          </table>
 
           <div className={styles.paginationInfo} aria-live="polite">
             Mostrando {paginatedUsers.length} de {filteredUsers.length} usuarios
           </div>
 
-          <Pagination className={styles.pagination}>
-            <PaginationContent>
-              <PaginationItem>
-                <Button
-                  onClick={handlePreviousPage}
-                  disabled={page === 1}
-                  variant="outline"
-                  aria-label="Página anterior"
-                >
-                  Anterior
-                </Button>
-              </PaginationItem>
+          <div className={styles.pagination}>
+            <div className={styles.paginationContent}>
+              <button
+                onClick={handlePreviousPage}
+                disabled={page === 1}
+                className={`${styles.button} ${styles.buttonOutline}`}
+                aria-label="Página anterior"
+              >
+                Anterior
+              </button>
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                <PaginationItem key={pageNum}>
-                  <PaginationLink
-                    onClick={() => setPage(pageNum)}
-                    isActive={pageNum === page}
-                    aria-label={`Ir a la página ${pageNum}`}
-                    aria-current={pageNum === page ? 'page' : undefined}
-                  >
-                    {pageNum}
-                  </PaginationLink>
-                </PaginationItem>
-              ))}
-              <PaginationItem>
-                <Button
-                  onClick={handleNextPage}
-                  disabled={page === totalPages}
-                  variant="outline"
-                  aria-label="Página siguiente"
+                <button
+                  key={pageNum}
+                  onClick={() => setPage(pageNum)}
+                  className={`${styles.paginationLink} ${pageNum === page ? styles.paginationLinkActive : ''}`}
+                  aria-label={`Ir a la página ${pageNum}`}
+                  aria-current={pageNum === page ? 'page' : undefined}
                 >
-                  Siguiente
-                </Button>
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+                  {pageNum}
+                </button>
+              ))}
+              <button
+                onClick={handleNextPage}
+                disabled={page === totalPages}
+                className={`${styles.button} ${styles.buttonOutline}`}
+                aria-label="Página siguiente"
+              >
+                Siguiente
+              </button>
+            </div>
+          </div>
         </>
       )}
     </div>
   );
 }
+
