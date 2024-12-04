@@ -20,7 +20,6 @@
   gap: 10px;
   margin-bottom: 20px;
   margin-top: 5rem;
-
 }
 
 .filterInput,
@@ -45,11 +44,9 @@
 .pagination {
   margin-top: 20px;
   display: flex;
-  justify-content: center;
-  position: absolute;
-  bottom:3rem ;
-  left: 6rem;
-
+  justify-content: center; 
+  gap: 10px; 
+  width: 100%;
 }
 
 .paginationInfo {
@@ -59,3 +56,64 @@
   color: #000000;
 }
 
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableHeader,
+.tableCell {
+  padding: 10px;
+  text-align: left;
+}
+
+.tableHeader {
+  font-weight: bold;
+}
+
+.tableRow:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tableBody {
+  padding: 10px;
+}
+
+.button {
+  padding: 8px 12px;
+  border: 1px solid #cccbcb;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.buttonOutline {
+  border: 1px solid #333;
+  background-color: transparent;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.paginationContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.paginationLink {
+  padding: 8px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.paginationLinkActive {
+  background-color: #333;
+  color: #fff;
+}
+
+.paginationLink:hover {
+  background-color: #ddd;
+}
