@@ -1,4 +1,4 @@
-'use client';
+"use client"
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,17 +12,14 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function EdicionPerfil() {
-  const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
-  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
-  const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
 
   const route = useRouter();
   const { token, userSession, setSession } = useAuth();
-  const [file, setFile] = useState<File | undefined>(undefined);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [imageUrl, setImageUrl] = useState<string | null>(userSession?.image || null);
   const [formData, setFormData] = useState({
     name: userSession?.name || '',
-    email: userSession?.email || '',
+    email: userSession?.email || '', 
     phone: userSession?.phone || '',
     country: userSession?.country || '',
     address: userSession?.address || '',
@@ -46,11 +43,6 @@ export default function EdicionPerfil() {
     const selectedFile = e.target.files?.[0];
     if (!selectedFile) return;
 
-    setFile(selectedFile);
-
-    const objetoUrl = URL.createObjectURL(selectedFile);
-    setImageUrl(objetoUrl);
-
     const form = new FormData();
     form.append('file', selectedFile);
     form.append('upload_preset', 'just-do-it');
@@ -60,16 +52,13 @@ export default function EdicionPerfil() {
         {
           method: 'POST',
           body: form,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         },
       );
 
       const data = await response.json();
       setImageUrl(data.secure_url);
     } catch (error) {
-      console.error('Error uploading image:', error);
+      console.error('Error al cargar la imagen:', error);
       toast.error('Hubo un error al cargar la imagen.',
         {
           style: {
@@ -88,13 +77,11 @@ export default function EdicionPerfil() {
     let isValid = true;
     const newErrors = { password: '', confirmPassword: '' };
 
-    
     if (formData.password && formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Las contraseñas no coinciden';
       isValid = false;
     }
 
-    
     if (formData.password && formData.password.length < 8) {
       newErrors.password = 'La contraseña debe tener al menos 8 caracteres';
       isValid = false;
@@ -112,8 +99,9 @@ export default function EdicionPerfil() {
   
     if (!validateForm()) return;
   
-    const updatedData = { ...formData, imageUrl };
-  
+ 
+    const { email, ...updatedData } = { ...formData, image: imageUrl };
+
     try {
       const response = await fetch(`${DOMAIN}/users/${userSession.id}`, {
         method: 'PATCH',
@@ -127,7 +115,6 @@ export default function EdicionPerfil() {
       if (response.ok) {
         const data = await response.json();
   
-       
         if (data.userData) {
           setSession(data.userData);
           toast.success('Perfil actualizado correctamente!');
@@ -137,7 +124,7 @@ export default function EdicionPerfil() {
         }
       } else {
         const errorData = await response.json();
-        toast.error(`Error al actualizar  los datos:}`,{
+        toast.error(`Error al actualizar los datos: ${errorData.message}`, {
           style: {
             background: 'red',
             color: 'white',
@@ -149,7 +136,7 @@ export default function EdicionPerfil() {
       }
     } catch (error) {
       console.error('Error:', error);
-      toast.error('Error al actualizar  los datos.', {
+      toast.error('Error al actualizar los datos.', {
         style: {
           background: 'red',
           color: 'white',
@@ -223,6 +210,7 @@ export default function EdicionPerfil() {
                   />
                 </div>
 
+                {/* Mantener el campo de correo visible pero sin enviarlo */}
                 <div>
                   <Label htmlFor="email" className={styles.label}>
                     Correo electrónico
@@ -235,6 +223,7 @@ export default function EdicionPerfil() {
                     placeholder={userSession?.email || 'Escribe tu correo'}
                     onChange={handleChange}
                     className={styles.input}
+                    disabled
                   />
                 </div>
 
@@ -281,47 +270,41 @@ export default function EdicionPerfil() {
                   />
                 </div>
 
-                {userSession?.auth === 'googleIncomplete' && (
-                  <>
-                    <div>
-                      <Label htmlFor="password" className={styles.label}>
-                        Nueva Contraseña
-                      </Label>
-                      <Input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value={formData.password}
-                        placeholder="Escribe tu nueva contraseña"
-                        onChange={handleChange}
-                        className={styles.input}
-                      />
-                      {errors.password && (
-                        <p className="text-red-500 text-sm">{errors.password}</p>
-                      )}
-                    </div>
+                <div>
+                  <Label htmlFor="password" className={styles.label}>
+                    Nueva contraseña
+                  </Label>
+                  <Input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className={styles.input}
+                  />
+                  {errors.password && (
+                    <p className="text-red-500 text-xs mt-1">{errors.password}</p>
+                  )}
+                </div>
 
-                    <div>
-                      <Label htmlFor="confirmPassword" className={styles.label}>
-                        Confirmar Contraseña
-                      </Label>
-                      <Input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        value={formData.confirmPassword}
-                        placeholder="Confirma tu nueva contraseña"
-                        onChange={handleChange}
-                        className={styles.input}
-                      />
-                      {errors.confirmPassword && (
-                        <p className="text-red-500 text-sm">
-                          {errors.confirmPassword}
-                        </p>
-                      )}
-                    </div>
-                  </>
-                )}
+                <div>
+                  <Label htmlFor="confirmPassword" className={styles.label}>
+                    Confirmar nueva contraseña
+                  </Label>
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className={styles.input}
+                  />
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-xs mt-1">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
               </div>
             </form>
           </CardContent>
