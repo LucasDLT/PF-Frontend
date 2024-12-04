@@ -11,6 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Link from 'next/link';
+import Image from 'next/image';
 import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context';
 
@@ -116,7 +117,13 @@ export default function NavbarApp() {
       <div className={styles.navContainer}>
         <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <span className={styles.logo}>Logo</span>
+          <Image
+        src="/justDoItGym-logo.png"
+        alt="Logo"
+        width={120}
+        height={120}
+        className={styles.logo}
+      ></Image>
           </div>
           <div className="hidden md:block">
             <NavMenu />
