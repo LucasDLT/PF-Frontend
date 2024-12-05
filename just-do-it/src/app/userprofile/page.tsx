@@ -42,10 +42,16 @@ export default function PerfilUsuario() {
   const API_URL = `${DOMAIN}:${PORT}`;
   const { userSession, token } = useAuth();
 
-  // Usar la interfaz en el estado para las clases programadas
+
   const [scheduledClasses, setScheduledClasses] = useState<ScheduledClassApiResponse[]>([]);
 
+
   useEffect(() => {
+    if (!userSession || !token) {
+      router.push('/');
+      return;
+    }
+
     const fetchScheduledClasses = async () => {
       try {
         console.log("Fetching scheduled classes...");
@@ -74,10 +80,8 @@ export default function PerfilUsuario() {
       }
     };
 
-    if (userSession?.id) {
-      fetchScheduledClasses();
-    }
-  }, [userSession?.id, token]);
+    fetchScheduledClasses();
+  }, [userSession, token, DOMAIN, router]);
 
   return (
     <div className={styles.container}>

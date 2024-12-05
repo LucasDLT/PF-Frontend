@@ -12,12 +12,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const Router = useRouter();
   const { userSession, token, logout } = useAuth();
 
- 
   useEffect(() => {
-    if (!['admin', 'super', 'trainer'].includes(userSession?.roles)) {
+    
+    if (!userSession || !token) {
+      Router.push('/login');
+    } 
+    
+    else if (userSession.roles === 'user' || userSession.roles === 'associate') {
       Router.push('/');
     }
-  }, [userSession?.roles, Router]);
+  }, [userSession, token, Router]); 
 
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const toggleMenu = (menuName: string) => {

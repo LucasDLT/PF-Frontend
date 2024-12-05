@@ -9,7 +9,7 @@ import { CameraIcon, Save } from 'lucide-react';
 import styles from './edicionperfil.module.css';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Eye, EyeOff } from 'lucide-react';
 import { ConfirmDialog } from '@/component/customConfirm';
@@ -26,6 +26,15 @@ export default function EdicionPerfil() {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(
     false,
   );
+
+  useEffect(() => {
+    
+    if (!userSession || !token) {
+      
+      route.push('/');
+    }
+  }, [userSession, token, route]);
+
 
   const [formData, setFormData] = useState({
     name: userSession?.name || '',

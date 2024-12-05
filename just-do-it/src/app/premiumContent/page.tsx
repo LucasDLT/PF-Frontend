@@ -7,6 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+
 
 interface ContentItem {
   id: string
@@ -15,18 +17,23 @@ interface ContentItem {
 }
 
 export default function PremiumContent() {
+
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN
   const [data, setData] = useState<ContentItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const { token } = useAuth()
+  const { token, userSession } = useAuth()
   const [shouldFetch, setShouldFetch] = useState(false)
+  const ROUTE = useRouter()
 
+  // Verificamos si `token` y `userSession` existen y si la membresía está activa
   useEffect(() => {
-    if (token) {
+    if (!token || !userSession || userSession.membership_status === 'inactive') {
+      ROUTE.push("/") // Redirige a la página principal si no está autorizado
+    } else {
       setShouldFetch(true)
     }
-  }, [token])
+  }, [token, userSession, ROUTE])
 
   useEffect(() => {
     if (!shouldFetch) return
@@ -198,4 +205,3 @@ export default function PremiumContent() {
     </div>
   )
 }
-
