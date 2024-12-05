@@ -6,7 +6,6 @@ import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
- 
 
 export default function LoadingView() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -17,11 +16,11 @@ export default function LoadingView() {
   const { data: session } = useSession();
   const Router = useRouter();
 
-  const [isRegistered, setIsRegistered] = useState(false); // Estado para evitar re-registros
+  const [isRegistered, setIsRegistered] = useState(false); 
 
   useEffect(() => {
     const registerUser = async () => {
-      if (session && session.user && !isRegistered) { // Solo ejecutar si no se ha registrado
+      if (session && session.user && !isRegistered) { 
         try {
           const response = await fetch(`${DOMAIN}/auth/signup/third/`, {
             method: 'POST',
@@ -35,23 +34,21 @@ export default function LoadingView() {
             }),
           });
 
+          if (response.status === 403) {
+            toast.error("Has sido baneado de esta aplicación, por favor contáctanos para más información.", {
+              position: "top-center",
+            });
+            Router.push("/login");
+            return;
+          }
+
           if (response.ok) {
             const data = await response.json();
 
-           
-            if (data.userData.banned) {
-              toast.error("Has sido baneado de esta aplicación, por favor contáctanos para más información.", {
-                position: "top-center",
-              
-              });
-              Router.push("/login"); 
-              return; 
-            }
-
             setSession(data.userData);
             setToken(data.token);
-            setIsRegistered(true); 
-            Router.push("/"); 
+            setIsRegistered(true);
+            Router.push("/");
           } else {
             console.error('Error registering user');
           }
