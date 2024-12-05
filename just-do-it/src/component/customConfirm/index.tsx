@@ -8,15 +8,17 @@ interface ConfirmDialogProps {
   onConfirm: (arg: any) => void;
   title: string;
   description: string;
+  message?: string;
 }
 
-export function ConfirmDialog({ isOpen, onClose, onConfirm, title, description }: ConfirmDialogProps) {
+export function ConfirmDialog({ isOpen, onClose, onConfirm, title, description, message}: ConfirmDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
+          <DialogDescription>{message}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>Cancelar</Button>
