@@ -60,7 +60,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   const [userBookedSchedules, setUserBookedSchedules] = useState<string[]>([]);
   const [isConfirming, setIsConfirming] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-  const { userSession, token } = useAuth();
+  const { userSession, token , setSession } = useAuth();
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
 
   useEffect(() => {
@@ -123,16 +123,16 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
       toast.error('El usuario no está autenticado.');
       return;
     }
-
+  
     const payload = {
       userId: userSession.id,
       classId: id,
       scheduleId: schedule.id,
     };
-
+  
     try {
       bookingSchema.parse(payload);
-
+  
       const response = await fetch(`${DOMAIN}/booked-classes`, {
         method: 'POST',
         headers: {
@@ -141,11 +141,15 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
         },
         body: JSON.stringify(payload),
       });
-
+  
       if (!response.ok) {
         throw new Error(`Error en la solicitud: ${response.statusText}`);
       }
-
+  
+      const data = await response.json();
+      const user = data.user; 
+      setSession(user);
+  
       setUserBookedSchedules(prev => [...prev, schedule.id]);
       toast.success('Inscripción exitosa');
       await onClassUpdate();
@@ -161,6 +165,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
       }
     }
   };
+  
 
   const handleUnsubscribe = async (scheduleId: string) => {
     if (!userSession) {
