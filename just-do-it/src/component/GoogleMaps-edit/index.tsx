@@ -27,7 +27,7 @@ const libraries: ("places")[] = ['places']
 
 interface EditClassMapProps {
   defaultLocation: string
-  onLocationChange: (location: string) => void
+  onLocationChange: (location?: string) => void
 }
 
 export default function EditClassMap({ defaultLocation, onLocationChange }: EditClassMapProps) {

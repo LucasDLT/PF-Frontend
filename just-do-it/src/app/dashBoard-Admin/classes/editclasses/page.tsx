@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +13,9 @@ import { AlertCircle } from 'lucide-react';
 import styles from './editclasses.module.css';
 import { useAuth } from '@/context';
 import EditClassMap from '@/component/GoogleMaps-edit';
-import { Badge } from "@/components/ui/badge";
+import { Badge } from '@/components/ui/badge';
+import { ConfirmDialog } from '@/component/customConfirm'; // Importa el ConfirmDialog
+import { toast } from 'sonner';
 
 interface Schedule {
   id: string;
@@ -24,7 +27,6 @@ interface Schedule {
 interface Trainer {
   id: string;
   name: string;
-  // Otros campos del entrenador si son necesarios
 }
 
 interface Class {
@@ -54,6 +56,7 @@ export default function AdminClassEditor() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [classDropdownOpen, setClassDropdownOpen] = useState(false);
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false); // Estado para el ConfirmDialog
 
   useEffect(() => {
     if (classes?.length === 0) {
@@ -82,10 +85,15 @@ export default function AdminClassEditor() {
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-      if ((name === 'name' && value.length <= 50) || (name === 'description' && value.length <= 150) || name === 'capacity') {
+      if (
+        (name === 'name' && value.length <= 50) ||
+        (name === 'description' && value.length <= 150) ||
+        name === 'capacity'
+      ) {
         setClassData(prev => ({
           ...prev,
-          [name]: name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
+          [name]:
+            name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
         }));
       }
     },
@@ -113,46 +121,58 @@ export default function AdminClassEditor() {
         return;
       }
 
-      if (!window.confirm('¿Estás seguro de editar esta clase?')) {
-        return;
-      }
-
-      const classPayload = {
-        name: classData.name,
-        description: classData.description,
-        location: classData.location,
-        capacity: parsedCapacity,
-        imgUrl: classData.imgUrl,
-        trainerId: classData.trainer?.id || null,
-        schedules: classData.schedules,
-      };
-
-      try {
-        const classResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}/classes/${selectedClassId}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify(classPayload),
-          },
-        );
-
-        if (!classResponse.ok) {
-          throw new Error('Error al actualizar la clase');
-        }
-
-        setSuccess('Clase actualizada exitosamente.');
-        fetchClasses(); 
-      } catch (error) {
-        console.error('Error al enviar los datos:', error);
-        setError('No se pudo actualizar la clase. Intenta nuevamente.');
-      }
+      // Abre el diálogo de confirmación antes de continuar
+      setIsConfirmDialogOpen(true);
     },
-    [token, selectedClassId, classData, fetchClasses],
+    [token, selectedClassId, classData],
   );
+
+  const handleConfirmClassUpdate = async () => {
+    const parsedCapacity = Number(classData.capacity);
+    if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
+      setError('La capacidad debe ser un número entero positivo');
+      return;
+    }
+
+    const classPayload = {
+      name: classData.name,
+      description: classData.description,
+      location: classData.location,
+      capacity: parsedCapacity,
+      imgUrl: classData.imgUrl,
+      trainerId: classData.trainer?.id || null,
+      schedules: classData.schedules,
+    };
+
+    try {
+      const classResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}/classes/${selectedClassId}`,
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(classPayload),
+        },
+      );
+
+      if (!classResponse.ok) {
+        throw new Error('Error al actualizar la clase');
+      }
+
+      setSuccess('Clase actualizada exitosamente.');
+      fetchClasses();
+      // Cierra el confirmDialog
+      setIsConfirmDialogOpen(false);
+      // Muestra el toast de éxito
+      toast.success(`Clase ${classData.name} actualizada exitosamente.`);
+    } catch (error) {
+      console.error('Error al enviar los datos:', error);
+      setError('No se pudo actualizar la clase. Intenta nuevamente.');
+      setIsConfirmDialogOpen(false); // Cierra el confirmDialog en caso de error
+    }
+  };
 
   const handleScheduleChange = (updatedSchedule: Schedule[]) => {
     setClassData(prev => ({ ...prev, schedules: updatedSchedule }));
@@ -162,48 +182,19 @@ export default function AdminClassEditor() {
     setClassData(prev => ({ ...prev, location: newLocation }));
   };
 
-  const updateSchedule = async (
-    classId: string,
-    scheduleId: string,
-    updatedSchedule: Schedule,
-  ) => {
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}/schedule/${classId}`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            scheduleId,
-            day: updatedSchedule.day,
-            startTime: updatedSchedule.startTime,
-            endTime: updatedSchedule.endTime,
-          }),
-        },
-      );
+  const getCharacterCount = useMemo(
+    () => (field: 'name' | 'description') => classData[field].length,
+    [classData],
+  );
 
-      if (!response.ok) {
-        throw new Error('Error al actualizar el horario');
-      }
-
-      const data = await response.json();
-      setSuccess('Horario actualizado exitosamente.');
-    } catch (error) {
-      console.error('Error al actualizar el horario:', error);
-      setError('No se pudo actualizar el horario. Intenta nuevamente.');
-    }
-  };
-
-  const getCharacterCount = useMemo(() => (field: 'name' | 'description') => classData[field].length, [classData]);
-
-  const getCharacterCountColor = useMemo(() => (field: 'name' | 'description') => {
-    const count = getCharacterCount(field);
-    const limit = field === 'name' ? 50 : 150;
-    return count > limit ? 'text-red-500' : 'text-gray-500';
-  }, [getCharacterCount]);
+  const getCharacterCountColor = useMemo(
+    () => (field: 'name' | 'description') => {
+      const count = getCharacterCount(field);
+      const limit = field === 'name' ? 50 : 150;
+      return count > limit ? 'text-red-500' : 'text-gray-500';
+    },
+    [getCharacterCount],
+  );
 
   return (
     <div className={styles.container}>
@@ -269,7 +260,10 @@ export default function AdminClassEditor() {
           minLength={10}
           maxLength={50}
         />
-        <Badge variant={getCharacterCount('name') > 50 ? "destructive" : "outline"} className={getCharacterCountColor('name')}>
+        <Badge
+          variant={getCharacterCount('name') > 50 ? 'destructive' : 'outline'}
+          className={getCharacterCountColor('name')}
+        >
           {getCharacterCount('name')}/50
         </Badge>
 
@@ -282,23 +276,14 @@ export default function AdminClassEditor() {
           minLength={10}
           maxLength={150}
         />
-        <Badge variant={getCharacterCount('description') > 150 ? "destructive" : "outline"} className={getCharacterCountColor('description')}>
+        <Badge
+          variant={
+            getCharacterCount('description') > 150 ? 'destructive' : 'outline'
+          }
+          className={getCharacterCountColor('description')}
+        >
           {getCharacterCount('description')}/150
         </Badge>
-
-        <Label htmlFor="location">Ubicación</Label>
-        <Input
-          id="location"
-          name="location"
-          type="text"
-          value={classData.location}
-          onChange={handleInputChange}
-        />
-
-        <EditClassMap
-          defaultLocation={classData.location}
-          onLocationChange={handleLocationChange}
-        />
 
         <Label htmlFor="capacity">Capacidad</Label>
         <Input
@@ -307,31 +292,29 @@ export default function AdminClassEditor() {
           type="number"
           value={classData.capacity}
           onChange={handleInputChange}
+          min="1"
         />
 
         <ImageUploader onImageUpload={handleImageUpload} />
-
-        <Label htmlFor="trainer">Entrenador</Label>
-        <Input
-          id="trainer"
-          name="trainer"
-          type="text"
-          value={classData.trainer?.name || 'No asignado'}
-          readOnly
-          disabled
+        <EditClassMap
+    defaultLocation={classData.location}
+    onLocationChange={handleLocationChange}
+        />
+        <EditScheduleDisplay
+          schedules={classData.schedules}
+          onScheduleChange={handleScheduleChange}
         />
 
-        <div className={styles.scheduleEditor}>
-          <EditScheduleDisplay
-            schedules={classData.schedules}
-            onScheduleChange={handleScheduleChange}
-            updateSchedule={updateSchedule} 
-          />
-        </div>
-
-        <Button type="submit">Guardar Cambios</Button>
+        <Button type="submit">Actualizar Clase</Button>
       </form>
+
+      <ConfirmDialog
+        isOpen={isConfirmDialogOpen}
+        onClose={() => setIsConfirmDialogOpen(false)}
+        onConfirm={handleConfirmClassUpdate}
+        title="Confirmación"
+        description="¿Estás seguro de actualizar esta clase?"
+      />
     </div>
   );
 }
-
