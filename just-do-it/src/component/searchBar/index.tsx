@@ -6,11 +6,11 @@ import styles from './searchbar.module.css';
 import { useAuth } from '@/context';
 
 export default function SearchBar() {
-  const { classes } = useAuth(); // Obtener las clases del contexto
+  const { classes } = useAuth(); 
   const [searchTerm, setSearchTerm] = useState('');
   const [filterMethod, setFilterMethod] = useState('name');
 
-  // Filtrar las clases según el criterio seleccionado
+  
   const filteredClasses = classes?.filter((gymClass) => {
     if (filterMethod === 'name') {
       return gymClass.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -30,10 +30,10 @@ export default function SearchBar() {
         placeholder={`Buscar por ${filterMethod === 'name' ? 'nombre de clase' : 'sala'}...`}
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className={`${styles.input} mb-6`} // Usamos la clase del CSS Module
+        className={`${styles.input} mb-6`} 
       />
 
-      {/* Contenedor con scroll solo para las tarjetas */}
+    
       <div className={styles.cardsContainer}>
         {filteredClasses.map((gymClass) => (
           <CardClass key={gymClass.id} gymClass={gymClass} />

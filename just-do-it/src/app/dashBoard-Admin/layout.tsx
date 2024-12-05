@@ -1,23 +1,28 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { signOut } from 'next-auth/react';
 import { useAuth } from '@/context';
 import styles from './Layout.module.css';
 import { useRouter } from 'next/navigation';
-;
+
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const Router = useRouter()
-  const {userSession , token , logout} = useAuth()
+  const Router = useRouter();
+  const { userSession, token, logout } = useAuth();
+
+ 
+  useEffect(() => {
+    if (!['admin', 'super', 'trainer'].includes(userSession?.roles)) {
+      Router.push('/');
+    }
+  }, [userSession?.roles, Router]);
 
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const toggleMenu = (menuName: string) => {
     setActiveMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
   };
-
-  
 
   const handleLogOut = () => {
     signOut({ callbackUrl: '/' });
@@ -27,15 +32,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>
-        
-
         <div className="flex-1 px-4 py-6">
           <ul className="mt-6 space-y-1">
             <Link href="/dashBoard-Admin">
               <li className={styles.menuItem}>PERFIL DEL ADMINISTRADOR</li>
             </Link>
-
-            
             <li>
               <div>
                 <button
@@ -79,7 +80,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </li>
 
-           
             <li>
               <div>
                 <button
@@ -118,7 +118,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               </div>
             </li>
 
-           
             <li>
               <div>
                 <button
@@ -157,16 +156,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                         Crear nueva membresia
                       </Link>
                     </li>
-                   
                   </ul>
-                  
                 )}
               </div>
             </li>
           </ul>
         </div>
 
-       
         <div className={styles.logout}>
           <Button variant={'destructive'} onClick={handleLogOut}>
             Cerrar sesión
@@ -174,7 +170,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-    
       <div className={styles.main}>{children}</div>
     </div>
   );
