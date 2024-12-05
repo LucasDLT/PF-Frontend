@@ -1,7 +1,10 @@
 'use client';
-import React, { useState, useEffect, createContext, useContext } from 'react';
+
+import React, { useState, useEffect, createContext, useContext, useCallback } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
 import { SessionProvider } from 'next-auth/react';
 import { Session } from '@/types/users';
+
 export interface Trainer {
   id: string;
   bio: string;
@@ -61,6 +64,8 @@ export const useAuth = () => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
+  const router = useRouter();
+  const pathname = usePathname();
 
   const [userSession, setSessionState] = useState<Session>({
     id: null,
@@ -73,10 +78,33 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     roles: '',
     membership_status: '',
     auth: '',
+    banned: false
   });
   const [token, setTokenState] = useState<string | null>(null);
   const [classes, setClasses] = useState<Class[] | null>(null);
 
+  const checkUserStatus = useCallback(async () => {
+    if (token) {
+      try {
+        const response = await fetch(`${DOMAIN}/user/${userSession.id}`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          handleUserData(userData);
+        } else if (response.status === 401) {
+          logout();
+        }
+      } catch (error) {
+        console.error('Error al verificar el estado del usuario:', error);
+      }
+    }
+  }, [token, DOMAIN]);
+
+  // Cargar sesión y token desde localStorage al inicializar
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const storedToken = localStorage.getItem('token');
@@ -91,26 +119,57 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           console.error('Error al parsear la sesión almacenada:', error);
         }
       } else {
-        setSessionState({
-          id: null,
-          name: '',
-          email: '',
-          image: undefined,
-          phone: '',
-          address: '',
-          country: '',
-          roles: '',
-          membership_status: '',
-          auth: '',
-        });
-        setTokenState(null);
+        resetSession();
       }
     }
   }, []);
 
+  // Fetch inicial de clases
   useEffect(() => {
     fetchClasses();
   }, []);
+
+  // Escuchar cambios en la propiedad "banned" del usuario y verificar estado periódicamente
+  useEffect(() => {
+    const checkStatus = () => {
+      if (userSession?.banned) {
+        logout();
+        router.push('/login');
+      }
+    };
+
+    checkStatus(); // Verifica inmediatamente
+    const intervalId = setInterval(checkStatus, 60000); // Verifica cada minuto
+
+    return () => clearInterval(intervalId);
+  }, [userSession, router]);
+
+  // Verificar estado del usuario al cambiar de página
+  useEffect(() => {
+    const checkStatus = async () => {
+      if (token) {
+        try {
+          const response = await fetch(`${DOMAIN}/user/status`, {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+          if (response.ok) {
+            const userData = await response.json();
+            handleUserData(userData);
+          } else if (response.status === 401) {
+            logout();
+          }
+        } catch (error) {
+          console.error('Error al verificar el estado del usuario:', error);
+        }
+      }
+    };
+
+    checkStatus();
+  }, [pathname, token, DOMAIN]);
+
 
   const fetchClasses = async () => {
     try {
@@ -149,22 +208,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   const handleSetToken = (newToken: string | null) => {
     setTokenState(newToken);
     if (!newToken) {
-      setSessionState({
-        id: null,
-        name: '',
-        email: '',
-        image: undefined,
-        phone: '',
-        address: '',
-        country: '',
-        roles: '',
-        membership_status: '',
-        auth: '',
-      });
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userSession');
-      }
+      resetSession();
     } else {
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', newToken);
@@ -174,21 +218,12 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
 
   const handleUserData = (userSession: Session) => {
     setSessionState(userSession);
-    if (!userSession) {
-      setTokenState(null);
-      if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('userSession');
-      }
-    } else {
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('userSession', JSON.stringify(userSession));
-      }
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('userSession', JSON.stringify(userSession));
     }
   };
 
-  const logout = () => {
-    setTokenState(null);
+  const resetSession = () => {
     setSessionState({
       id: null,
       name: '',
@@ -200,13 +235,19 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       roles: '',
       membership_status: '',
       auth: '',
+      banned: false
     });
-
-    setClasses(null);
+    setTokenState(null);
     if (typeof window !== 'undefined') {
       localStorage.removeItem('token');
       localStorage.removeItem('userSession');
     }
+  };
+
+  const logout = () => {
+    resetSession();
+    setClasses(null);
+    router.push('/login');
   };
 
   return (

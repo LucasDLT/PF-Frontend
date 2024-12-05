@@ -26,4 +26,5 @@ export interface Session {
   roles: string;
   membership_status: string;
   auth:string;
+  banned:boolean;
 }

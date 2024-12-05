@@ -55,7 +55,7 @@ export default function UserList() {
   const banUser = async (userId: string) => {
     try {
       const response = await fetch(`${DOMAIN}/users/ban/${userId}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
@@ -78,7 +78,7 @@ export default function UserList() {
   const unbanUser = async (userId: string) => {
     try {
       const response = await fetch(`${DOMAIN}/users/unban/${userId}`, {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
         },
