@@ -4,6 +4,7 @@ import { Membership } from '@/types/membership';
 import styles from './membership.module.css';
 import { useAuth } from '@/context';
 import { Fade } from 'react-awesome-reveal';
+import { toast } from 'sonner';
 
 export default function MembershipsPage() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
@@ -38,6 +39,15 @@ export default function MembershipsPage() {
 
   const handleClick = async (stripePriceId: string) => {
     if (!userSession?.name || !userSession?.email) {
+      toast.error('Debes iniciar sesion para comprar una membresia',
+        {style: {
+          background: 'red',
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: '15px',
+          borderRadius: '8px',
+        }}
+      );
       console.error(
         'La sesión del usuario está incompleta. Nombre o correo no definidos.',
       );
