@@ -178,9 +178,10 @@ export default function AdminClassEditor() {
     setClassData(prev => ({ ...prev, schedules: updatedSchedule }));
   };
 
-  const handleLocationChange = (newLocation: string) => {
-    setClassData(prev => ({ ...prev, location: newLocation }));
+  const handleLocationChange = (newLocation: string | undefined) => {
+    setClassData(prev => ({ ...prev, location: newLocation || '' }));
   };
+  
 
   const getCharacterCount = useMemo(
     () => (field: 'name' | 'description') => classData[field].length,
