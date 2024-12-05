@@ -3,6 +3,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import styles from './UserList.module.css';
 import { useAuth } from '@/context';
+import { toast } from 'sonner';
+import { ConfirmDialog } from '@/component/customConfirm';
 
 interface User {
   id: string;
@@ -36,6 +38,11 @@ export default function UserList() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const ITEMS_PER_PAGE = 5;
+  
+  // Confirmation dialog state
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [actionType, setActionType] = useState<'ban' | 'unban' | null>(null);
 
   const fetchUsersFromAPI = async (page: number, limit: number): Promise<ApiResponse> => {
     const response = await fetch(`${DOMAIN}/users?page=${page}&limit=${limit}`, {
@@ -70,6 +77,7 @@ export default function UserList() {
           user.id === userId ? { ...user, banned: true } : user
         )
       );
+      toast.success('Usuario baneado con éxito');
     } catch (error) {
       console.error('Error banning user:', error);
     }
@@ -93,6 +101,7 @@ export default function UserList() {
           user.id === userId ? { ...user, banned: false } : user
         )
       );
+      toast.success('Usuario desbaneado con éxito');
     } catch (error) {
       console.error('Error unbanning user:', error);
     }
@@ -153,6 +162,29 @@ export default function UserList() {
   useEffect(() => {
     setTotalPages(Math.ceil(filteredUsers.length / ITEMS_PER_PAGE));
   }, [filteredUsers]);
+
+  const handleBanUserConfirmation = (userId: string) => {
+    setSelectedUserId(userId);
+    setActionType('ban');
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleUnbanUserConfirmation = (userId: string) => {
+    setSelectedUserId(userId);
+    setActionType('unban');
+    setIsConfirmDialogOpen(true);
+  };
+
+  const handleConfirmAction = () => {
+    if (actionType === 'ban' && selectedUserId) {
+      banUser(selectedUserId);
+    } else if (actionType === 'unban' && selectedUserId) {
+      unbanUser(selectedUserId);
+    }
+    setIsConfirmDialogOpen(false);
+    setActionType(null);
+    setSelectedUserId(null);
+  };
 
   return (
     <div className={styles.container}>
@@ -216,7 +248,7 @@ export default function UserList() {
                   <td className={styles.tableCell}>
                     {!['admin', 'super', 'trainer'].includes(user.roles) && (
                       <button
-                        onClick={() => user.banned ? unbanUser(user.id) : banUser(user.id)}
+                        onClick={() => user.banned ? handleUnbanUserConfirmation(user.id) : handleBanUserConfirmation(user.id)}
                         className={`${styles.button} ${styles.buttonOutline}`}
                       >
                         {user.banned ? 'Desbanear' : 'Banear'}
@@ -228,44 +260,32 @@ export default function UserList() {
             </tbody>
           </table>
 
-          <div className={styles.paginationInfo} aria-live="polite">
-            Mostrando {paginatedUsers.length} de {filteredUsers.length} usuarios
-          </div>
-
           <div className={styles.pagination}>
-            <div className={styles.paginationContent}>
-              <button
-                onClick={handlePreviousPage}
-                disabled={page === 1}
-                className={`${styles.button} ${styles.buttonOutline}`}
-                aria-label="Página anterior"
-              >
-                Anterior
-              </button>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                <button
-                  key={pageNum}
-                  onClick={() => setPage(pageNum)}
-                  className={`${styles.paginationLink} ${pageNum === page ? styles.paginationLinkActive : ''}`}
-                  aria-label={`Ir a la página ${pageNum}`}
-                  aria-current={pageNum === page ? 'page' : undefined}
-                >
-                  {pageNum}
-                </button>
-              ))}
-              <button
-                onClick={handleNextPage}
-                disabled={page === totalPages}
-                className={`${styles.button} ${styles.buttonOutline}`}
-                aria-label="Página siguiente"
-              >
-                Siguiente
-              </button>
-            </div>
+            <button
+              className={`${styles.button} ${styles.buttonOutline}`}
+              onClick={handlePreviousPage}
+              disabled={page === 1}
+            >
+              Anterior
+            </button>
+            <span>{`Página ${page} de ${totalPages}`}</span>
+            <button
+              className={`${styles.button} ${styles.buttonOutline}`}
+              onClick={handleNextPage}
+              disabled={page === totalPages}
+            >
+              Siguiente
+            </button>
           </div>
         </>
       )}
+
+      {/* Confirm Dialog for ban/unban */}
+      <ConfirmDialog
+        isOpen={isConfirmDialogOpen}
+        onClose={() => setIsConfirmDialogOpen(false)}
+        onConfirm={handleConfirmAction}
+        description={`¿Estás seguro de que quieres ${actionType === 'ban' ? 'banear' : 'desbanear'} a este usuario?`} title={''}      />
     </div>
   );
 }
-
