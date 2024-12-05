@@ -5,11 +5,13 @@ import { useAuth } from '@/context';
 import { Loader2 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+ 
 
 export default function LoadingView() {
   const PORT = process.env.NEXT_PUBLIC_APP_API_PORT;
   const API_URL = `${process.env.NEXT_PUBLIC_APP_API_DOMAIN}:${process.env.NEXT_PUBLIC_APP_API_PORT}`;
-  const DOMAIN= process.env.NEXT_PUBLIC_APP_API_DOMAIN
+  const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
 
   const { setToken, setSession } = useAuth();
   const { data: session } = useSession();
@@ -35,10 +37,21 @@ export default function LoadingView() {
 
           if (response.ok) {
             const data = await response.json();
+
+           
+            if (data.userData.banned) {
+              toast.error("Has sido baneado de esta aplicación, por favor contáctanos para más información.", {
+                position: "top-center",
+              
+              });
+              Router.push("/login"); 
+              return; 
+            }
+
             setSession(data.userData);
             setToken(data.token);
-            setIsRegistered(true); // Marcar como registrado para evitar el bucle
-            Router.push("/");
+            setIsRegistered(true); 
+            Router.push("/"); 
           } else {
             console.error('Error registering user');
           }
