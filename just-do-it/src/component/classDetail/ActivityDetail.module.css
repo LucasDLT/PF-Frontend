@@ -161,3 +161,41 @@
   color: #0056b3; 
   text-decoration: underline; 
 }
+.messageContainer {
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  flex-direction: column;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.messageTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #ffea00;
+  margin-bottom: 16px;
+}
+
+.message {
+  font-size: 1.125rem;
+  color: #dde1e5;
+  text-align: center;
+}
+
+.membershipLink {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.membershipLink:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}

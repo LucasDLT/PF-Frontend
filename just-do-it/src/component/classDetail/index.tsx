@@ -3,6 +3,7 @@ import styles from './ActivityDetail.module.css';
 import { useAuth } from '@/context';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
+import Link from 'next/link';
 
 interface Schedule {
   id: string;
@@ -97,6 +98,10 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   const handleScheduleSelect = (schedule: Schedule) => {
+    if (userSession?.membership_status === 'inactive') {
+      toast.error('Debes tener una membresía activa para poder inscribirte a una clase.');
+      return;
+    }
     setSelectedSchedule(schedule);
     setIsConfirming(true);
   };
@@ -185,6 +190,64 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
     }
   };
 
+  const renderScheduleModal = () => {
+    if (userSession?.membership_status === 'inactive') {
+      return (
+        <div className={styles.messageContainer}>
+          <h2 className={styles.messageTitle}>¡Necesitas una membresía activa!</h2>
+          <p className={styles.message}>
+            Debes tener una membresía activa para poder inscribirte a las clases.
+            <br />
+            Puedes conseguir una membresía 
+            <Link href="/memberships">
+              <span className={styles.membershipLink}> aquí</span>
+            </Link>
+          </p>
+        </div>
+      );
+    }
+  
+
+    return (
+      <div className={styles.scheduleList}>
+        {schedules.map(schedule => {
+          const isUserBooked = userBookedSchedules.includes(schedule.id);
+
+          return (
+            <div key={schedule.id} className={styles.scheduleItem}>
+              <div className={styles.scheduleInfo}>
+                <h4>{schedule.day}</h4>
+                <p>
+                  {schedule.startTime} - {schedule.endTime}
+                </p>
+                <p>Capacidad restante: {schedule.remainingCapacity}</p>
+                <p>Participantes actuales: {schedule.currentParticipants}</p>
+              </div>
+
+              <div className={styles.scheduleActions}>
+                <button
+                  className={styles.button}
+                  onClick={() =>
+                    isUserBooked
+                      ? handleUnsubscribe(schedule.id)
+                      : handleScheduleSelect(schedule)
+                  }
+                  disabled={schedule.remainingCapacity === 0 && !isUserBooked}
+                >
+                  {isUserBooked
+                    ? 'Cancelar inscripción'
+                    : schedule.remainingCapacity === 0
+                    ? 'Clase llena'
+                    : 'Inscribirme'}
+                </button>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.card}>
@@ -224,43 +287,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>Selecciona un Horario</h2>
-            <div className={styles.scheduleList}>
-              {schedules.map(schedule => {
-                const isUserBooked = userBookedSchedules.includes(schedule.id);
-
-                return (
-                  <div key={schedule.id} className={styles.scheduleItem}>
-                    <div className={styles.scheduleInfo}>
-                      <h4>{schedule.day}</h4>
-                      <p>
-                        {schedule.startTime} - {schedule.endTime}
-                      </p>
-                      <p>Capacidad restante: {schedule.remainingCapacity}</p>
-                      <p>Participantes actuales: {schedule.currentParticipants}</p>
-                    </div>
-
-                    <div className={styles.scheduleActions}>
-                      <button
-                        className={styles.button}
-                        onClick={() =>
-                          isUserBooked
-                            ? handleUnsubscribe(schedule.id)
-                            : handleScheduleSelect(schedule)
-                        }
-                        disabled={schedule.remainingCapacity === 0 && !isUserBooked}
-                      >
-                        {isUserBooked
-                          ? 'Cancelar inscripción'
-                          : schedule.remainingCapacity === 0
-                          ? 'Clase llena'
-                          : 'Inscribirme'}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
+            {renderScheduleModal()}
             <div className={styles.modalButtons}>
               <button className={styles.cancelBtn} onClick={toggleModal}>
                 Cerrar
@@ -273,17 +300,11 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
       {isConfirming && selectedSchedule && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h2 className={styles.modalTitle}>
-              {userBookedSchedules.includes(selectedSchedule.id)
-                ? 'Confirmar Cancelación'
-                : 'Confirmar Inscripción'}
-            </h2>
+            <h3>Confirmar inscripción para el horario seleccionado:</h3>
             <p>
-              {userBookedSchedules.includes(selectedSchedule.id)
-                ? '¿Estás seguro que deseas cancelar tu inscripción en este horario?'
-                : '¿Estás seguro que deseas inscribirte en este horario?'}
+              {selectedSchedule.day} de {selectedSchedule.startTime} a {selectedSchedule.endTime}
             </p>
-            <div className={styles.modalButtons}>
+            <div>
               <button
                 className={styles.confirmBtn}
                 onClick={() => handleConfirmation(true)}
