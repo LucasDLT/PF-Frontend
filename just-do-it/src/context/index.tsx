@@ -1,7 +1,10 @@
-'use client';
+"use client"
 import React, { useState, useEffect, createContext, useContext } from 'react';
+
 import { SessionProvider } from 'next-auth/react';
 import { Session } from '@/types/users';
+import { useRouter } from 'next/navigation';
+
 export interface Trainer {
   id: string;
   bio: string;
@@ -61,6 +64,7 @@ export const useAuth = () => {
 
 const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
+  const router = useRouter();  
 
   const [userSession, setSessionState] = useState<Session>({
     id: null,
@@ -89,7 +93,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
           setSessionState(parsedSession);
           setTokenState(storedToken);
         } catch (error) {
-          console.error('Error al parsear la sesiÃ³n almacenada:', error);
+          console.error('Error al parsear la sesión almacenada:', error);
         }
       } else {
         setSessionState({
@@ -109,6 +113,14 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
       }
     }
   }, []);
+
+  
+  useEffect(() => {
+    if (userSession.banned) {
+      logout();
+      router.push('/login');  
+    }
+  }, [userSession.banned, router]);
 
   useEffect(() => {
     fetchClasses();

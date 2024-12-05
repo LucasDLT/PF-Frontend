@@ -78,6 +78,9 @@ export default function Login() {
         const errorData = await response.json();
         throw new Error(errorData.message || 'Credenciales incorrectas');
       }
+      if (response.status === 403) {
+        toast.error("Has sido baneado de la aplicacion para mas informacion contactanos")
+      }
 
       const result = await response.json();
 
