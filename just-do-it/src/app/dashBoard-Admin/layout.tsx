@@ -10,18 +10,18 @@ import { useRouter } from 'next/navigation';
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const Router = useRouter();
-  const { userSession, token, logout } = useAuth();
+  const { userSession, logout } = useAuth();
   
-  // Asegurarse de que la sesión y el token estén disponibles
+  // Verificación de roles para redirigir a la página correcta
   useEffect(() => {
-    if (!userSession || !token) {
-      // Si no hay sesión o token, redirigir al login
-      Router.push('/login');
-    } else if (userSession?.roles === 'user' || userSession?.roles === 'associate') {
+    if (userSession?.roles === 'user' || userSession?.roles === 'associate') {
       // Si es un usuario o asociado, redirigir al home
       Router.push('/');
+    } else if (!userSession) {
+      // Si no hay sesión, redirigir al login
+      Router.push('/login');
     }
-  }, [userSession, token, Router]);
+  }, [userSession, Router]);
 
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const toggleMenu = (menuName: string) => {
