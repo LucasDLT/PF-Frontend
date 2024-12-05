@@ -58,9 +58,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userBookedSchedules, setUserBookedSchedules] = useState<string[]>([]);
   const [isConfirming, setIsConfirming] = useState(false);
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(
-    null,
-  );
+  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const { userSession, token } = useAuth();
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
 
@@ -226,38 +224,42 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>Selecciona un Horario</h2>
-            {schedules.map(schedule => {
-              const isUserBooked = userBookedSchedules.includes(schedule.id);
+            <div className={styles.scheduleList}>
+              {schedules.map(schedule => {
+                const isUserBooked = userBookedSchedules.includes(schedule.id);
 
-              return (
-                <div key={schedule.id} className={styles.scheduleItem}>
-                  <h4>{schedule.day}</h4>
-                  <p>
-                    {schedule.startTime} - {schedule.endTime}
-                  </p>
-                  <p>Capacidad restante: {schedule.remainingCapacity}</p>
-                  <p>Participantes actuales: {schedule.currentParticipants}</p>
+                return (
+                  <div key={schedule.id} className={styles.scheduleItem}>
+                    <div className={styles.scheduleInfo}>
+                      <h4>{schedule.day}</h4>
+                      <p>
+                        {schedule.startTime} - {schedule.endTime}
+                      </p>
+                      <p>Capacidad restante: {schedule.remainingCapacity}</p>
+                      <p>Participantes actuales: {schedule.currentParticipants}</p>
+                    </div>
 
-                  <button
-                    className={styles.button}
-                    onClick={() =>
-                      isUserBooked
-                        ? handleUnsubscribe(schedule.id)
-                        : handleScheduleSelect(schedule)
-                    }
-                    disabled={
-                      !isUserBooked && schedule.remainingCapacity === 0
-                    }
-                  >
-                    {isUserBooked
-                      ? 'Cancelar inscripción'
-                      : schedule.remainingCapacity === 0
-                      ? 'Clase llena'
-                      : 'Inscribirme'}
-                  </button>
-                </div>
-              );
-            })}
+                    <div className={styles.scheduleActions}>
+                      <button
+                        className={styles.button}
+                        onClick={() =>
+                          isUserBooked
+                            ? handleUnsubscribe(schedule.id)
+                            : handleScheduleSelect(schedule)
+                        }
+                        disabled={schedule.remainingCapacity === 0 && !isUserBooked}
+                      >
+                        {isUserBooked
+                          ? 'Cancelar inscripción'
+                          : schedule.remainingCapacity === 0
+                          ? 'Clase llena'
+                          : 'Inscribirme'}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
 
             <div className={styles.modalButtons}>
               <button className={styles.cancelBtn} onClick={toggleModal}>
