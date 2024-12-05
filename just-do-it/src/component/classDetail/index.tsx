@@ -59,8 +59,9 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userBookedSchedules, setUserBookedSchedules] = useState<string[]>([]);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [isUnsubscribing, setIsUnsubscribing] = useState(false); // New state for unsubscribe confirmation
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
-  const { userSession, token , setSession } = useAuth();
+  const { userSession, token, setSession } = useAuth();
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
 
   useEffect(() => {
@@ -165,34 +166,43 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
       }
     }
   };
-  
 
+  // Handle unsubscribe confirmation
   const handleUnsubscribe = async (scheduleId: string) => {
-    if (!userSession) {
-      toast.error('El usuario no está autenticado.');
-      return;
-    }
+    setIsUnsubscribing(true);
+    setSelectedSchedule(schedules.find(s => s.id === scheduleId) || null);
+  };
 
-    try {
-      const response = await fetch(`${DOMAIN}/booked-classes/${scheduleId}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error en la solicitud: ${response.statusText}`);
+  const confirmUnsubscribe = async (confirmed: boolean) => {
+    if (confirmed && selectedSchedule) {
+      if (!userSession) {
+        toast.error('El usuario no está autenticado.');
+        return;
       }
-
-      setUserBookedSchedules(prev => prev.filter(id => id !== scheduleId));
-      toast.success('Inscripción cancelada exitosamente');
-      await onClassUpdate();
-      await fetchUserBookings();
-    } catch (error) {
-      console.error('Error al cancelar la inscripción:', error);
-      toast.error('Error al cancelar la inscripción');
+  
+      try {
+        const response = await fetch(`${DOMAIN}/booked-classes/${selectedSchedule.id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Error en la solicitud: ${response.statusText}`);
+        }
+  
+        setUserBookedSchedules(prev => prev.filter(id => id !== selectedSchedule.id));
+        toast.success('Inscripción cancelada exitosamente');
+        await onClassUpdate();
+        await fetchUserBookings();
+      } catch (error) {
+        console.error('Error al cancelar la inscripción:', error);
+        toast.error('Error al cancelar la inscripción');
+      }
     }
+    setIsUnsubscribing(false);
+    setSelectedSchedule(null);
   };
 
   const renderScheduleModal = () => {
@@ -211,7 +221,6 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
         </div>
       );
     }
-  
 
     return (
       <div className={styles.scheduleList}>
@@ -319,6 +328,31 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
               <button
                 className={styles.cancelBtn}
                 onClick={() => handleConfirmation(false)}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isUnsubscribing && selectedSchedule && (
+        <div className={styles.modal}>
+          <div className={styles.modalContent}>
+            <h3>Confirmar cancelación de inscripción para el horario seleccionado:</h3>
+            <p>
+              {selectedSchedule.day} de {selectedSchedule.startTime} a {selectedSchedule.endTime}
+            </p>
+            <div>
+              <button
+                className={styles.confirmBtn}
+                onClick={() => confirmUnsubscribe(true)}
+              >
+                Confirmar
+              </button>
+              <button
+                className={styles.cancelBtn}
+                onClick={() => confirmUnsubscribe(false)}
               >
                 Cancelar
               </button>
