@@ -181,6 +181,7 @@ export default function EdicionPerfil() {
     });
   };
 
+
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -243,6 +244,20 @@ export default function EdicionPerfil() {
                   />
                 </div>
 
+                <div>
+                  <Label htmlFor="email" className={styles.label}>
+                    Correo electrónico
+                  </Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    placeholder={userSession?.email || 'Correo electrónico'}
+                    readOnly
+                    onClick={handleEmailClick}
+                    className={`${styles.input} bg-gray-200 cursor-not-allowed`}
+                  />
+                </div>
 
                 <div>
                   <Label htmlFor="phone" className={styles.label}>
@@ -286,108 +301,79 @@ export default function EdicionPerfil() {
                     className={styles.input}
                   />
                 </div>
-                <div>
-                  <Label htmlFor="password" className={styles.label}>
-                    Nueva Contraseña
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      name="password"
-                      type={isPasswordVisible ? 'text' : 'password'}
-                      value={formData.password}
-                      placeholder="Escribe tu nueva contraseña"
-                      onChange={handleChange}
-                      className={styles.input}
-                    />
-                    <Button
-                      type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                      onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                    >
-                      {isPasswordVisible ? (
-                        <Eye className="w-5 h-5" />
-                      ) : (
-                        <EyeOff className="w-5 h-5" />
-                      )}
-                    </Button>
-                  </div>
-                  {errors.password && (
-                    <p className="text-red-500 text-sm">{errors.password}</p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="confirmPassword" className={styles.label}>
-                    Confirmar Contraseña
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={isConfirmPasswordVisible ? 'text' : 'password'}
-                      value={formData.confirmPassword}
-                      placeholder="Confirma tu nueva contraseña"
-                      onChange={handleChange}
-                      className={styles.input}
-                    />
-                    <Button
-                      type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                      onClick={() =>
-                        setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
-                      }
-                    >
-                      {isConfirmPasswordVisible ? (
-                        <Eye className="w-5 h-5" />
-                      ) : (
-                        <EyeOff className="w-5 h-5" />
-                      )}
-                    </Button>
-                  </div>
-                  {errors.confirmPassword && (
-                    <p className="text-red-500 text-sm">
-                      {errors.confirmPassword}
-                    </p>
-                  )}
-                </div>
 
                 {userSession?.auth === 'googleIncomplete' && (
                   <>
                     <div>
-                  <Label htmlFor="confirmPassword" className={styles.label}>
-                    Confirmar Contraseña
-                  </Label>
-                  <div className="relative">
-                    <Input
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={isConfirmPasswordVisible ? 'text' : 'password'}
-                      value={formData.confirmPassword}
-                      placeholder="Confirma tu nueva contraseña"
-                      onChange={handleChange}
-                      className={styles.input}
-                    />
-                    <Button
-                      type="button"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                      onClick={() =>
-                        setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
-                      }
-                    >
-                      {isConfirmPasswordVisible ? (
-                        <Eye className="w-5 h-5" />
-                      ) : (
-                        <EyeOff className="w-5 h-5" />
+                      <Label htmlFor="password" className={styles.label}>
+                        Nueva Contraseña
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="password"
+                          name="password"
+                          type={isPasswordVisible ? 'text' : 'password'}
+                          value={formData.password}
+                          placeholder="Escribe tu nueva contraseña"
+                          onChange={handleChange}
+                          className={styles.input}
+                        />
+                        <Button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                          onClick={() =>
+                            setIsPasswordVisible(!isPasswordVisible)
+                          }
+                        >
+                          {isPasswordVisible ? (
+                            <Eye className="w-5 h-5" />
+                          ) : (
+                            <EyeOff className="w-5 h-5" />
+                          )}
+                        </Button>
+                      </div>
+                      {errors.password && (
+                        <p className="text-red-500 text-sm">
+                          {errors.password}
+                        </p>
                       )}
-                    </Button>
-                  </div>
-                  {errors.confirmPassword && (
-                    <p className="text-red-500 text-sm">
-                      {errors.confirmPassword}
-                    </p>
-                  )}
-                </div>
+                    </div>
+                    <div>
+                      <Label htmlFor="confirmPassword" className={styles.label}>
+                        Confirmar Contraseña
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          id="confirmPassword"
+                          name="confirmPassword"
+                          type={isConfirmPasswordVisible ? 'text' : 'password'}
+                          value={formData.confirmPassword}
+                          placeholder="Confirma tu nueva contraseña"
+                          onChange={handleChange}
+                          className={styles.input}
+                        />
+                        <Button
+                          type="button"
+                          className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                          onClick={() =>
+                            setIsConfirmPasswordVisible(
+                              !isConfirmPasswordVisible,
+                            )
+                          }
+                        >
+                          {isConfirmPasswordVisible ? (
+                            <Eye className="w-5 h-5" />
+                          ) : (
+                            <EyeOff className="w-5 h-5" />
+                          )}
+                        </Button>
+                      </div>
+                      {errors.confirmPassword && (
+                        <p className="text-red-500 text-sm">
+                          {errors.confirmPassword}
+                        </p>
+                      )}
+                    </div>
                   </>
                 )}
               </div>
