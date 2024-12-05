@@ -181,7 +181,6 @@ export default function EdicionPerfil() {
     });
   };
 
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>

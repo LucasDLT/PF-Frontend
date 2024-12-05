@@ -14,6 +14,9 @@ import { useAuth } from '@/context';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from 'lucide-react';
 import { Badge } from "@/components/ui/badge";
+import {toast} from 'sonner';
+import { ConfirmDialog } from '@/component/customConfirm';
+
 
 export default function AdminClassCreator() {
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
@@ -37,6 +40,8 @@ export default function AdminClassCreator() {
 
   const [eventAddress, setEventAddress] = useState<string>('');
   const [eventLocation, setEventLocation] = useState<string>('');
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+
 
   useEffect(() => {
     let isMounted = true;
@@ -129,17 +134,17 @@ export default function AdminClassCreator() {
       return;
     }
 
-    const confirmCreate = window.confirm('¿Estás seguro de crear esta clase?');
-    if (!confirmCreate) {
-      return;
-    }
+    setIsConfirmDialogOpen(true);
+   },[classData]);
 
+
+   const handleConfirmClassCreation = async () => {
     const parsedCapacity = Number(classData.capacity);
     if (!Number.isInteger(parsedCapacity) || parsedCapacity <= 0) {
       setError('La capacidad debe ser un número entero positivo');
       return;
     }
-
+  
     const payload = {
       name: classData.name,
       description: classData.description,
@@ -149,7 +154,7 @@ export default function AdminClassCreator() {
       imgUrl: classData.image,
       trainerId: classData.trainerId,
     };
-
+  
     try {
       const response = await fetch(`${DOMAIN}/classes`, {
         method: 'POST',
@@ -159,7 +164,7 @@ export default function AdminClassCreator() {
         },
         body: JSON.stringify(payload),
       });
-
+  
       if (response.ok) {
         setSuccess('Clase creada exitosamente.');
         setClassData({
@@ -171,6 +176,8 @@ export default function AdminClassCreator() {
           schedules: [],
           trainerId: '',
         });
+        // Cerrar el confirmDialog después de crear la clase exitosamente
+        setIsConfirmDialogOpen(false);
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Error al crear la clase.');
@@ -178,8 +185,12 @@ export default function AdminClassCreator() {
     } catch (error) {
       console.error('Error al enviar los datos:', error);
       setError('No se pudo enviar la solicitud. Intenta nuevamente.');
+    } finally {
+      // Cerrar el confirmDialog independientemente del resultado
+      setIsConfirmDialogOpen(false);
     }
-  }, [DOMAIN, token, classData]);
+  };
+  
 
   const getCharacterCount = useMemo(() => (field: 'name' | 'description') => classData[field].length, [classData]);
 
@@ -295,6 +306,13 @@ export default function AdminClassCreator() {
           Crear Clase
         </Button>
       </form>
+      <ConfirmDialog
+        isOpen={isConfirmDialogOpen}
+        onClose={() => setIsConfirmDialogOpen(false)}
+        onConfirm={handleConfirmClassCreation} // Handle class creation on confirm
+        title="Confirmación"
+        description="¿Estás seguro de crear esta clase?"
+      />      
       <ClassPreview classData={classData} />
     </div>
   );
