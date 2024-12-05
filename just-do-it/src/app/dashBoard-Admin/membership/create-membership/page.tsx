@@ -18,7 +18,6 @@ const CreateMembershipPage = () => {
   const { token } = useAuth();
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
 
-  // Definir la interfaz para los datos que se enviarán
   interface MembershipData {
     name: string;
     price: number;
@@ -34,13 +33,14 @@ const CreateMembershipPage = () => {
       duration: '',
     };
 
-    if (name.length < 10) {
-      errors.name = 'El nombre debe tener al menos 10 caracteres';
+    if (name.length < 5 || name.length > 50) {
+      errors.name = 'El nombre debe tener entre 5 y 50 caracteres';
       valid = false;
     }
 
-    if (description.length < 10) {
-      errors.description = 'La descripción debe tener al menos 10 caracteres';
+    if (description.length < 10 || description.length > 150) {
+      errors.description =
+        'La descripción debe tener entre 10 y 150 caracteres';
       valid = false;
     }
 
@@ -53,11 +53,23 @@ const CreateMembershipPage = () => {
     return valid;
   };
 
+  const handleNameChange = (value: string) => {
+    if (value.length <= 50) setName(value);
+  };
+
+  const handleDescriptionChange = (value: string) => {
+    if (value.length <= 150) setDescription(value);
+  };
+
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
-    // Crear el objeto con el tipo MembershipData
-    const membershipData: MembershipData = { name, price, duration, description };
+    const membershipData: MembershipData = {
+      name,
+      price,
+      duration,
+      description,
+    };
 
     try {
       const response = await fetch(`${DOMAIN}/memberships/create-product`, {
@@ -75,23 +87,30 @@ const CreateMembershipPage = () => {
 
       const data = await response.json();
       setSuccessMessage('Membresía creada exitosamente!');
-      setTimeout(() => setSuccessMessage(''), 5000); // Limpiar el mensaje de éxito después de 5 segundos
+
+      setName('');
+      setPrice(0);
+      setDuration(0);
+      setDescription('');
+      setFormErrors({ name: '', description: '', duration: '' });
+
+      setTimeout(() => setSuccessMessage(''), 5000);
     } catch (error) {
       setError((error as Error).message);
     }
   };
 
   const handleCreateClick = () => {
-    setShowModal(true); // Muestra el modal de confirmación
+    setShowModal(true);
   };
 
   const handleCancel = () => {
-    setShowModal(false); // Cierra el modal sin hacer nada
+    setShowModal(false);
   };
 
   const handleConfirm = () => {
     handleSubmit();
-    setShowModal(false); // Cierra el modal después de confirmar
+    setShowModal(false);
   };
 
   return (
@@ -100,7 +119,6 @@ const CreateMembershipPage = () => {
       {error && <p className="text-red-500">{error}</p>}
       {successMessage && <p className="text-green-500">{successMessage}</p>}
       <form className="space-y-4">
-        {/* Nombre */}
         <div>
           <label htmlFor="name" className="block text-sm font-medium">
             Nombre
@@ -109,19 +127,19 @@ const CreateMembershipPage = () => {
             type="text"
             id="name"
             value={name}
-            onChange={e => setName(e.target.value)}
+            onChange={e => handleNameChange(e.target.value)}
             className="w-full px-4 py-2 border rounded-md"
             placeholder="Nombre de la membresía"
           />
-          <p className={`text-xs mt-1 ${formErrors.name ? 'text-red-500' : 'text-black'}`}>
-            El nombre debe tener al menos 10 caracteres
+          <p
+            className={`text-xs mt-1 ${
+              formErrors.name ? 'text-red-500' : 'text-black'
+            }`}
+          >
+            {formErrors.name || `Caracteres permitidos: ${name.length}/50`}
           </p>
-          {formErrors.name && (
-            <p className="text-xs text-red-500 mt-1">{formErrors.name}</p>
-          )}
         </div>
 
-        {/* Precio */}
         <div>
           <label htmlFor="price" className="block text-sm font-medium">
             Precio
@@ -136,10 +154,9 @@ const CreateMembershipPage = () => {
           />
         </div>
 
-        {/* Duración */}
         <div>
           <label htmlFor="duration" className="block text-sm font-medium">
-            Duración (dias)
+            Duración (días)
           </label>
           <select
             id="duration"
@@ -151,17 +168,19 @@ const CreateMembershipPage = () => {
             <option value={30}>30 días</option>
             <option value={45}>45 días</option>
             <option value={60}>60 días</option>
-            
+            <option value={75}>75 días</option>
+            <option value={90}>90 días</option>
           </select>
-          <p className={`text-xs mt-1 ${formErrors.duration ? 'text-red-500' : 'text-black'}`}>
-            La duración debe ser 30, 45, 60, 75 o 90 días
+          <p
+            className={`text-xs mt-1 ${
+              formErrors.duration ? 'text-red-500' : 'text-black'
+            }`}
+          >
+            {formErrors.duration ||
+              'Duraciones disponibles: 30, 45, 60, 75, 90 días'}
           </p>
-          {formErrors.duration && (
-            <p className="text-xs text-red-500 mt-1">{formErrors.duration}</p>
-          )}
         </div>
 
-        {/* Descripción */}
         <div>
           <label htmlFor="description" className="block text-sm font-medium">
             Descripción
@@ -169,16 +188,18 @@ const CreateMembershipPage = () => {
           <textarea
             id="description"
             value={description}
-            onChange={e => setDescription(e.target.value)}
+            onChange={e => handleDescriptionChange(e.target.value)}
             className="w-full px-4 py-2 border rounded-md"
             placeholder="Descripción de la membresía"
           />
-          <p className={`text-xs mt-1 ${formErrors.description ? 'text-red-500' : 'text-black'}`}>
-            La descripción debe tener al menos 10 caracteres
+          <p
+            className={`text-xs mt-1 ${
+              formErrors.description ? 'text-red-500' : 'text-black'
+            }`}
+          >
+            {formErrors.description ||
+              `Caracteres permitidos: ${description.length}/150`}
           </p>
-          {formErrors.description && (
-            <p className="text-xs text-red-500 mt-1">{formErrors.description}</p>
-          )}
         </div>
 
         <button
@@ -190,11 +211,12 @@ const CreateMembershipPage = () => {
         </button>
       </form>
 
-      {/* Modal de Confirmación */}
       {showModal && (
         <div className="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg max-w-sm w-full">
-            <h3 className="text-lg font-bold mb-4">¿Estás seguro de crear esta membresía?</h3>
+            <h3 className="text-lg font-bold mb-4">
+              ¿Estás seguro de crear esta membresía?
+            </h3>
             <div className="flex justify-between">
               <button
                 onClick={handleCancel}
