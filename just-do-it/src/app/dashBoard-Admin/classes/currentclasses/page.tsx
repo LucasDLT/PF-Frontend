@@ -178,6 +178,7 @@ export default function AdminClassCreator() {
         });
         // Cerrar el confirmDialog después de crear la clase exitosamente
         setIsConfirmDialogOpen(false);
+        toast.success(`Clase ${classData.name} creada exitosamente.`);
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Error al crear la clase.');

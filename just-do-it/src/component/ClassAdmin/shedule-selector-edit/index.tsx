@@ -15,7 +15,7 @@ interface Schedule {
 interface ScheduleSelectorProps {
   schedules: Schedule[];
   onScheduleChange: (updatedSchedule: Schedule[]) => void;
-  updateSchedule: (classId: string, scheduleId: string, updatedSchedule: Schedule) => Promise<void>; // Nueva propiedad
+  updateSchedule?: (classId: string, scheduleId: string, updatedSchedule: Schedule) => Promise<void>; // Nueva propiedad
 }
 
 export default function ScheduleSelector({ onScheduleChange, schedules }: ScheduleSelectorProps) {
