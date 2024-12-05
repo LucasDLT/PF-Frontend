@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 interface ConfirmDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (arg: any) => void;
   title: string;
   description: string;
 }

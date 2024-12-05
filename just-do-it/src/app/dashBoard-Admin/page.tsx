@@ -1,84 +1,181 @@
-'use client';
+'use client'
 
-import {
-  CalendarIcon,
-  MailIcon,
-  MapPinIcon,
-  PhoneIcon,
-  UserIcon,
-} from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useAuth } from '@/context';
-import styles from './PanelAdmin.module.css'; // Importamos el CSS adicional
+import { useAuth } from '@/context'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Progress } from "@/components/ui/progress"
+import { CalendarDays, Mail, MapPin, Phone, Flag, Users, BarChart, PieChart, TrendingUp } from 'lucide-react'
+import styles from './PanelAdmin.module.css'
 
-export default function PanelAdmin() {
-  const { userSession } = useAuth();
+export default function AdminDashboard() {
+  const { userSession } = useAuth()
+
+  if (!userSession) {
+    return <div>Cargando...</div>
+  }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="container mx-auto">
-        <h1 className={styles.layoutHeader}>
-          Panel de Administración de Eventos
-        </h1>
-      </div>
-
-      <div className="flex-grow bg-gray-100 py-6">
-        <div className="container mx-auto px-4 max-w-7xl">
-          <Card className="shadow-xl">
-            <CardHeader className={`${styles.cardHeaderCustom} flex justify-between items-center`}>
-              <Avatar className={styles.avatarCustom}>
-                <AvatarImage src={userSession?.image} alt="User Image" />
-                <AvatarFallback>{userSession?.name?.charAt(0)}</AvatarFallback>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Panel de Administración</h1>
+      
+      <div className={`${styles.grid} ${styles.gridCols1} ${styles.mdGridCols3} ${styles.gap6} ${styles.mb8}`}>
+        <Card className={styles.card}>
+          <CardHeader>
+            <CardTitle>Bienvenido, {userSession.name}</CardTitle>
+            <CardDescription>
+              Este es tu panel de control. Aquí encontrarás un resumen de la actividad del sistema y tus datos personales.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center space-x-4">
+              <Avatar className={styles.avatar}>
+                <AvatarImage src={userSession.image} alt={userSession.name || ''} />
+                <AvatarFallback>{userSession.name?.charAt(0) || 'A'}</AvatarFallback>
               </Avatar>
-              <CardTitle className="text-3xl font-bold text-white cursor-default">
-                {userSession?.name}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className={styles.cardContentCustom}>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-6">
-                {/* Información del Usuario */}
-                <Card className="shadow-md bg-white">
-                  <CardHeader className="border-b border-gray-200">
-                    <CardTitle className="text-xl font-semibold text-gray-800 flex items-center">
-                      <UserIcon className="text-xl mr-2 text-blue-500" />
-                      Información del Usuario
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="cursor-default space-y-4 p-4">
-                    <div className="text-l font-semibold text-gray-800 flex items-center">
-                      <UserIcon className="text-l mr-2 text-blue-500" />
-                      <p className="text-gray-700">{userSession?.name}</p>
-                    </div>
-                    <div className="text-l font-semibold text-gray-800 flex items-center">
-                      <MailIcon className="text-l mr-2 text-blue-500" />
-                      <p className="text-gray-700">{userSession?.email}</p>
-                    </div>
-                    <div className="text-l font-semibold text-gray-800 flex items-center">
-                      <MapPinIcon className="text-l mr-2 text-blue-500" />
-                      <p className="text-gray-700">{userSession?.address}</p>
-                    </div>
-                    <div className="text-l font-semibold text-gray-800 flex items-center">
-                      <PhoneIcon className="text-l mr-2 text-blue-500" />
-                      <p className="text-gray-700">{userSession?.phone}</p>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Clases */}
-                <Card className="shadow-md bg-white">
-                  <CardHeader className="border-b border-gray-200">
-                    <CardTitle className="text-xl font-semibold text-gray-800 flex items-center">
-                      <CalendarIcon className="w-5 h-5 mr-2 text-blue-500" />
-                      Tus Clases
-                    </CardTitle>
-                  </CardHeader>
-                </Card>
+              <div>
+                <h2 className={styles.userName}>{userSession.name}</h2>
+                <p className={styles.userEmail}>{userSession.email}</p>
+                <Badge variant="secondary" className={styles.badgeSecondary}>{userSession.roles}</Badge>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className={styles.card}>
+          <CardHeader>
+            <CardTitle>Información de Contacto</CardTitle>
+          </CardHeader>
+          <CardContent className={styles.spaceY2}>
+            <div className="flex items-center space-x-2">
+              <Phone className="text-muted-foreground" />
+              <span>{userSession.phone}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <MapPin className="text-muted-foreground" />
+              <span>{userSession.address}</span>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Flag className="text-muted-foreground" />
+              <span>{userSession.country}</span>
+            </div>
+          </CardContent>
+        </Card>
       </div>
+
+      <div className={`${styles.grid} ${styles.gridCols1} ${styles.mdGridCols3} ${styles.gap6} ${styles.mb8}`}>
+        <Card className={styles.card}>
+          <CardHeader>
+            <CardTitle>Resumen de Actividades</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className={styles.spaceY4}>
+              <li>
+                <div className="flex items-center justify-between mb-1">
+                  <span>Usuarios Activos</span>
+                  <Badge>120</Badge>
+                </div>
+                <Progress value={75} className={styles.progress} />
+              </li>
+              <li>
+                <div className="flex items-center justify-between mb-1">
+                  <span>Eventos Programados</span>
+                  <Badge>8</Badge>
+                </div>
+                <Progress value={40} className={styles.progress} />
+              </li>
+              <li>
+                <div className="flex items-center justify-between mb-1">
+                  <span>Tareas Pendientes</span>
+                  <Badge variant="destructive">3</Badge>
+                </div>
+                <Progress value={15} className={styles.progress} />
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card className={styles.card}>
+          <CardHeader>
+            <CardTitle>Próximos Eventos</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className={styles.spaceY4}>
+              <li className="flex items-start space-x-2">
+                <CalendarDays className="text-muted-foreground mt-0.5" />
+                <div>
+                  <p className="font-medium">Reunión de Equipo</p>
+                  <p className="text-sm text-muted-foreground">15 de Mayo, 10:00 AM</p>
+                  <Badge variant="outline" className={styles.badgeOutline}>Virtual</Badge>
+                </div>
+              </li>
+              <li className="flex items-start space-x-2">
+                <CalendarDays className="text-muted-foreground mt-0.5" />
+                <div>
+                  <p className="font-medium">Lanzamiento de Producto</p>
+                  <p className="text-sm text-muted-foreground">22 de Mayo, 2:00 PM</p>
+                  <Badge variant="outline" className={styles.badgeOutline}>Presencial</Badge>
+                </div>
+              </li>
+            </ul>
+          </CardContent>
+        </Card>
+
+        <Card className={styles.card}>
+          <CardHeader>
+            <CardTitle>Estadísticas del Sistema</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className={styles.spaceY4}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <BarChart className="text-muted-foreground" />
+                  <span>Tráfico Diario</span>
+                </div>
+                <span className="font-semibold">1,234</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <PieChart className="text-muted-foreground" />
+                  <span>Uso de Recursos</span>
+                </div>
+                <span className="font-semibold">68%</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="text-muted-foreground" />
+                  <span>Crecimiento Mensual</span>
+                </div>
+                <span className="font-semibold">+5.2%</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card className={styles.card}>
+        <CardHeader>
+          <CardTitle>Actividad Reciente</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ul className={styles.spaceY4}>
+            {[ 
+              { action: "Nuevo usuario registrado", time: "Hace 2 horas", icon: <Users className="text-green-500" /> },
+              { action: "Actualización de sistema completada", time: "Hace 1 día", icon: <TrendingUp className="text-blue-500" /> },
+              { action: "Reporte mensual generado", time: "Hace 3 días", icon: <BarChart className="text-purple-500" /> },
+              { action: "Backup del sistema realizado", time: "Hace 1 semana", icon: <PieChart className="text-yellow-500" /> },
+            ].map((item, index) => (
+              <li key={index} className={styles.activityItem}>
+                <div className={styles.iconWrapper}>{item.icon}</div>
+                <div>
+                  <p className={styles.activityAction}>{item.action}</p>
+                  <p className={styles.activityTime}>{item.time}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </CardContent>
+      </Card>
     </div>
-  );
+  )
 }
