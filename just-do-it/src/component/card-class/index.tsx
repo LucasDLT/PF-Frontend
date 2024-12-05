@@ -7,6 +7,7 @@ interface CardClassProps {
     name: string;
     location: string;
     imgUrl: string;
+    description: string;
   };
 }
 
@@ -22,7 +23,7 @@ export default function CardClass({ gymClass }: CardClassProps) {
       />
       <div className={styles.cardContent} >
       <h2>{gymClass.name}</h2>
-      <p>{gymClass.location}</p>
+      <p>{gymClass.description}</p>
       <button className={styles.cardButton}>
         <Link href={`/servicedetail/${gymClass.id}`}>Ver más</Link>
       </button>

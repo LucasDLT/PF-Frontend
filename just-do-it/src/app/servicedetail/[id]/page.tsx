@@ -7,6 +7,7 @@ import ActivityDetail from '@/component/classDetail';
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 import Reviews from '@/component/reviews';
+import { toast, Toaster } from 'react-hot-toast';
 
 interface Schedule {
   id: string;
@@ -60,7 +61,7 @@ export default function ClassDetailPage() {
   const [error, setError] = useState('');
   const { userSession, token } = useAuth();
 
-  const [placeName, setPlaceName] = useState<string>(''); // Nombre del lugar
+  const [placeName, setPlaceName] = useState<string>('');
   const membershipStatus = userSession?.membership_status;
 
   const fetchPlaceName = async (coordinates: string) => {
@@ -86,7 +87,7 @@ export default function ClassDetailPage() {
 
   const onSubmitRating = async (rating: number, reviewText: string) => {
     if (!userSession?.id) {
-      alert('No estás autenticado');
+      toast.error('No estás autenticado');
       return;
     }
 
@@ -123,44 +124,59 @@ export default function ClassDetailPage() {
               class_id: id,
             },
           ] as ReviewProps[],
-
         };
       });
+      toast.success('Reseña enviada con éxito');
     } catch (error) {
       console.error('Error al enviar la reseña:', error);
+      toast.error('Error al enviar la reseña');
+    }
+  };
+
+  const fetchClassData = async () => {
+    try {
+      const response = await fetch(`${DOMAIN}/classes/${id}`);
+      if (!response.ok) {
+        throw new Error('Clase no encontrada');
+      }
+      const data: GymClass = await response.json();
+      setGymClass(data);
+
+      if (data.location) {
+        await fetchPlaceName(data.location);
+      }
+    } catch (error) {
+      setError((error as Error).message);
+      toast.error('Error al cargar los datos de la clase');
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    const fetchClass = async () => {
-      try {
-        const response = await fetch(`${DOMAIN}/classes/${id}`);
-        if (!response.ok) {
-          throw new Error('Clase no encontrada');
-        }
-        const data: GymClass = await response.json();
-        setGymClass(data);
-
-        // Convierte las coordenadas a un nombre de lugar
-        if (data.location) {
-          await fetchPlaceName(data.location);
-        }
-      } catch (error) {
-        setError((error as Error).message);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchClass();
+    fetchClassData();
   }, [id]);
 
   useEffect(() => {
     AOS.init({});
   }, []);
 
-  const handleScheduleClick = (scheduleId: string) => {
-    console.log(`Horario con ID ${scheduleId} clickeado`);
+  const handleClassUpdate = async () => {
+    try {
+      const response = await fetch(`${DOMAIN}/classes/${id}`);
+      if (!response.ok) {
+        throw new Error('Clase no encontrada');
+      }
+      const data: GymClass = await response.json();
+      setGymClass(data);
+
+      if (data.location) {
+        await fetchPlaceName(data.location);
+      }
+    } catch (error) {
+      console.error('Error al actualizar los datos de la clase:', error);
+      toast.error('Error al actualizar la información de la clase');
+    }
   };
 
   if (loading) {
@@ -191,7 +207,8 @@ export default function ClassDetailPage() {
         trainerName={gymClass.trainer?.name || 'No asignado'}
         imgUrl={gymClass.imgUrl}
         schedules={gymClass.schedules}
-        onScheduleClick={handleScheduleClick}
+        onClassUpdate={handleClassUpdate}
+        onScheduleClick={(scheduleId) => console.log(`Horario seleccionado: ${scheduleId}`)}
       />
       {gymClass.schedules.length === 0 && (
         <p>No hay horarios disponibles para esta clase.</p>
@@ -201,6 +218,8 @@ export default function ClassDetailPage() {
         onSubmitRating={onSubmitRating}
         membershipStatus={membershipStatus}
       />
+      <Toaster />
     </div>
   );
 }
+

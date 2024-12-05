@@ -355,44 +355,39 @@ export default function EdicionPerfil() {
                 {userSession?.auth === 'googleIncomplete' && (
                   <>
                     <div>
-                      <Label htmlFor="password" className={styles.label}>
-                        Nueva Contraseña
-                      </Label>
-                      <Input
-                        id="password"
-                        name="password"
-                        type="password"
-                        value={formData.password}
-                        placeholder="Escribe tu nueva contraseña"
-                        onChange={handleChange}
-                        className={styles.input}
-                      />
-                      {errors.password && (
-                        <p className="text-red-500 text-sm">
-                          {errors.password}
-                        </p>
+                  <Label htmlFor="confirmPassword" className={styles.label}>
+                    Confirmar Contraseña
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={isConfirmPasswordVisible ? 'text' : 'password'}
+                      value={formData.confirmPassword}
+                      placeholder="Confirma tu nueva contraseña"
+                      onChange={handleChange}
+                      className={styles.input}
+                    />
+                    <Button
+                      type="button"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2"
+                      onClick={() =>
+                        setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+                      }
+                    >
+                      {isConfirmPasswordVisible ? (
+                        <Eye className="w-5 h-5" />
+                      ) : (
+                        <EyeOff className="w-5 h-5" />
                       )}
-                    </div>
-
-                    <div>
-                      <Label htmlFor="confirmPassword" className={styles.label}>
-                        Confirmar Contraseña
-                      </Label>
-                      <Input
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        type="password"
-                        value={formData.confirmPassword}
-                        placeholder="Confirma tu nueva contraseña"
-                        onChange={handleChange}
-                        className={styles.input}
-                      />
-                      {errors.confirmPassword && (
-                        <p className="text-red-500 text-sm">
-                          {errors.confirmPassword}
-                        </p>
-                      )}
-                    </div>
+                    </Button>
+                  </div>
+                  {errors.confirmPassword && (
+                    <p className="text-red-500 text-sm">
+                      {errors.confirmPassword}
+                    </p>
+                  )}
+                </div>
                   </>
                 )}
               </div>

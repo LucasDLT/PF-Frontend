@@ -17,7 +17,7 @@
   max-width: 30rem;
   height: 30rem;
   z-index: 20;
-  background-color: #0000008d;
+  background-color: #afafaf8d;
   border-radius: 10px;
   box-shadow: 0 1px 28px 30px rgba(133, 137, 15, 0.186);
 }
@@ -32,7 +32,7 @@
   font-weight: bold; /* font-bold */
   text-align: center;
   color: #000000a2;
-  background-color: #4c4c43b3;
+  background-color: #afafaf8d;
   backdrop-filter: blur(1px);
   border-radius: 10px;
   width: 100%;
@@ -46,11 +46,12 @@
 
 }
 .button{
+  padding: 10px 20px;
   background-color: #ecf014;
   font-size: 1rem;
   font-weight: bold;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 4px;
 }
 .button:hover {
   color: #4f4b4bdc;
