@@ -43,6 +43,7 @@ toast.success(`Cerrando sesión, hasta pronto ${userSession?.name}`)
     console.log('--- Verificando estado de sesión ---');
     console.log('User Session:', userSession);
     console.log('Imagen del usuario:', userSession?.image);
+    console.log('tokens:', token);
   }, [userSession]);
 
   const NavMenu = ({ isMobile = false }) => {

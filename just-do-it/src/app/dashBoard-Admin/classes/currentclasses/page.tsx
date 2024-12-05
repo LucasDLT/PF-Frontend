@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,8 +11,9 @@ import ScheduleSelector from '@/component/ClassAdmin/shedule-selector';
 import styles from './AdminClassCreator.module.css';
 import { ClassPreview } from '@/component/ClassAdmin/CardPreview';
 import { useAuth } from '@/context';
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { AlertCircle } from 'lucide-react'
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AlertCircle } from 'lucide-react';
+import { Badge } from "@/components/ui/badge";
 
 export default function AdminClassCreator() {
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
@@ -76,10 +77,12 @@ export default function AdminClassCreator() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setClassData(prevData => ({
-      ...prevData,
-      [name]: name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
-    }));
+    if ((name === 'name' && value.length <= 50) || (name === 'description' && value.length <= 150) || name === 'capacity') {
+      setClassData(prevData => ({
+        ...prevData,
+        [name]: name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
+      }));
+    }
   }, []);
 
   const handleImageUpload = useCallback((uploadedImageUrl: string) => {
@@ -104,6 +107,14 @@ export default function AdminClassCreator() {
         !classData.location || classData.capacity <= 0 || 
         classData.schedules.length === 0 || !classData.trainerId) {
       setError('Todos los campos son obligatorios');
+      return false;
+    }
+    if (classData.name.length < 10 || classData.name.length > 50) {
+      setError('El nombre debe tener entre 10 y 50 caracteres.');
+      return false;
+    }
+    if (classData.description.length < 10 || classData.description.length > 150) {
+      setError('La descripción debe tener entre 10 y 150 caracteres.');
       return false;
     }
     return true;
@@ -170,6 +181,14 @@ export default function AdminClassCreator() {
     }
   }, [DOMAIN, token, classData]);
 
+  const getCharacterCount = useMemo(() => (field: 'name' | 'description') => classData[field].length, [classData]);
+
+  const getCharacterCountColor = useMemo(() => (field: 'name' | 'description') => {
+    const count = getCharacterCount(field);
+    const limit = field === 'name' ? 50 : 150;
+    return count > limit ? 'text-red-500' : 'text-gray-500';
+  }, [getCharacterCount]);
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Crear Nueva Clase</h1>
@@ -200,7 +219,12 @@ export default function AdminClassCreator() {
             value={classData.name}
             onChange={handleInputChange}
             required
+            minLength={10}
+            maxLength={50}
           />
+          <Badge variant={getCharacterCount('name') > 50 ? "destructive" : "outline"} className={getCharacterCountColor('name')}>
+            {getCharacterCount('name')}/50
+          </Badge>
         </div>
         <div className={styles.formGroup}>
           <Label htmlFor="description" className={styles.label}>
@@ -212,7 +236,12 @@ export default function AdminClassCreator() {
             value={classData.description}
             onChange={handleInputChange}
             required
+            minLength={10}
+            maxLength={150}
           />
+          <Badge variant={getCharacterCount('description') > 150 ? "destructive" : "outline"} className={getCharacterCountColor('description')}>
+            {getCharacterCount('description')}/150
+          </Badge>
         </div>
         <div className={styles.formGroup}>
           <Label htmlFor="capacity" className={styles.label}>
@@ -248,8 +277,7 @@ export default function AdminClassCreator() {
             name="trainerId"
             value={classData.trainerId}
             onChange={(e) =>
-              setClassData(prevData => ({ ...prevData, trainerId: e.target.value }))
-            }
+              setClassData(prevData => ({ ...prevData, trainerId: e.target.value }))}
             className={styles.select}
             required
           >
@@ -271,4 +299,3 @@ export default function AdminClassCreator() {
     </div>
   );
 }
-

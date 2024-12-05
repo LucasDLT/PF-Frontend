@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -11,7 +11,8 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { AlertCircle } from 'lucide-react';
 import styles from './editclasses.module.css';
 import { useAuth } from '@/context';
-import MyMaps from '@/component/GoogleMaps';
+import EditClassMap from '@/component/GoogleMaps-edit';
+import { Badge } from "@/components/ui/badge";
 
 interface Schedule {
   id: string;
@@ -81,10 +82,12 @@ export default function AdminClassEditor() {
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { name, value } = e.target;
-      setClassData(prev => ({
-        ...prev,
-        [name]: name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
-      }));
+      if ((name === 'name' && value.length <= 50) || (name === 'description' && value.length <= 150) || name === 'capacity') {
+        setClassData(prev => ({
+          ...prev,
+          [name]: name === 'capacity' ? (value ? parseInt(value, 10) : 0) : value,
+        }));
+      }
     },
     [],
   );
@@ -142,7 +145,7 @@ export default function AdminClassEditor() {
         }
 
         setSuccess('Clase actualizada exitosamente.');
-        fetchClasses(); // Refrescar las clases después de actualizar
+        fetchClasses(); 
       } catch (error) {
         console.error('Error al enviar los datos:', error);
         setError('No se pudo actualizar la clase. Intenta nuevamente.');
@@ -193,6 +196,14 @@ export default function AdminClassEditor() {
       setError('No se pudo actualizar el horario. Intenta nuevamente.');
     }
   };
+
+  const getCharacterCount = useMemo(() => (field: 'name' | 'description') => classData[field].length, [classData]);
+
+  const getCharacterCountColor = useMemo(() => (field: 'name' | 'description') => {
+    const count = getCharacterCount(field);
+    const limit = field === 'name' ? 50 : 150;
+    return count > limit ? 'text-red-500' : 'text-gray-500';
+  }, [getCharacterCount]);
 
   return (
     <div className={styles.container}>
@@ -255,7 +266,12 @@ export default function AdminClassEditor() {
           type="text"
           value={classData.name}
           onChange={handleInputChange}
+          minLength={10}
+          maxLength={50}
         />
+        <Badge variant={getCharacterCount('name') > 50 ? "destructive" : "outline"} className={getCharacterCountColor('name')}>
+          {getCharacterCount('name')}/50
+        </Badge>
 
         <Label htmlFor="description">Descripción</Label>
         <Textarea
@@ -263,7 +279,12 @@ export default function AdminClassEditor() {
           name="description"
           value={classData.description}
           onChange={handleInputChange}
+          minLength={10}
+          maxLength={150}
         />
+        <Badge variant={getCharacterCount('description') > 150 ? "destructive" : "outline"} className={getCharacterCountColor('description')}>
+          {getCharacterCount('description')}/150
+        </Badge>
 
         <Label htmlFor="location">Ubicación</Label>
         <Input
@@ -274,7 +295,7 @@ export default function AdminClassEditor() {
           onChange={handleInputChange}
         />
 
-        <MyMaps
+        <EditClassMap
           defaultLocation={classData.location}
           onLocationChange={handleLocationChange}
         />
