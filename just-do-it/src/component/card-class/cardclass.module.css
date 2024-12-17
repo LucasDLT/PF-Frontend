@@ -1,57 +1,78 @@
-/* CardClass.module.css */
 .card {
   width: 100%;
-  height: 60%;
-  margin-bottom: 1rem;
-  background-color: #504e4e6e;
-  backdrop-filter: blur(3px);
-  border-radius: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: white;
-  font-size: medium;
-  font-weight:bolder ;
-  letter-spacing: 1px;
-  text-align: left;
-  padding: 1rem;
+  height: 400px;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 200px;
 }
 
 .cardImage {
-  border-radius: 0.5rem;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  height: 10rem;
-  width: 15rem;
+  transition: transform 0.3s ease;
 }
 
-.cardButton {
-  border-radius: 0.5rem;
-  background-color: #fbbf24;
-  color: #ffffff;
-  border: none;
-  padding: 0.5rem 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
-  margin-top: 0.3rem;
-}
-
-.cardButton:hover {
-  background-color: #f0cb6e;
-  color: #000000;
-  transition: all ease-in-out 0.4s;
+.card:hover .cardImage {
+  transform: scale(1.1);
 }
 
 .cardContent {
+  padding: 1.5rem;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 10rem;
-  width: 70rem;
-  padding: 10px;
-  gap: 5rem;
-  margin-right: 10px;
-  margin-left: 1rem;
-  border: #000000 1px solid;
-  border-radius: 10px;
+  flex-direction: column;
+  height: 200px;
 }
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #C5F32C;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.card:hover .cardTitle {
+  color: #ffffff;
+}
+
+.cardDescription {
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.cardButtonWrapper {
+  margin-top: auto;
+}
+
+.cardButton {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #C5F32C;
+  color: #000000;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.cardButton:hover {
+  background-color: #A3D119;
+  color: #ffffff;
+}
+

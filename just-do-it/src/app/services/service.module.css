@@ -18,9 +18,26 @@
       rgba(0, 0, 0, 0.8) 30%
     ),
     url('/bg-services.jpg');
-
-  background-size: 70% 100%;
+  background-size: cover;
   background-repeat: no-repeat;
-  background-position: 100% 10%;
-  height: 100vh;
+  background-position: center;
+  background-attachment: fixed;
+  min-height: 100vh;
 }
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 3rem;
+  }
+}
+
