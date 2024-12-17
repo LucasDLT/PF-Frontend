@@ -4,6 +4,7 @@ import { useAuth } from '@/context';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
+import { MapPin, User, Users } from 'lucide-react';
 
 interface Schedule {
   id: string;
@@ -59,7 +60,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userBookedSchedules, setUserBookedSchedules] = useState<string[]>([]);
   const [isConfirming, setIsConfirming] = useState(false);
-  const [isUnsubscribing, setIsUnsubscribing] = useState(false); // New state for unsubscribe confirmation
+  const [isUnsubscribing, setIsUnsubscribing] = useState(false);
   const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(null);
   const { userSession, token, setSession } = useAuth();
   const DOMAIN = process.env.NEXT_PUBLIC_APP_API_DOMAIN;
@@ -167,7 +168,6 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
     }
   };
 
-  // Handle unsubscribe confirmation
   const handleUnsubscribe = async (scheduleId: string) => {
     setIsUnsubscribing(true);
     setSelectedSchedule(schedules.find(s => s.id === scheduleId) || null);
@@ -240,7 +240,7 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
 
               <div className={styles.scheduleActions}>
                 <button
-                  className={styles.button}
+                  className={`${styles.button} ${isUserBooked ? styles.cancelButton : ''}`}
                   onClick={() =>
                     isUserBooked
                       ? handleUnsubscribe(schedule.id)
@@ -267,29 +267,34 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
       <div className={styles.card}>
         <div className={styles.cardContent}>
           <div className={styles.leftSection}>
-            <img src={imgUrl} alt={name} className={styles.image} />
+            <div className={styles.imageWrapper}>
+              <img src={imgUrl} alt={name} className={styles.image} />
+            </div>
           </div>
           <div className={styles.rightSection}>
             <h1 className={styles.title}>{name}</h1>
             <p className={styles.description}>{description}</p>
-            <p className={styles.location}>
-              <strong>Ubicación: </strong>
-              <a
-                className={styles.locationLink}
-                href={`https://www.google.com/maps?q=${location}`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {location}
-              </a>
-            </p>
-            <p className={styles.capacity}>
-              <strong>Capacidad total:</strong> {capacity}
-            </p>
-            <p className={styles.trainer}>
-              <strong>Entrenador:</strong> {trainerName}
-            </p>
-
+            <div className={styles.details}>
+              <p className={styles.location}>
+                <MapPin size={18} />
+                <a
+                  className={styles.locationLink}
+                  href={`https://www.google.com/maps?q=${location}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {location}
+                </a>
+              </p>
+              <p className={styles.capacity}>
+                <Users size={18} />
+                <span>Capacidad total: {capacity}</span>
+              </p>
+              <p className={styles.trainer}>
+                <User size={18} />
+                <span>Entrenador: {trainerName}</span>
+              </p>
+            </div>
             <button className={styles.button} onClick={toggleModal}>
               Gestionar Inscripciones
             </button>
@@ -314,11 +319,11 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
       {isConfirming && selectedSchedule && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h3>Confirmar inscripción para el horario seleccionado:</h3>
-            <p>
+            <h3 className={styles.modalTitle}>Confirmar inscripción para el horario seleccionado:</h3>
+            <p className={styles.modalText}>
               {selectedSchedule.day} de {selectedSchedule.startTime} a {selectedSchedule.endTime}
             </p>
-            <div>
+            <div className={styles.modalButtons}>
               <button
                 className={styles.confirmBtn}
                 onClick={() => handleConfirmation(true)}
@@ -339,11 +344,11 @@ const ActivityDetail: React.FC<ActivityDetailProps> = ({
       {isUnsubscribing && selectedSchedule && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
-            <h3>Confirmar cancelación de inscripción para el horario seleccionado:</h3>
-            <p>
+            <h3 className={styles.modalTitle}>Confirmar cancelación de inscripción para el horario seleccionado:</h3>
+            <p className={styles.modalText}>
               {selectedSchedule.day} de {selectedSchedule.startTime} a {selectedSchedule.endTime}
             </p>
-            <div>
+            <div className={styles.modalButtons}>
               <button
                 className={styles.confirmBtn}
                 onClick={() => confirmUnsubscribe(true)}
