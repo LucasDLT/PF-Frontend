@@ -1,64 +1,97 @@
 .container {
-    width: 100%;
-    height: 100vh;
-    background-image: url('/nuestrosHorarios.jpg'); 
-    background-size: cover;
-    background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-  }
-  
+  width: 100%;
+  min-height: 100vh;
+  background-image: url('/nuestrosHorarios.jpg'); 
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.scheduleBox {
+  display: flex;
+  width: 80%;
+  max-width: 900px;
+  background-color: rgba(255, 255, 255, 0.8); 
+  border-radius: 10px;
+  color: aliceblue;
+  overflow: hidden;
+  border: #ccc solid 1px;
+}
+
+.daysColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #000000;
+  border-right: 2px solid #ccc;
+}
+
+.hoursColumn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 20px;
+  font-size: 16px;
+  background-color: #000000;
+}
+
+.hoursColumn div {
+  text-align: center;
+}
+
+.daysColumn div, .hoursColumn div {
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+}
+
+.title {
+  text-align: center;
+  color: aliceblue;
+  font-size: 5rem;
+  margin: 1rem;
+  font-family: 'Colotus Personal Use', sans-serif;
+}
+
+@media (max-width: 768px) {
   .scheduleBox {
-    display: flex;
-    width: 80%;
-    max-width: 900px;
-    background-color: rgba(255, 255, 255, 0.8); 
-    border-radius: 10px;
-    color: aliceblue;
-    overflow: hidden;
-    border: #ccc solid 1px;
+    width: 90%;
+    flex-direction: column;
   }
-  
+
   .daysColumn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    padding: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: #000000;
-    border-right: 2px solid #ccc;
+    border-right: none;
+    border-bottom: 2px solid #ccc;
   }
-  
-  .hoursColumn {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-evenly;
-    padding: 20px;
-    font-size: 16px;
-    background-color: #000000;
+
+  .title {
+    font-size: 3.5rem;
   }
-  
-  .hoursColumn div {
-    text-align: center;
+}
+
+@media (max-width: 480px) {
+  .scheduleBox {
+    width: 95%;
   }
-  
-  .daysColumn div, .hoursColumn div {
-    width: 100%;
-    text-align: center;
+
+  .daysColumn, .hoursColumn {
+    font-size: 14px;
     padding: 10px;
   }
-  
-  .title{
-    text-align: center;
-    color: aliceblue;
-    font-size: 5rem;
-    margin: 1rem;
-    font-family: 'Colotus Personal Use', sans-serif;
+
+  .title {
+    font-size: 2.5rem;
   }
+}
+

@@ -73,10 +73,65 @@
 
 .carouselPrevious {
   left: 10px;
-  top: 13rem ;
+  top: 13rem;
 }
 
 .carouselNext {
-  top: 13rem ;
+  top: 13rem;
   right: 10px;
 }
+
+@media (max-width: 1200px) {
+  .carouselContent {
+    padding: 5rem;
+    gap: 30px;
+  }
+
+  .carouselItem {
+    max-width: 22rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .carouselContent {
+    padding: 3rem;
+    gap: 20px;
+    max-height: none;
+  }
+
+  .carouselItem {
+    max-width: 18rem;
+  }
+
+  .imageContainer {
+    height: 150px;
+  }
+
+  .cardBody {
+    height: auto;
+  }
+
+  .carouselPrevious,
+  .carouselNext {
+    top: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .carouselContent {
+    padding: 2rem;
+  }
+
+  .carouselItem {
+    max-width: 100%;
+  }
+
+  .cardTitle {
+    font-size: 1rem;
+  }
+
+  .cardDescription {
+    font-size: 0.75rem;
+  }
+}
+
