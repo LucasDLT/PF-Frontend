@@ -140,9 +140,14 @@ const Reviews: React.FC<ReviewsComponentProps> = ({
             </Button>
           </form>
         ) : (
-          <p className={styles.noMembershipText}>
-            Debes tener una suscripcion activa para dejar una reseñas. {<Link href="/memberships" style={{ color: 'blue' }} >Ver suscripciones</Link>}
-          </p>
+          <div className={styles.noMembershipWrapper}>
+            <p className={styles.noMembershipText}>
+              Debes tener una suscripción activa para dejar una reseña.
+            </p>
+            <Link href="/memberships" className={styles.membershipLink}>
+              Ver suscripciones
+            </Link>
+          </div>
         )}
       </CardContent>
     </Card>

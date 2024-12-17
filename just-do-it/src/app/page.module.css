@@ -1,63 +1,122 @@
 .container {
-    background-color: black;
-  }
-  
-  .hero {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0)), 
-                      url('/img_landing.png');
-    background-size: 70% 170%;
-    background-repeat: no-repeat;
-    background-position: 120% 20%;
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
-  }
-  
-  .heroTextWrapper {
-    position: absolute;
-    left: 15rem; 
-    top: 14rem; 
-    width: 46rem; 
-    height: 8.9375rem; 
-  }
-  
-  .heroText {
-    font-size: 6rem; 
-    font-weight: 400; 
-    color: white;
-    font-family: 'Truecolor Personal Use', sans-serif;
+  background-color: black;
+}
 
+.hero {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 1) 10%, rgba(0, 0, 0, 0)), 
+                    url('/img_landing.png');
+  background-size: 70% 170%;
+  background-repeat: no-repeat;
+  background-position: 120% 20%;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+}
+
+.heroTextWrapper {
+  position: absolute;
+  left: 15%;
+  top: 20%;
+  width: 50%;
+  max-width: 46rem;
+}
+
+.heroText {
+  font-size: 6vw;
+  font-weight: 400;
+  color: white;
+  font-family: 'Truecolor Personal Use', sans-serif;
+  line-height: 1.2;
+  margin: 0;
+  word-wrap: break-word;
+}
+
+.heroTextYellow {
+  color: #ECF014;
+}
+
+.heroButton {
+  position: relative;
+  display: inline-block;
+  margin-top: 2rem;
+  width: auto;
+  min-width: 10rem;
+  background-color: #ECF014;
+  color: black;
+  font-size: 2vw;
+  text-align: center;
+  border-radius: 16px;
+  padding: 1rem 2rem;
+  font-family: 'Truecolor Personal Use', sans-serif;
+  letter-spacing: 1px;
+  transition: background-color 0.3s ease;
+}
+
+.heroButton:hover {
+  background-color: #d8cd12;
+}
+
+@media (max-width: 1200px) {
+  .heroTextWrapper {
+    width: 60%;
   }
-  
-  .heroTextYellow {
-    color: #ECF014; 
+
+  .heroText {
+    font-size: 7vw;
   }
-  
+
   .heroButton {
-    position: absolute;
-    left: 0.3125rem; 
-    top: 18rem; 
-    width: 10rem; 
-    height: 4.5rem; 
-    background-color: #ECF014;
-    color: black;
-    font-size: 2rem; 
+    font-size: 2.5vw;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero {
+    background-size: cover;
+    background-position: center;
+  }
+
+  .heroTextWrapper {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
     text-align: center;
-    border-radius: 16px; 
-    padding: 1rem;
-    font-family: 'Truecolor Personal Use', sans-serif;
-    letter-spacing: 1px;
   }
-  
-  .heroButtonLink {
-    color: black;
-    text-decoration: none;
+
+  .heroText {
+    font-size: 8vw;
   }
-  
-  .heroButton:hover {
-    background-color: #d8cd12;
+
+  .heroButton {
+    font-size: 3vw;
   }
+}
+
+@media (max-width: 768px) {
+  .heroTextWrapper {
+    width: 90%;
+  }
+
+  .heroText {
+    font-size: 10vw;
+  }
+
+  .heroButton {
+    font-size: 4vw;
+  }
+}
+
+@media (max-width: 576px) {
+  .heroText {
+    font-size: 12vw;
+  }
+
+  .heroButton {
+    font-size: 5vw;
+    padding: 0.8rem 1.5rem;
+  }
+}
