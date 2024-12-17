@@ -28,11 +28,6 @@ const developers = [
   },
 
   {
-    name: 'Harrison Devia',
-    role: 'Backend',
-    github: 'https://github.com/Hdeviam',
-  },
-  {
     name: 'Lucas Sebastian De La Torre',
     role: 'Frontend',
     github: 'https://gihttps://github.com/LucasDLT',

@@ -39,7 +39,7 @@
 
 .cardBody {
   padding: 16px;
-  background-color: rgba(226, 231, 93, 0.338);
+  background-color: #2e2e2e;
   border-radius: 0 0 0.75rem 0.75rem;
   color: #e0e0e0;
   height: 150px; 
@@ -49,12 +49,14 @@
   font-size: 1.25rem; 
   font-weight: bold;
   margin-bottom: 0.5rem;
+  color: #C5F32C;
 }
 
 .cardDescription {
   font-size: 0.875rem; 
   margin-bottom: 0.5rem;
-  color: #e0e0e0;
+  font-weight: bold;
+  color: #ffffff;
 }
 
 .carouselPrevious,
