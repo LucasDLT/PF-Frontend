@@ -1,8 +1,7 @@
-/* Layout.module.css */
-
 .container {
   display: flex;
   height: 100vh;
+  position: relative;
 }
 
 .sidebar {
@@ -15,11 +14,49 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  transition: transform 0.3s ease-in-out;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+}
+
+.sidebarContent {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.sidebarToggle {
+  display: none; /* Oculto por defecto */
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 1001;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebarToggle:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+
+.menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
 }
 
 .sidebar button {
   margin-bottom: 1rem;
-
   border-radius: 10px;
 }
 
@@ -46,6 +83,7 @@
   font-size: 1.1rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  color: #f0f0f0;
 }
 
 .customButton:hover {
@@ -56,6 +94,7 @@
   padding-left: 20px;
   padding-top: 10px;
   border-radius: 10px;
+  list-style-type: none;
 }
 
 .subMenu li {
@@ -68,6 +107,7 @@
 
 .transitionIcon {
   transition: transform 0.3s ease;
+  margin-left: auto;
 }
 
 .rotate180 {
@@ -80,8 +120,48 @@
 }
 
 .main {
-  flex-grow: 1; /* Hace que el contenido principal ocupe el espacio restante */
+  flex-grow: 1;
   padding: 2rem;
-  background-color: #ffffff57;
-  overflow-y: auto; /* Permite desplazamiento si el contenido es largo */
+  background-color: #ffffff;
+  overflow-y: auto;
+  transition: margin-left 0.3s ease-in-out;
 }
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 1000;
+  }
+
+  .sidebarOpen {
+    transform: translateX(0);
+  }
+
+  .sidebarToggle {
+    display: flex; /* Visible solo en móvil */
+  }
+
+  .main {
+    margin-left: 0;
+    padding-top: 4rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .sidebar {
+    transform: translateX(0) !important; /* Siempre visible en escritorio */
+  }
+  .main {
+    margin-left: 250px;
+  }
+}
+
