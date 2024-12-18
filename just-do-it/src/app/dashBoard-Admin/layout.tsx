@@ -11,21 +11,38 @@ import { useRouter } from 'next/navigation';
 export default function Layout({ children }: { children: React.ReactNode }) {
   const Router = useRouter();
   const { userSession, logout } = useAuth();
-  
-  // Verificación de roles para redirigir a la página correcta
+  const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize(); // Llamada inicial
+    window.addEventListener('resize', handleResize);
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   useEffect(() => {
     if (userSession?.roles === 'user' || userSession?.roles === 'associate') {
-      // Si es un usuario o asociado, redirigir al home
       Router.push('/');
     } else if (!userSession) {
-      // Si no hay sesión, redirigir al login
       Router.push('/login');
     }
   }, [userSession, Router]);
 
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const toggleMenu = (menuName: string) => {
     setActiveMenu((prevMenu) => (prevMenu === menuName ? null : menuName));
+    // Removemos la lógica de cerrar el sidebar aquí
+  };
+
+  const handleSubMenuClick = () => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
   };
 
   const handleLogOut = () => {
@@ -33,12 +50,29 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     logout();
   };
 
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    if (isMobile) {
+      setIsSidebarOpen(false);
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <div className={styles.sidebar}>
-        <div className="flex-1 px-4 py-6">
-          <ul className="mt-6 space-y-1">
-            <Link href="/dashBoard-Admin">
+      {isMobile && (
+        <button className={styles.sidebarToggle} onClick={toggleSidebar}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={styles.icon}>
+            <path fillRule="evenodd" d="M3 6.75A.75.75 0 013.75 6h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 6.75zM3 12a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75A.75.75 0 013 12zm0 5.25a.75.75 0 01.75-.75h16.5a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75z" clipRule="evenodd" />
+          </svg>
+        </button>
+      )}
+      <div className={`${styles.sidebar} ${isSidebarOpen ? styles.sidebarOpen : ''}`}>
+        <div className={styles.sidebarContent}>
+          <ul className={styles.menu}>
+            <Link href="/dashBoard-Admin" onClick={(e) => e.stopPropagation()}>
               <li className={styles.menuItem}>PERFIL DEL ADMINISTRADOR</li>
             </Link>
             <li>
@@ -55,7 +89,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="size-5"
+                      className={styles.icon}
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -69,16 +103,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </button>
                 {activeMenu === 'eventos' && (
                   <ul className={styles.subMenu}>
-                    <li>
-                      <Link href="/dashBoard-Admin/classes/currentclasses">
-                        Crear Clase
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/dashBoard-Admin/classes/editclasses">
-                        Ver y Editar Clases
-                      </Link>
-                    </li>
+                    <Link href="/dashBoard-Admin/classes/currentclasses" onClick={handleSubMenuClick}>
+                      <li>Crear Clase</li>
+                    </Link>
+                    <Link href="/dashBoard-Admin/classes/editclasses" onClick={handleSubMenuClick}>
+                      <li>Ver y Editar Clases</li>
+                    </Link>
                   </ul>
                 )}
               </div>
@@ -98,7 +128,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="size-5"
+                      className={styles.icon}
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -112,11 +142,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </button>
                 {activeMenu === 'usuarios' && (
                   <ul className={styles.subMenu}>
-                    <li>
-                      <Link href="/dashBoard-Admin/usercontrol">
-                        Control de Usuarios
-                      </Link>
-                    </li>
+                    <Link href="/dashBoard-Admin/usercontrol" onClick={handleSubMenuClick}>
+                      <li>Control de Usuarios</li>
+                    </Link>
                   </ul>
                 )}
               </div>
@@ -136,7 +164,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      className="size-5"
+                      className={styles.icon}
                       viewBox="0 0 20 20"
                       fill="currentColor"
                     >
@@ -150,16 +178,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 </button>
                 {activeMenu === 'membresias' && (
                   <ul className={styles.subMenu}>
-                    <li>
-                      <Link href="/dashBoard-Admin/membership">
-                        Historial de pago
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/dashBoard-Admin/membership/create-membership">
-                        Crear nueva membresia
-                      </Link>
-                    </li>
+                    <Link href="/dashBoard-Admin/membership" onClick={handleSubMenuClick}>
+                      <li>Historial de pago</li>
+                    </Link>
+                    <Link href="/dashBoard-Admin/membership/create-membership" onClick={handleSubMenuClick}>
+                      <li>Crear nueva membresia</li>
+                    </Link>
                   </ul>
                 )}
               </div>
@@ -174,7 +198,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </div>
 
-      <div className={styles.main}>{children}</div>
+      <div className={styles.main} onClick={closeSidebar}>{children}</div>
     </div>
   );
 }
+
