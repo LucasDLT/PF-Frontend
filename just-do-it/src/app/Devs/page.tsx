@@ -19,7 +19,7 @@ const developers = [
   {
     name: 'Nelson Enrique Arias Gamez',
     role: 'Backend',
-    github: 'https://github.com/nechodev',
+    github: 'https://github.com/abogadatos',
   },
   {
     name: 'Luis Angel Almazan De Jesus',
